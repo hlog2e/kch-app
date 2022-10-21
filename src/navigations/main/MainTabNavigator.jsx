@@ -27,6 +27,7 @@ export default function MainTabNavigator() {
         tabBarInactiveTintColor: "#94a3b8",
         headerShown: false,
       }}
+      initialRouteName="홈"
     >
       <Tab.Screen
         name="피드"
