@@ -22,9 +22,10 @@ export default function MainTabNavigator() {
           height: insets.bottom + 60,
         },
         tabBarItemStyle: { height: 50 },
+        tabBarShowLabel: false,
         tabBarLabelStyle: { fontSize: 11, fontWeight: "700" },
         tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "#94a3b8",
+        tabBarInactiveTintColor: "black",
         headerShown: false,
       }}
       initialRouteName="홈"
@@ -33,49 +34,64 @@ export default function MainTabNavigator() {
         name="피드"
         component={FeedStack}
         options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="albums-outline" size="26" color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Ionicons name="albums" size="26" color={color} />
+            ) : (
+              <Ionicons name="albums-outline" size="26" color={color} />
+            ),
         }}
       ></Tab.Screen>
       <Tab.Screen
         name="커뮤니티"
         component={CommunityStack}
         options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="people-outline" size="26" color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Ionicons name="people" size="26" color={color} />
+            ) : (
+              <Ionicons name="people-outline" size="26" color={color} />
+            ),
         }}
       ></Tab.Screen>
       <Tab.Screen
         name="홈"
         component={HomeStack}
         options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="home-outline" size="26" color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Ionicons name="home" size="26" color={color} />
+            ) : (
+              <Ionicons name="home-outline" size="26" color={color} />
+            ),
         }}
       ></Tab.Screen>
       <Tab.Screen
         name="채팅"
         component={ChatStack}
         options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="chatbubbles-outline" size="26" color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Ionicons name="chatbubbles" size="26" color={color} />
+            ) : (
+              <Ionicons name="chatbubbles-outline" size="26" color={color} />
+            ),
         }}
       ></Tab.Screen>
       <Tab.Screen
         name="더보기"
         component={MoreStack}
         options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons
-              name="ellipsis-horizontal-outline"
-              size="26"
-              color={color}
-            />
-          ),
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Ionicons name="ellipsis-horizontal" size="26" color={color} />
+            ) : (
+              <Ionicons
+                name="ellipsis-horizontal-outline"
+                size="26"
+                color={color}
+              />
+            ),
         }}
       ></Tab.Screen>
     </Tab.Navigator>
