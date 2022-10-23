@@ -11,19 +11,13 @@ import { Ionicons } from "@expo/vector-icons";
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
-  const insets = useSafeAreaInsets();
+  const { bottom: bottomInsets } = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: {
-          borderTopLeftRadius: 25,
-          borderTopRightRadius: 25,
-          borderTopWidth: 0,
-          height: insets.bottom + 60,
-        },
-        tabBarItemStyle: { height: 50 },
+        tabBarStyle: { height: bottomInsets + 50 },
         tabBarShowLabel: false,
-        tabBarLabelStyle: { fontSize: 11, fontWeight: "700" },
         tabBarActiveTintColor: "black",
         tabBarInactiveTintColor: "black",
         headerShown: false,
