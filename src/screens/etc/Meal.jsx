@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView, Text, StyleSheet, Image } from "react-native";
+import {
+  View,
+  ScrollView,
+  Text,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { apiInstance } from "../../../apis/api";
 import OnlyLeftArrowHeader from "../../components/common/OnlyLeftArrowHeader";
@@ -9,6 +17,7 @@ import uuid from "react-native-uuid";
 
 export default function MealScreen({ navigation }) {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     apiInstance
@@ -17,6 +26,7 @@ export default function MealScreen({ navigation }) {
       })
       .then((data) => {
         setMeals(data.data.data);
+        setIsLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -35,6 +45,17 @@ export default function MealScreen({ navigation }) {
             />
             <Text style={styles.header_title}>급식</Text>
           </View>
+
+          {isLoading ? (
+            <View
+              style={{
+                height: Dimensions.get("screen").height / 2,
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator />
+            </View>
+          ) : null}
 
           {meals.map((_item) => {
             return <Row key={uuid.v4()} _id={_item._id} meals={_item.meals} />;
