@@ -6,7 +6,7 @@ export default function Weather() {
   useEffect(() => {}, []);
   return (
     <View style={{ flexDirection: "row" }}>
-      <Ionicons name="sunny" style={{}} size="26" />
+      <Ionicons name="sunny" style={{}} size={26} />
       <View style={{ marginHorizontal: 10 }}>
         <Text style={{ fontSize: 16, fontWeight: "600" }}>24 ℃</Text>
         <View
@@ -19,7 +19,7 @@ export default function Weather() {
           <Ionicons
             name="umbrella-outline"
             style={{ color: "gray" }}
-            size="12"
+            size={12}
           />
           <Text style={{ fontSize: 12, color: "gray" }}> 10 %</Text>
         </View>
