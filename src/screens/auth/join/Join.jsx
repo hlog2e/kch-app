@@ -14,6 +14,7 @@ import ButtonOnlyText from "../../../components/common/ButtonOnlyText";
 import ButtonFullWidth from "../../../components/common/ButtonFullWidth";
 
 import { numRegexChecker } from "../../../../utils/regex";
+import { requestVerifyCode } from "../../../../apis/auth";
 
 export default function JoinScreen({ navigation }) {
   const [error, setError] = useState(false);
@@ -27,6 +28,17 @@ export default function JoinScreen({ navigation }) {
       setDone(false);
     }
   }, [phoneNumber]);
+
+  async function handleRequestVerifyCode() {
+    if (done) {
+      //전화번호 입력이 완료되었을 때
+      await requestVerifyCode(phoneNumber).then((_data) => {
+        navigation.push("JoinVerify", {
+          phoneNumber: phoneNumber,
+        });
+      });
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -65,7 +77,7 @@ export default function JoinScreen({ navigation }) {
               }}
               placeholder="01012345678"
               keyboardType="phone-pad"
-              maxLength="13"
+              maxLength="11"
               style={[styles.input, error ? styles.input_red : styles.input]}
             />
             {error ? <Alert text={error.message} /> : null}
@@ -73,13 +85,7 @@ export default function JoinScreen({ navigation }) {
 
           <View>
             <ButtonFullWidth
-              onPress={() => {
-                if (done) {
-                  navigation.push("JoinVerify", {
-                    phoneNumber: phoneNumber,
-                  });
-                }
-              }}
+              onPress={handleRequestVerifyCode}
               text="다음"
               color={done ? "#00139B" : "#A1A5C0"}
             />

@@ -65,7 +65,7 @@ export default function LoginScreen({ navigation }) {
               }}
               placeholder="01012345678"
               keyboardType="phone-pad"
-              maxLength="13"
+              maxLength="11"
               style={[styles.input, error ? styles.input_red : styles.input]}
             />
             {error ? <Alert text={error.message} /> : null}

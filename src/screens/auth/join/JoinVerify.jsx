@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import ButtonOnlyText from "../../../components/common/ButtonOnlyText";
 import ButtonFullWidth from "../../../components/common/ButtonFullWidth";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 
@@ -49,7 +48,7 @@ export default function JoinVerfiyScreen({ navigation, route }) {
             marginTop: 20,
           }}
         >
-          인증
+          인증번호
         </Text>
 
         <View
@@ -66,6 +65,7 @@ export default function JoinVerfiyScreen({ navigation, route }) {
             </Text>
             <TextInput
               value={verifyCode}
+              maxLength="4"
               onChangeText={(_data) => {
                 if (numRegexChecker(_data)) {
                   setVerifyCode(_data);
@@ -85,16 +85,17 @@ export default function JoinVerfiyScreen({ navigation, route }) {
           </View>
 
           <View>
-            <ButtonFullWidth text="다음" color="#00139B" />
-            <View style={{ alignItems: "center" }}>
-              <ButtonOnlyText
-                onPress={() => {
-                  navigation.replace("Join");
-                }}
-                text="회원가입"
-                color={done ? "#00139B" : "#A1A5C0"}
-              />
-            </View>
+            <ButtonFullWidth
+              onPress={() => {
+                if (done) {
+                  navigation.push("JoinForm", {
+                    phoneNumber: route.params.phoneNumber,
+                  });
+                }
+              }}
+              text="다음"
+              color={done ? "#00139B" : "#A1A5C0"}
+            />
           </View>
         </View>
       </KeyboardAvoidingView>
