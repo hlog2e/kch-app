@@ -36,7 +36,7 @@ export default function HomeScreen({ navigation }) {
                   lineHeight: 16,
                 }}
               >
-                {"10월 21일\n메뉴 보러가기"}
+                {"이번주 급식\n메뉴 보러가기"}
               </Text>
             </View>
 

@@ -1,8 +1,10 @@
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { dfs_xy_conv, getBaseTime } from "../../../utils/korea-weather-api";
 import { getWeather } from "../../../apis/weather";
+
+import * as Location from "expo-location";
 
 export default function Weather() {
   const [temp, setTemp] = useState("--");
@@ -29,27 +31,46 @@ export default function Weather() {
     "snow-outline",
     "rainy-outline",
   ];
-  async function getWeater() {
-    const { x, y } = dfs_xy_conv("toXY", "36.6277786", "127.5118068");
 
-    const { baseTime, baseDate } = getBaseTime();
+  async function getLocation() {
+    const { status } = await Location.requestForegroundPermissionsAsync();
 
-    const data = await getWeather(baseDate, baseTime, x, y);
-    const weatherArray = data.response.body.items.item;
-
-    setTemp(weatherArray.find((i) => i.category === "TMP").fcstValue);
-    setRain(weatherArray.find((i) => i.category === "POP").fcstValue);
-    setRainCode(weatherArray.find((i) => i.category === "PTY").fcstValue);
-    setSkyCode(weatherArray.find((i) => i.category === "SKY").fcstValue);
-
-    setIsRain(
-      !weatherArray.find((i) => i.category === "POP").fcstValue === "0"
-        ? true
-        : false
-    );
+    if (status !== "granted") {
+      Alert.alert(
+        "날씨 오류",
+        "앱의 위치 권한이 비활성화 되어있어 날씨를 불러올 수 없습니다. 휴대전화 설정에서 위치 권한을 허용해주세요!",
+        [{ text: "확인" }]
+      );
+      return;
+    }
+    return await Location.getCurrentPositionAsync({});
   }
+
   useEffect(() => {
-    getWeater();
+    (async () => {
+      const location = await getLocation();
+      const { x, y } = await dfs_xy_conv(
+        "toXY",
+        location.coords.latitude,
+        location.coords.longitude
+      );
+
+      const { baseTime, baseDate } = getBaseTime();
+
+      const data = await getWeather(baseDate, baseTime, x, y);
+      const weatherArray = data.response.body.items.item;
+
+      setTemp(weatherArray.find((i) => i.category === "TMP").fcstValue);
+      setRain(weatherArray.find((i) => i.category === "POP").fcstValue);
+      setRainCode(weatherArray.find((i) => i.category === "PTY").fcstValue);
+      setSkyCode(weatherArray.find((i) => i.category === "SKY").fcstValue);
+
+      setIsRain(
+        !weatherArray.find((i) => i.category === "POP").fcstValue === "0"
+          ? true
+          : false
+      );
+    })();
   }, []);
 
   return (

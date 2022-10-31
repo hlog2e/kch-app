@@ -2,7 +2,7 @@ import axios from "axios";
 import { Alert } from "react-native";
 
 export const apiInstance = axios.create({
-  baseURL: "http://192.168.1.182:3001",
+  baseURL: "http://10.136.229.214:3001",
 });
 
 apiInstance.interceptors.request.use(
