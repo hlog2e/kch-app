@@ -33,7 +33,7 @@ export default function Weather() {
     const { x, y } = dfs_xy_conv("toXY", "36.6277786", "127.5118068");
 
     const { baseTime, baseDate } = getBaseTime();
-    console.log(x, y, baseTime, baseDate);
+
     const data = await getWeather(baseDate, baseTime, x, y);
     const weatherArray = data.response.body.items.item;
 

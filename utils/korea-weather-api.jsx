@@ -73,7 +73,8 @@ export function dfs_xy_conv(code, v1, v2) {
 }
 
 export function getBaseTime() {
-  const nowTime = moment().format("hhmm");
+  const nowTime = moment().format("HHmm");
+
   let baseDate = moment().format("YYYYMMDD");
   let baseTime;
   // 기상청 정보는 1일 총 8번 업데이트 된다.(0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300)
