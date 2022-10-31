@@ -5,7 +5,7 @@ import * as ExpoSplash from "expo-splash-screen";
 ExpoSplash.preventAutoHideAsync();
 
 export default function SplashScreen({ navigation }) {
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(true);
 
   useEffect(() => {
     if (user) {

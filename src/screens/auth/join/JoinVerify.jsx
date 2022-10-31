@@ -15,6 +15,8 @@ import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader"
 
 import { numRegexChecker } from "../../../../utils/regex";
 import AlertSucess from "../../../components/common/AlertSucess";
+import AlertError from "../../../components/common/AlertError";
+import { postValidateVerifyCode, postVerifyCode } from "../../../../apis/auth";
 
 export default function JoinVerfiyScreen({ navigation, route }) {
   const [status, setStatus] = useState({
@@ -27,12 +29,29 @@ export default function JoinVerfiyScreen({ navigation, route }) {
   useEffect(() => {
     if (verifyCode.length === 4) {
       setDone(true);
+      setStatus({});
     } else {
       setDone(false);
     }
   }, [verifyCode]);
 
-  console.log(route.params.phoneNumber);
+  async function handleRequestValidateCode() {
+    if (done) {
+      const { isValidate, message } = await postVerifyCode(
+        route.params.phoneNumber,
+        verifyCode
+      );
+
+      //TODO true => isValidate
+      if (true) {
+        navigation.push("JoinForm", {
+          phoneNumber: route.params.phoneNumber,
+        });
+      } else {
+        setStatus({ status: "error", message: message });
+      }
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <OnlyLeftArrowHeader navigation={navigation} />
@@ -78,7 +97,9 @@ export default function JoinVerfiyScreen({ navigation, route }) {
                 status.status === "error" ? styles.input_red : styles.input,
               ]}
             />
-            {status.status === "error" ? <Alert text={status.message} /> : null}
+            {status.status === "error" ? (
+              <AlertError text={status.message} />
+            ) : null}
             {status.status === "sucess" ? (
               <AlertSucess text={status.message} />
             ) : null}
@@ -86,13 +107,7 @@ export default function JoinVerfiyScreen({ navigation, route }) {
 
           <View>
             <ButtonFullWidth
-              onPress={() => {
-                if (done) {
-                  navigation.push("JoinForm", {
-                    phoneNumber: route.params.phoneNumber,
-                  });
-                }
-              }}
+              onPress={handleRequestValidateCode}
               text="다음"
               color={done ? "#00139B" : "#A1A5C0"}
             />

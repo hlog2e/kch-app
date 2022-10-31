@@ -31,7 +31,7 @@ export default function MealScreen({ navigation }) {
       .catch((err) => console.log(err));
   }, []);
   return (
-    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
+    <SafeAreaView style={styles.container}>
       <View>
         <OnlyLeftArrowHeader navigation={navigation} />
         <ScrollView>

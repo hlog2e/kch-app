@@ -14,14 +14,20 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import ButtonFullWidth from "../../../components/common/ButtonFullWidth";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import DropDownPicker from "react-native-dropdown-picker";
+import { postJoinUser, postVerifyRegisterCode } from "../../../../apis/auth";
+
+import AlertError from "../../../components/common/AlertError";
+import AlertSucess from "../../../components/common/AlertSucess";
+import {
+  engAndNumRegexChecker,
+  korAndEngRegexChecker,
+} from "../../../../utils/regex";
 
 export default function JoinFormScreen({ navigation, route }) {
-  const [status, setStatus] = useState({
-    status: "sucess",
-    message: "문자메세지로 인증번호가 전송되었습니다.",
-  });
-  const [dropDownDone, setDropDownDone] = useState(false);
-  const [registerCodeDone, setRegisterCodeDone] = useState(false);
+  const [dropDownDone, setDropDownDone] = useState(false); //입력여부 체크
+  const [registerCodeDone, setRegisterCodeDone] = useState(false); //입력여부 체크
+  const [registerCodeVerified, setRegisterCodeVerified] = useState(false); //가입코드 유효성 체크
+  const [registerCodeAlertStatus, setRegisterCodeAlertStatus] = useState({});
 
   //DropDown 구분 선택
   const [gradeOpen, setGradeOpen] = useState(false);
@@ -83,15 +89,16 @@ export default function JoinFormScreen({ navigation, route }) {
   const [numValue, setNumValue] = useState();
   //가입코드 state
   const [registerCode, setRegisterCode] = useState("");
+  const [name, setName] = useState("");
 
   //DropDown 메뉴들 모두다 선택했는지 Validation
   useEffect(() => {
-    if (gradeValue && classValue && numValue) {
+    if (gradeValue && name) {
       setDropDownDone(true);
     } else {
       setDropDownDone(false);
     }
-  }, [gradeValue, classValue, numValue]);
+  }, [gradeValue, name]);
   //가입코드 Input 입력 완료 되었는지 Validation
   useEffect(() => {
     if (registerCode.length === 5) {
@@ -99,9 +106,43 @@ export default function JoinFormScreen({ navigation, route }) {
     } else {
       setRegisterCodeDone(false);
     }
-  }, [gradeValue, classValue, numValue]);
+  }, [registerCode]);
 
-  console.log(route.params.phoneNumber);
+  async function handlePostValidateRegisterCode() {
+    const { isValidate, message } = await postVerifyRegisterCode(registerCode);
+    if (isValidate) {
+      setRegisterCodeVerified(true);
+      setRegisterCodeAlertStatus({
+        status: "sucess",
+        message: message,
+      });
+    } else {
+      setRegisterCodeVerified(false);
+      setRegisterCodeAlertStatus({
+        status: "error",
+        message: message,
+      });
+    }
+  }
+
+  async function handlePostJoin() {
+    if (dropDownDone && registerCodeDone && registerCodeVerified) {
+      const user = await postJoinUser({
+        phoneNumber: route.params.phoneNumber,
+        name: name,
+        grade: gradeValue,
+        class: classValue,
+        number: numValue,
+        registerCode: registerCode,
+      }).catch((err) => {
+        Alert.alert("회원가입 오류", err.response.data.message, [
+          { text: "확인" },
+        ]);
+      });
+
+      console.log(user);
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <OnlyLeftArrowHeader navigation={navigation} />
@@ -128,7 +169,6 @@ export default function JoinFormScreen({ navigation, route }) {
           }}
         >
           <View>
-            {status.status === "error" ? <Alert text={status.message} /> : null}
             <Text style={{ fontSize: 14, color: "gray" }}>구분</Text>
             <DropDownPicker
               listMode="SCROLLVIEW"
@@ -205,6 +245,29 @@ export default function JoinFormScreen({ navigation, route }) {
                 />
               </>
             ) : null}
+            <View>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "gray",
+                  marginTop: 30,
+                  marginBottom: 10,
+                }}
+              >
+                이름
+              </Text>
+              <TextInput
+                placeholder="이름"
+                returnKeyType="done"
+                value={name}
+                onChangeText={(value) => {
+                  if (korAndEngRegexChecker(value)) {
+                    setName(value);
+                  }
+                }}
+                style={styles.input}
+              />
+            </View>
             <Text
               style={{
                 fontSize: 14,
@@ -218,12 +281,21 @@ export default function JoinFormScreen({ navigation, route }) {
             </Text>
             <View style={{ flexDirection: "row" }}>
               <TextInput
+                editable={!registerCodeVerified}
                 maxLength="5"
+                autoCapitalize="characters"
                 placeholder="가입코드(5자리)"
                 returnKeyType="done"
+                value={registerCode}
+                onChangeText={(value) => {
+                  if (engAndNumRegexChecker(value)) {
+                    setRegisterCode(value);
+                  }
+                }}
                 style={[styles.input, { flex: 1 }]}
               />
               <TouchableOpacity
+                onPress={handlePostValidateRegisterCode}
                 style={{
                   alignItems: "center",
                   marginLeft: 15,
@@ -240,10 +312,22 @@ export default function JoinFormScreen({ navigation, route }) {
             </View>
           </View>
 
+          {registerCodeAlertStatus.status === "error" ? (
+            <AlertError text={registerCodeAlertStatus.message} />
+          ) : null}
+          {registerCodeAlertStatus.status === "sucess" ? (
+            <AlertSucess text={registerCodeAlertStatus.message} />
+          ) : null}
+
           <View style={{ marginTop: 60, zIndex: -1 }}>
             <ButtonFullWidth
               text="가입하기"
-              color={dropDownDone && registerCodeDone ? "#00139B" : "#A1A5C0"}
+              onPress={handlePostJoin}
+              color={
+                dropDownDone && registerCodeDone && registerCodeVerified
+                  ? "#00139B"
+                  : "#A1A5C0"
+              }
             />
           </View>
         </View>

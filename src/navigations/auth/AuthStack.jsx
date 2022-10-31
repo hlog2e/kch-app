@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import JoinScreen from "../../screens/auth/join/Join";
-import JoinFormScreen from "../../screens/auth/join/JoinFrom";
+import JoinFormScreen from "../../screens/auth/join/JoinForm";
 import JoinVerfiyScreen from "../../screens/auth/join/JoinVerify";
 import LoginScreen from "../../screens/auth/login/Login";
 import LoginVerfiyScreen from "../../screens/auth/login/LoginVerfiy";

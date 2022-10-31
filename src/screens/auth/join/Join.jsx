@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,7 +13,8 @@ import ButtonOnlyText from "../../../components/common/ButtonOnlyText";
 import ButtonFullWidth from "../../../components/common/ButtonFullWidth";
 
 import { numRegexChecker } from "../../../../utils/regex";
-import { requestVerifyCode } from "../../../../apis/auth";
+import { postRequestCode } from "../../../../apis/auth";
+import AlertError from "../../../components/common/AlertError";
 
 export default function JoinScreen({ navigation }) {
   const [error, setError] = useState(false);
@@ -32,11 +32,18 @@ export default function JoinScreen({ navigation }) {
   async function handleRequestVerifyCode() {
     if (done) {
       //전화번호 입력이 완료되었을 때
-      await requestVerifyCode(phoneNumber).then((_data) => {
-        navigation.push("JoinVerify", {
-          phoneNumber: phoneNumber,
+      await postRequestCode(phoneNumber, "join")
+        .then((data) => {
+          navigation.push("JoinVerify", {
+            phoneNumber: phoneNumber,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          setError({
+            message: err.response.data.message,
+          });
         });
-      });
     }
   }
   return (
@@ -80,7 +87,7 @@ export default function JoinScreen({ navigation }) {
               maxLength="11"
               style={[styles.input, error ? styles.input_red : styles.input]}
             />
-            {error ? <Alert text={error.message} /> : null}
+            {error ? <AlertError text={error.message} /> : null}
           </View>
 
           <View>
