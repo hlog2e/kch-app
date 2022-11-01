@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,6 +13,8 @@ import ButtonOnlyText from "../../../components/common/ButtonOnlyText";
 import ButtonFullWidth from "../../../components/common/ButtonFullWidth";
 
 import { numRegexChecker } from "../../../../utils/regex";
+import { postRequestCode } from "../../../../apis/auth";
+import AlertError from "../../../components/common/AlertError";
 
 export default function LoginScreen({ navigation }) {
   const [error, setError] = useState(false);
@@ -27,6 +28,19 @@ export default function LoginScreen({ navigation }) {
       setDone(false);
     }
   }, [phoneNumber]);
+
+  async function handleRequestCode() {
+    await postRequestCode(phoneNumber, "login")
+      .then(() => {
+        navigation.push("LoginVerify", { phoneNumber: phoneNumber });
+      })
+      .catch((err) => {
+        console.log(err);
+        setError({
+          message: err.response.data.message,
+        });
+      });
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -68,18 +82,12 @@ export default function LoginScreen({ navigation }) {
               maxLength="11"
               style={[styles.input, error ? styles.input_red : styles.input]}
             />
-            {error ? <Alert text={error.message} /> : null}
+            {error ? <AlertError text={error.message} /> : null}
           </View>
 
           <View>
             <ButtonFullWidth
-              onPress={() => {
-                if (done) {
-                  navigation.push("LoginVerify", {
-                    phoneNumber: phoneNumber,
-                  });
-                }
-              }}
+              onPress={handleRequestCode}
               text="다음"
               color={done ? "#00139B" : "#A1A5C0"}
             />

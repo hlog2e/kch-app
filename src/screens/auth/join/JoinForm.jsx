@@ -23,6 +23,8 @@ import {
   korAndEngRegexChecker,
 } from "../../../../utils/regex";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function JoinFormScreen({ navigation, route }) {
   const [dropDownDone, setDropDownDone] = useState(false); //입력여부 체크
   const [registerCodeDone, setRegisterCodeDone] = useState(false); //입력여부 체크
@@ -127,7 +129,7 @@ export default function JoinFormScreen({ navigation, route }) {
 
   async function handlePostJoin() {
     if (dropDownDone && registerCodeDone && registerCodeVerified) {
-      const user = await postJoinUser({
+      const data = await postJoinUser({
         phoneNumber: route.params.phoneNumber,
         name: name,
         grade: gradeValue,
@@ -140,7 +142,9 @@ export default function JoinFormScreen({ navigation, route }) {
         ]);
       });
 
-      console.log(user);
+      await AsyncStorage.setItem("token", JSON.stringify(data.token)); //asyncStorage에 토큰 저장
+      await AsyncStorage.setItem("user", JSON.stringify(data.user)); //asyncStorage에 유저 정보 저장
+      navigation.replace("Main");
     }
   }
   return (

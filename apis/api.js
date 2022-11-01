@@ -1,32 +1,53 @@
 import axios from "axios";
 import { Alert } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const apiInstance = axios.create({
-  baseURL: "http://10.136.229.214:3001",
+  baseURL: "http://10.0.193.33:3001",
 });
 
-apiInstance.interceptors.request.use(
-  function (config) {
-    // 요청이 전달되기 전에 작업 수행
+export const apiAuthInstance = axios.create({
+  baseURL: "http://10.0.193.33:3001",
+});
+
+// Auth api 인터셉터
+apiAuthInstance.interceptors.request.use(
+  async function (config) {
+    const token = await AsyncStorage.getItem("token");
+    config.headers.Authorization = token;
+
     return config;
   },
   function (error) {
-    // 요청 오류가 있는 작업 수행
     return Promise.reject(error);
   }
 );
 
+// Non-Auth api 인터셉터
 apiInstance.interceptors.response.use(
   function (response) {
-    // 2xx 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
-    // 응답 데이터가 있는 작업 수행
     return response;
   },
   function (error) {
-    // 2xx 외의 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
-    // 응답 오류가 있는 작업 수행
+    if (!error.response) {
+      Alert.alert(
+        "오류",
+        "서버와의 연결이 불안정합니다. 나중에 다시 시도해 주세요. (503)",
+        [{ text: "확인" }]
+      );
+    }
 
-    //서버의 응답이 없을때 실행하는 인터셉터
+    return Promise.reject(error);
+  }
+);
+
+// Auth api 인터셉터
+apiAuthInstance.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
     if (!error.response) {
       Alert.alert(
         "오류",

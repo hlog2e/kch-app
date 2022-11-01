@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -16,6 +15,10 @@ import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader"
 
 import { numRegexChecker } from "../../../../utils/regex";
 import AlertSucess from "../../../components/common/AlertSucess";
+import { postLogin } from "../../../../apis/auth";
+import AlertError from "../../../components/common/AlertError";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginVerfiyScreen({ navigation, route }) {
   const [status, setStatus] = useState({
@@ -28,12 +31,22 @@ export default function LoginVerfiyScreen({ navigation, route }) {
   useEffect(() => {
     if (verifyCode.length === 4) {
       setDone(true);
+      setStatus({});
     } else {
       setDone(false);
     }
   }, [verifyCode]);
 
-  console.log(route.params.phoneNumber);
+  async function handlePostLogin() {
+    const data = await postLogin(route.params.phoneNumber, verifyCode).catch(
+      (err) => {
+        setStatus({ status: "error", message: err.response.data.message });
+      }
+    );
+    await AsyncStorage.setItem("token", JSON.stringify(data.token)); //asyncStorage에 토큰 저장
+    await AsyncStorage.setItem("user", JSON.stringify(data.user)); //asyncStorage에 유저 정보 저장
+    navigation.replace("Main");
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <OnlyLeftArrowHeader navigation={navigation} />
@@ -66,6 +79,7 @@ export default function LoginVerfiyScreen({ navigation, route }) {
             </Text>
             <TextInput
               value={verifyCode}
+              maxLength="4"
               onChangeText={(_data) => {
                 if (numRegexChecker(_data)) {
                   setVerifyCode(_data);
@@ -78,14 +92,20 @@ export default function LoginVerfiyScreen({ navigation, route }) {
                 status.status === "error" ? styles.input_red : styles.input,
               ]}
             />
-            {status.status === "error" ? <Alert text={status.message} /> : null}
+            {status.status === "error" ? (
+              <AlertError text={status.message} />
+            ) : null}
             {status.status === "sucess" ? (
               <AlertSucess text={status.message} />
             ) : null}
           </View>
 
           <View>
-            <ButtonFullWidth text="로그인" color="#00139B" />
+            <ButtonFullWidth
+              onPress={handlePostLogin}
+              text="로그인"
+              color="#00139B"
+            />
             <View style={{ alignItems: "center" }}>
               <ButtonOnlyText
                 onPress={() => {

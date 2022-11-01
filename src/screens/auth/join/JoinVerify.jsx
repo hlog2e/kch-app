@@ -42,8 +42,7 @@ export default function JoinVerfiyScreen({ navigation, route }) {
         verifyCode
       );
 
-      //TODO true => isValidate
-      if (true) {
+      if (isValidate) {
         navigation.push("JoinForm", {
           phoneNumber: route.params.phoneNumber,
         });

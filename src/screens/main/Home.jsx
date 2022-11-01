@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,9 +8,15 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { apiAuthInstance } from "../../../apis/api";
 import Weather from "../../components/home/Weather";
 
 export default function HomeScreen({ navigation }) {
+  useEffect(() => {
+    (async () => {
+      const test = await apiAuthInstance.get("/");
+    })();
+  });
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView>

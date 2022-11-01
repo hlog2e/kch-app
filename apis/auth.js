@@ -27,3 +27,11 @@ export const postJoinUser = async (_joinData) => {
   const { data } = await apiInstance.post("/auth/join", _joinData);
   return data;
 };
+
+export const postLogin = async (_phoneNumber, _code) => {
+  const { data } = await apiInstance.post("/auth/login", {
+    phoneNumber: _phoneNumber,
+    code: _code,
+  });
+  return data;
+};
