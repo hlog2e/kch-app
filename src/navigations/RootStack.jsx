@@ -4,11 +4,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "./auth/AuthStack";
 import SplashScreen from "../screens/splash/Splash";
 
+import { navigationRef } from "./RootNavigation";
+
 const Stack = createNativeStackNavigator();
 
 export default function RootStack() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{ headerShown: false }}

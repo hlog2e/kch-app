@@ -11,7 +11,7 @@ export default function SplashScreen({ navigation }) {
     (async () => {
       const user = await AsyncStorage.getItem("user");
 
-      if (false) {
+      if (user) {
         navigation.replace("Main");
         ExpoSplash.hideAsync();
       } else {
@@ -21,7 +21,3 @@ export default function SplashScreen({ navigation }) {
     })();
   }, []);
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", justifyContent: "center" },
-});

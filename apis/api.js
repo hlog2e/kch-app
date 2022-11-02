@@ -2,20 +2,21 @@ import axios from "axios";
 import { Alert } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { navigate } from "../src/navigations/RootNavigation";
 
 export const apiInstance = axios.create({
-  baseURL: "http://10.0.193.33:3001",
+  baseURL: "http://localhost:3001",
 });
 
 export const apiAuthInstance = axios.create({
-  baseURL: "http://10.0.193.33:3001",
+  baseURL: "http://localhost:3001",
 });
 
 // Auth api 인터셉터
 apiAuthInstance.interceptors.request.use(
   async function (config) {
     const token = await AsyncStorage.getItem("token");
-    config.headers.Authorization = token;
+    config.headers.Authorization = `Bearer ${JSON.parse(token)}`;
 
     return config;
   },
@@ -47,7 +48,17 @@ apiAuthInstance.interceptors.response.use(
   function (response) {
     return response;
   },
-  function (error) {
+  async function (error) {
+    if (error.response.data.status === 403) {
+      await AsyncStorage.removeItem("user");
+      await AsyncStorage.removeItem("token");
+      Alert.alert(
+        "인증 오류",
+        "인증이 만료되었습니다. 다시 로그인 해주세요! (403)",
+        [{ text: "확인" }]
+      );
+      navigate("Auth");
+    }
     if (!error.response) {
       Alert.alert(
         "오류",
