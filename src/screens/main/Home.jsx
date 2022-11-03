@@ -59,7 +59,12 @@ export default function HomeScreen({ navigation }) {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.card_item}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push("TimetableScreen");
+            }}
+            style={styles.card_item}
+          >
             <View>
               <Text style={styles.card_title}>시간표</Text>
               <Text

@@ -2,7 +2,7 @@ import { Alert, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { dfs_xy_conv, getBaseTime } from "../../../utils/korea-weather-api";
-import { getWeather } from "../../../apis/weather";
+import { getWeather } from "../../../apis/home/weather";
 
 import * as Location from "expo-location";
 
