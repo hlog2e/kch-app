@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { getTimetable } from "../../../apis/home/timetable";
 import moment from "moment/moment";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TimetableScreen() {
+import OnlyLeftArrowHeader from "../../components/common/OnlyLeftArrowHeader";
+
+export default function TimetableScreen({ navigation }) {
   const [timetable, setTimetable] = useState();
   const weekFirstDay = moment() //이번주 월요일날짜
     .startOf("weeks")
@@ -41,17 +43,35 @@ export default function TimetableScreen() {
 
   return (
     <SafeAreaView>
-      <View style={styles.table}>
-        <View style={styles.header}>
-          {dayNames.map((e) => {
-            return (
-              <View style={[styles.header_item, { marginLeft: 20 }]}>
-                <Text style={styles.header_item_text}>{e}</Text>
-              </View>
-            );
-          })}
+      <OnlyLeftArrowHeader navigation={navigation} />
+
+      <View style={styles.header_container}>
+        <Image
+          style={{
+            width: 50,
+            height: 50,
+          }}
+          source={require("../../../assets/svgs/timetable.png")}
+        />
+        <View style={styles.header_text_wrap}>
+          <Text style={styles.header_title}>이번주 시간표</Text>
+          <Text style={styles.header_desc}>2학년 5반</Text>
         </View>
-        {timetable ? (
+      </View>
+
+      {timetable ? (
+        <View style={styles.table}>
+          <View style={styles.table_header}>
+            <View style={{ width: 20 }} />
+            {dayNames.map((e) => {
+              return (
+                <View style={styles.table_header_item}>
+                  <Text style={styles.table_header_item_text}>{e}</Text>
+                </View>
+              );
+            })}
+          </View>
+
           <View style={styles.column_wrap}>
             <View style={styles.side_column}>
               {/* 1교시 ~ 7교시 까지 숫자 렌더링 */}
@@ -114,30 +134,44 @@ export default function TimetableScreen() {
               })}
             </View>
           </View>
-        ) : null}
-      </View>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  table: { flex: 1, paddingHorizontal: 20, marginTop: 200 },
+  header_container: {
+    paddingVertical: 28,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  header_text_wrap: { paddingHorizontal: 16 },
+  header_title: {
+    fontSize: 24,
+    fontWeight: "700",
+  },
+  header_desc: { color: "gray" },
 
-  header: {
+  table: { flex: 1, paddingHorizontal: 20 },
+
+  table_header: {
     flexDirection: "row",
     height: 50,
     borderBottomWidth: 0.5,
-    borderBottomColor: "gray",
+    borderBottomColor: "#d4d4d4",
   },
-  header_item: {
+  table_header_item: {
     width: 60,
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
   },
-  header_item_text: { fontWeight: "700", fontSize: 16 },
+  table_header_item_text: { fontWeight: "700", fontSize: 16 },
 
   column_wrap: { flexDirection: "row" },
+
   side_column: { backgroundColor: "blue", marginRight: 15 },
   side_item: {
     height: 50,
@@ -149,7 +183,6 @@ const styles = StyleSheet.create({
   column: { flex: 1, alignItems: "center" },
   item: {
     height: 50,
-
     width: 60,
     alignItems: "center",
     justifyContent: "center",
