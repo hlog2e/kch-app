@@ -24,7 +24,7 @@ export default function TimetableScreen({ navigation }) {
   const times = ["1", "2", "3", "4", "5", "6", "7"];
 
   async function getTimetableAndSort() {
-    const data = await getTimetable("2", "5", "20221031", "20221104");
+    const data = await getTimetable("2", "5", weekFirstDay, dateArray[4]);
 
     const row = data.hisTimetable[1].row;
     const _timetable = row.reduce((acc, e) => {
