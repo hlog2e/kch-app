@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   View,
   ScrollView,
@@ -9,27 +9,23 @@ import {
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { apiInstance } from "../../../apis/api";
+import { useQuery } from "react-query";
 import OnlyLeftArrowHeader from "../../components/common/OnlyLeftArrowHeader";
 
-import moment from "moment";
 import uuid from "react-native-uuid";
+import { getMeals } from "../../../apis/home/meal";
+import moment from "moment";
 
 export default function MealScreen({ navigation }) {
   const [meals, setMeals] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    apiInstance
-      .get("/meal", {
-        params: { date: moment().format("YYYYMMDD"), limit: 5 },
-      })
-      .then((data) => {
-        setMeals(data.data.data);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const { isLoading, isError, data, error } = useQuery("meals", getMeals, {
+    onSuccess: ({ data }) => {
+      setMeals(data);
+      console.log(data);
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
