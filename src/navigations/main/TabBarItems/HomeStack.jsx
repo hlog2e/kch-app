@@ -1,7 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MealScreen from "../../../screens/etc/Meal";
-import TimetableScreen from "../../../screens/etc/TimeTable";
-import HomeScreen from "../../../screens/main/Home";
+import HomeScreen from "../../../screens/main/Home/Home";
+import MealScreen from "../../../screens/main/Home/Meal";
+import TimetableScreen from "../../../screens/main/Home/TimeTable";
+import CalendarScreen from "../../../screens/main/Home/Calendar";
 
 const Stack = createNativeStackNavigator();
 export default function HomeStack() {
@@ -13,6 +14,7 @@ export default function HomeStack() {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="MealScreen" component={MealScreen} />
       <Stack.Screen name="TimetableScreen" component={TimetableScreen} />
+      <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
     </Stack.Navigator>
   );
 }

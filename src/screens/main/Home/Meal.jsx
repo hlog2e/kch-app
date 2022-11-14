@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   View,
   ScrollView,
@@ -11,10 +10,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
-import OnlyLeftArrowHeader from "../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 
 import uuid from "react-native-uuid";
-import { getMeals } from "../../../apis/home/meal";
+import { getMeals } from "../../../../apis/home/meal";
 import moment from "moment";
 
 export default function MealScreen({ navigation }) {
@@ -25,8 +24,6 @@ export default function MealScreen({ navigation }) {
       ]);
     },
   });
-
-  console.log(status);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -39,7 +36,7 @@ export default function MealScreen({ navigation }) {
                 width: 64,
                 height: 64,
               }}
-              source={require("../../../assets/svgs/rice.png")}
+              source={require("../../../../assets/svgs/rice.png")}
             />
             <Text style={styles.header_title}>급식</Text>
           </View>

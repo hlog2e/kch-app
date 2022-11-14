@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import CommunityScreen from "../../../screens/main/Community";
+import CommunityScreen from "../../../screens/main/Community/Community";
 
 const Stack = createNativeStackNavigator();
 export default function CommunityStack() {

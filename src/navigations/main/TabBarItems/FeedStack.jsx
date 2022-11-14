@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import FeedScreen from "../../../screens/main/Feed";
+import FeedScreen from "../../../screens/main/Feed/Feed";
 
 const Stack = createNativeStackNavigator();
 export default function FeedStack() {

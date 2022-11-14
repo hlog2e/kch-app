@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,15 +7,10 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { apiAuthInstance } from "../../../apis/api";
-import Weather from "../../components/home/Weather";
+
+import Weather from "../../../components/home/Weather";
 
 export default function HomeScreen({ navigation }) {
-  useEffect(() => {
-    (async () => {
-      const test = await apiAuthInstance.get("/");
-    })();
-  });
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView>
@@ -48,7 +42,7 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             <Image
-              source={require("../../../assets/svgs/rice.png")}
+              source={require("../../../../assets/svgs/rice.png")}
               style={{
                 width: 50,
                 height: 50,
@@ -81,7 +75,7 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             <Image
-              source={require("../../../assets/svgs/timetable.png")}
+              source={require("../../../../assets/svgs/timetable.png")}
               style={{
                 width: 40,
                 height: 40,
@@ -94,7 +88,12 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         <View style={styles.card_container}>
-          <TouchableOpacity style={styles.card_item}>
+          <TouchableOpacity
+            style={styles.card_item}
+            onPress={() => {
+              navigation.push("CalendarScreen");
+            }}
+          >
             <View>
               <Text style={styles.card_title}>학사일정</Text>
               <Text
@@ -111,7 +110,7 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             <Image
-              source={require("../../../assets/svgs/calendar.png")}
+              source={require("../../../../assets/svgs/calendar.png")}
               style={{
                 width: 40,
                 height: 40,

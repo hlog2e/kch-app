@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MoreScreen from "../../../screens/main/More";
+import MoreScreen from "../../../screens/main/More/More";
 
 const Stack = createNativeStackNavigator();
 export default function MoreStack() {

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { getTimetable } from "../../../apis/home/timetable";
+import { getTimetable } from "../../../../apis/home/timetable";
 import moment from "moment/moment";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import OnlyLeftArrowHeader from "../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 
 export default function TimetableScreen({ navigation }) {
   const [timetable, setTimetable] = useState();
@@ -51,7 +51,7 @@ export default function TimetableScreen({ navigation }) {
             width: 50,
             height: 50,
           }}
-          source={require("../../../assets/svgs/timetable.png")}
+          source={require("../../../../assets/svgs/timetable.png")}
         />
         <View style={styles.header_text_wrap}>
           <Text style={styles.header_title}>이번주 시간표</Text>
@@ -65,7 +65,7 @@ export default function TimetableScreen({ navigation }) {
             <View style={{ width: 20 }} />
             {dayNames.map((e) => {
               return (
-                <View style={styles.table_header_item}>
+                <View key={e} style={styles.table_header_item}>
                   <Text style={styles.table_header_item_text}>{e}</Text>
                 </View>
               );
@@ -77,7 +77,7 @@ export default function TimetableScreen({ navigation }) {
               {/* 1교시 ~ 7교시 까지 숫자 렌더링 */}
               {times.map((e) => {
                 return (
-                  <View style={styles.side_item}>
+                  <View key={e} style={styles.side_item}>
                     <Text style={styles.side_item_text}>{e}</Text>
                   </View>
                 );

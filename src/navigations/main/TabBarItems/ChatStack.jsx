@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ChatScreen from "../../../screens/main/Chat";
+import ChatScreen from "../../../screens/main/Chat/Chat";
 
 const Stack = createNativeStackNavigator();
 export default function ChatStack() {

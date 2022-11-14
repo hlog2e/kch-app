@@ -1,5 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import * as ExpoSplash from "expo-splash-screen";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
