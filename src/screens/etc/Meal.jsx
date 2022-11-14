@@ -7,6 +7,7 @@ import {
   Image,
   ActivityIndicator,
   Dimensions,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
@@ -17,14 +18,15 @@ import { getMeals } from "../../../apis/home/meal";
 import moment from "moment";
 
 export default function MealScreen({ navigation }) {
-  const [meals, setMeals] = useState([]);
-
-  const { isLoading, isError, data, error } = useQuery("meals", getMeals, {
-    onSuccess: ({ data }) => {
-      setMeals(data);
-      console.log(data);
+  const { status, data, error } = useQuery("meals", getMeals, {
+    onError: () => {
+      Alert.alert("오류", "급식 데이터를 가져오는데 오류가 발생하였습니다.", [
+        { text: "확인" },
+      ]);
     },
   });
+
+  console.log(status);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -42,7 +44,7 @@ export default function MealScreen({ navigation }) {
             <Text style={styles.header_title}>급식</Text>
           </View>
 
-          {isLoading ? (
+          {status === "loading" ? (
             <View
               style={{
                 height: Dimensions.get("screen").height / 2,
@@ -53,9 +55,13 @@ export default function MealScreen({ navigation }) {
             </View>
           ) : null}
 
-          {meals.map((_item) => {
-            return <Row key={uuid.v4()} _id={_item._id} meals={_item.meals} />;
-          })}
+          {status === "success"
+            ? data.data.map((_item) => {
+                return (
+                  <Row key={uuid.v4()} _id={_item._id} meals={_item.meals} />
+                );
+              })
+            : null}
         </ScrollView>
       </View>
     </SafeAreaView>
