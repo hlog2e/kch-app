@@ -5,7 +5,9 @@ import {
   Text,
   StyleSheet,
   FlatList,
+  Dimensions,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment/moment";
@@ -13,8 +15,9 @@ import moment from "moment/moment";
 import { Octicons } from "@expo/vector-icons";
 import { useQuery } from "react-query";
 import { getSchedule } from "../../../../apis/home/schedule";
+import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 
-export default function CalendarScreen() {
+export default function CalendarScreen({ navigation }) {
   const [selectedDate, setSelectedDate] = useState(moment());
   const startDate = moment(selectedDate).startOf("month").format("YYYYMMDD");
   const endDate = moment(selectedDate).endOf("month").format("YYYYMMDD");
@@ -47,10 +50,21 @@ export default function CalendarScreen() {
 
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
+      <OnlyLeftArrowHeader navigation={navigation} />
       <MonthSelectHeader
         selectedMonth={selectedDate}
         setSelectedMonth={setSelectedDate}
       />
+      {status === "loading" ? (
+        <View
+          style={{
+            height: Dimensions.get("screen").height / 2,
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator />
+        </View>
+      ) : null}
       {status === "success" ? (
         <FlatList data={schedules} renderItem={Item} />
       ) : null}
@@ -61,7 +75,7 @@ export default function CalendarScreen() {
 function MonthSelectHeader({ selectedMonth, setSelectedMonth }) {
   const styles = StyleSheet.create({
     container: {
-      paddingTop: 40,
+      paddingTop: 25,
       marginBottom: 25,
       flexDirection: "row",
       alignItems: "center",
