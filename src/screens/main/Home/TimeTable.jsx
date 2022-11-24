@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { getTimetable } from "../../../../apis/home/timetable";
 import moment from "moment/moment";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import { UserContext } from "../../../../context/UserContext";
 
 export default function TimetableScreen({ navigation }) {
+  const { user } = useContext(UserContext);
+
   const [timetable, setTimetable] = useState();
   const weekFirstDay = moment() //이번주 월요일날짜
     .startOf("weeks")
@@ -24,7 +27,12 @@ export default function TimetableScreen({ navigation }) {
   const times = ["1", "2", "3", "4", "5", "6", "7"];
 
   async function getTimetableAndSort() {
-    const data = await getTimetable("2", "5", weekFirstDay, dateArray[4]);
+    const data = await getTimetable(
+      user.grade,
+      user.class,
+      weekFirstDay,
+      dateArray[4]
+    );
 
     const row = data.hisTimetable[1].row;
     const _timetable = row.reduce((acc, e) => {
@@ -55,7 +63,9 @@ export default function TimetableScreen({ navigation }) {
         />
         <View style={styles.header_text_wrap}>
           <Text style={styles.header_title}>이번주 시간표</Text>
-          <Text style={styles.header_desc}>2학년 5반</Text>
+          <Text style={styles.header_desc}>
+            {user.grade}학년 {user.class}반
+          </Text>
         </View>
       </View>
 
