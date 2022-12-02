@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -24,8 +24,11 @@ import {
 } from "../../../../utils/regex";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "../../../../context/UserContext";
 
 export default function JoinFormScreen({ navigation, route }) {
+  const { setUser } = useContext(UserContext);
+
   const [dropDownDone, setDropDownDone] = useState(false); //입력여부 체크
   const [registerCodeDone, setRegisterCodeDone] = useState(false); //입력여부 체크
   const [registerCodeVerified, setRegisterCodeVerified] = useState(false); //가입코드 유효성 체크
@@ -144,6 +147,8 @@ export default function JoinFormScreen({ navigation, route }) {
 
       await AsyncStorage.setItem("token", JSON.stringify(data.token)); //asyncStorage에 토큰 저장
       await AsyncStorage.setItem("user", JSON.stringify(data.user)); //asyncStorage에 유저 정보 저장
+      setUser(data.user);
+
       navigation.replace("Main");
     }
   }

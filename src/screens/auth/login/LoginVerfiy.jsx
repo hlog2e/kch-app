@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import { postLogin } from "../../../../apis/auth";
 import AlertError from "../../../components/common/AlertError";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "../../../../context/UserContext";
 
 export default function LoginVerfiyScreen({ navigation, route }) {
   const [status, setStatus] = useState({
@@ -27,6 +28,8 @@ export default function LoginVerfiyScreen({ navigation, route }) {
   });
   const [verifyCode, setVerifyCode] = useState("");
   const [done, setDone] = useState(false);
+
+  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
     if (verifyCode.length === 4) {
@@ -45,6 +48,7 @@ export default function LoginVerfiyScreen({ navigation, route }) {
     );
     await AsyncStorage.setItem("token", JSON.stringify(data.token)); //asyncStorage에 토큰 저장
     await AsyncStorage.setItem("user", JSON.stringify(data.user)); //asyncStorage에 유저 정보 저장
+    setUser(data.user);
     navigation.replace("Main");
   }
   return (
