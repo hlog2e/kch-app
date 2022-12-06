@@ -5,16 +5,12 @@ import {
   View,
   Dimensions,
   FlatList,
-  Modal,
-  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import { SliderBox } from "react-native-image-slider-box";
-import { ImageViewer } from "react-native-image-zoom-viewer";
 
 import { useState } from "react";
-import { Octicons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
+import ImageZoomModal from "../../../components/common/ImageZoomModal";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -70,37 +66,12 @@ export default function FeedScreen({ navigation }) {
           keyExtractor={(item) => item._id}
         />
       </SafeAreaView>
-      <ZoomModal
+      <ImageZoomModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         images={modalImages}
       />
     </>
-  );
-}
-
-function ZoomModal({ modalOpen, setModalOpen, images }) {
-  return (
-    <Modal visible={modalOpen} transparent={false}>
-      <ImageViewer
-        renderIndicator={() => null}
-        renderHeader={() => (
-          <View style={{ position: "fixed", top: 45, left: 15, zIndex: 50 }}>
-            <TouchableOpacity
-              onPress={() => {
-                setModalOpen(false);
-              }}
-            >
-              <Octicons name="x" size={30} style={{ color: "white" }} />
-            </TouchableOpacity>
-          </View>
-        )}
-        imageUrls={images}
-        renderImage={(props) => <Image {...props} />}
-      />
-
-      <StatusBar style="light" />
-    </Modal>
   );
 }
 
