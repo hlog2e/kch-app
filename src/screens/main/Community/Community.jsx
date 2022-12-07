@@ -1,6 +1,7 @@
 import { FlatList, StyleSheet, Text, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { comma } from "../../../../utils/intl";
 
 export default function CommunityScreen({ navigation }) {
   const styles = StyleSheet.create({
@@ -84,15 +85,11 @@ function CommunityItem() {
       <View style={styles.footer}>
         <View style={styles.icon_wrap}>
           <FontAwesome name={"heart-o"} size={20} />
-          <Text style={styles.icon_text}>
-            {new Intl.NumberFormat("ko").format(1001)}
-          </Text>
+          <Text style={styles.icon_text}>{comma(2222)}</Text>
         </View>
         <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
           <Ionicons name={"chatbubble-outline"} size={20} />
-          <Text style={styles.icon_text}>
-            {new Intl.NumberFormat("ko").format(1024)}
-          </Text>
+          <Text style={styles.icon_text}>{comma(2231)}</Text>
         </View>
       </View>
     </View>
