@@ -3,8 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { dfs_xy_conv, getBaseTime } from "../../../utils/korea-weather-api";
 import { getWeather } from "../../../apis/home/weather";
-
-import * as Location from "expo-location";
+import getLocation from "../../../utils/getLocationOnDevice";
 
 export default function Weather() {
   const [temp, setTemp] = useState("--");
@@ -32,44 +31,40 @@ export default function Weather() {
     "rainy-outline",
   ];
 
-  async function getLocation() {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-
-    if (status !== "granted") {
-      Alert.alert(
-        "날씨 오류",
-        "앱의 위치 권한이 비활성화 되어있어 날씨를 불러올 수 없습니다. 휴대전화 설정에서 위치 권한을 허용해주세요!",
-        [{ text: "확인" }]
-      );
-      return;
-    }
-    return await Location.getCurrentPositionAsync({});
-  }
-
   useEffect(() => {
     (async () => {
-      const location = await getLocation();
-      const { x, y } = await dfs_xy_conv(
-        "toXY",
-        location.coords.latitude,
-        location.coords.longitude
-      );
+      try {
+        const location = await getLocation();
 
-      const { baseTime, baseDate } = getBaseTime();
+        if (!33 < location.latitude < 43 || !124 < location.longitude < 132) {
+          Alert.alert(
+            "날씨 오류",
+            "사용자의 GPS 좌표가 국외 입니다. 다른 나라 날씨를 내가 어떻게 아냐?",
+            [{ text: "확인" }]
+          );
+        }
+        const { x, y } = await dfs_xy_conv(
+          "toXY",
+          location.coords.latitude,
+          location.coords.longitude
+        );
 
-      const data = await getWeather(baseDate, baseTime, x, y);
-      const weatherArray = data.response.body.items.item;
+        const { baseTime, baseDate } = getBaseTime();
 
-      setTemp(weatherArray.find((i) => i.category === "TMP").fcstValue);
-      setRain(weatherArray.find((i) => i.category === "POP").fcstValue);
-      setRainCode(weatherArray.find((i) => i.category === "PTY").fcstValue);
-      setSkyCode(weatherArray.find((i) => i.category === "SKY").fcstValue);
+        const data = await getWeather(baseDate, baseTime, x, y);
+        const weatherArray = data.response.body.items.item;
 
-      setIsRain(
-        !weatherArray.find((i) => i.category === "POP").fcstValue === "0"
-          ? true
-          : false
-      );
+        setTemp(weatherArray.find((i) => i.category === "TMP").fcstValue);
+        setRain(weatherArray.find((i) => i.category === "POP").fcstValue);
+        setRainCode(weatherArray.find((i) => i.category === "PTY").fcstValue);
+        setSkyCode(weatherArray.find((i) => i.category === "SKY").fcstValue);
+
+        setIsRain(
+          !weatherArray.find((i) => i.category === "POP").fcstValue === "0"
+            ? true
+            : false
+        );
+      } catch (err) {}
     })();
   }, []);
 
