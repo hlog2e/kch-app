@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const queryClient = new QueryClient();
 
 export default function App() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   async function getUserOnAsyncStorage() {
     const _user = JSON.parse(await AsyncStorage.getItem("user"));
