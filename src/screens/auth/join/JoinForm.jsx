@@ -291,7 +291,7 @@ export default function JoinFormScreen({ navigation, route }) {
             <View style={{ flexDirection: "row" }}>
               <TextInput
                 editable={!registerCodeVerified}
-                maxLength="5"
+                maxLength={5}
                 autoCapitalize="characters"
                 placeholder="가입코드(5자리)"
                 returnKeyType="done"

@@ -84,7 +84,7 @@ export default function JoinScreen({ navigation }) {
               }}
               placeholder="01012345678"
               keyboardType="phone-pad"
-              maxLength="11"
+              maxLength={11}
               style={[styles.input, error ? styles.input_red : styles.input]}
             />
             {error ? <AlertError text={error.message} /> : null}

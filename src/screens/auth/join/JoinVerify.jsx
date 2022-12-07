@@ -83,7 +83,7 @@ export default function JoinVerfiyScreen({ navigation, route }) {
             </Text>
             <TextInput
               value={verifyCode}
-              maxLength="4"
+              maxLength={4}
               onChangeText={(_data) => {
                 if (numRegexChecker(_data)) {
                   setVerifyCode(_data);
