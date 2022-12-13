@@ -111,23 +111,23 @@ function MonthSelectHeader({ selectedMonth, setSelectedMonth }) {
 function Item({ item }) {
   const styles = StyleSheet.create({
     container: {
+      justifyContent: "space-between",
       backgroundColor: "white",
       marginVertical: 7,
       marginHorizontal: 20,
       height: 130,
       borderRadius: 25,
-      padding: 20,
+      padding: 15,
     },
     title: {
       fontSize: 24,
       fontWeight: "700",
+      marginTop: 5,
     },
     event_name: {
-      marginTop: 10,
       fontSize: 16,
     },
     footer: {
-      marginTop: 22,
       flexDirection: "row",
       justifyContent: "space-between",
     },
