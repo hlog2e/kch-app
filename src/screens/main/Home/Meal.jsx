@@ -27,9 +27,9 @@ export default function MealScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <OnlyLeftArrowHeader navigation={navigation} />
-        <ScrollView>
+      <OnlyLeftArrowHeader navigation={navigation} />
+      <ScrollView>
+        <SafeAreaView>
           <View style={styles.header_container}>
             <Image
               style={{
@@ -59,8 +59,8 @@ export default function MealScreen({ navigation }) {
                 );
               })
             : null}
-        </ScrollView>
-      </View>
+        </SafeAreaView>
+      </ScrollView>
     </SafeAreaView>
   );
 }
