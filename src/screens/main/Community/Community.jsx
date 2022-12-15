@@ -5,6 +5,7 @@ import {
   View,
   Image,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
@@ -12,7 +13,7 @@ import { comma } from "../../../../utils/intl";
 import moment from "moment";
 import "moment/locale/ko";
 
-export default function CommunityScreen() {
+export default function CommunityScreen({ navigation }) {
   const DUMMY_DATA = [
     {
       _id: "adslfnlnel2pdn",
@@ -68,7 +69,7 @@ export default function CommunityScreen() {
       <FlatList
         data={DUMMY_DATA}
         renderItem={(_item) => {
-          return <CommunityItem item={_item.item} />;
+          return <CommunityItem item={_item.item} navigation={navigation} />;
         }}
         keyExtractor={(_item) => _item._id}
       />
@@ -76,7 +77,7 @@ export default function CommunityScreen() {
   );
 }
 
-function CommunityItem({ item }) {
+function CommunityItem({ item, navigation }) {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
@@ -112,7 +113,12 @@ function CommunityItem({ item }) {
   });
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push("CommunityDetailScreen", { item: item });
+      }}
+      style={styles.container}
+    >
       <View style={styles.header}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
           {item.title}
@@ -137,6 +143,6 @@ function CommunityItem({ item }) {
           <Text style={styles.icon_text}>{comma(item.comment_count)}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
