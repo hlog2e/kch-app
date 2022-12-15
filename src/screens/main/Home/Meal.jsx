@@ -26,40 +26,38 @@ export default function MealScreen({ navigation }) {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <OnlyLeftArrowHeader navigation={navigation} />
       <ScrollView>
-        <SafeAreaView>
-          <View style={styles.header_container}>
-            <Image
-              style={{
-                width: 64,
-                height: 64,
-              }}
-              source={require("../../../../assets/svgs/rice.png")}
-            />
-            <Text style={styles.header_title}>급식</Text>
+        <View style={styles.header_container}>
+          <Image
+            style={{
+              width: 64,
+              height: 64,
+            }}
+            source={require("../../../../assets/svgs/rice.png")}
+          />
+          <Text style={styles.header_title}>급식</Text>
+        </View>
+
+        {status === "loading" ? (
+          <View
+            style={{
+              height: Dimensions.get("screen").height / 2,
+              justifyContent: "center",
+            }}
+          >
+            <ActivityIndicator />
           </View>
+        ) : null}
 
-          {status === "loading" ? (
-            <View
-              style={{
-                height: Dimensions.get("screen").height / 2,
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator />
-            </View>
-          ) : null}
-
-          {status === "success"
-            ? data.data.map((_item) => {
-                return (
-                  <Row key={uuid.v4()} _id={_item._id} meals={_item.meals} />
-                );
-              })
-            : null}
-        </SafeAreaView>
+        {status === "success"
+          ? data.data.map((_item) => {
+              return (
+                <Row key={uuid.v4()} _id={_item._id} meals={_item.meals} />
+              );
+            })
+          : null}
       </ScrollView>
     </SafeAreaView>
   );
