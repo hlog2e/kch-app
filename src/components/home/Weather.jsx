@@ -36,14 +36,7 @@ export default function Weather() {
       try {
         const location = await getLocation();
 
-        if (!33 < location.latitude < 43 || !124 < location.longitude < 132) {
-          Alert.alert(
-            "날씨 오류",
-            "사용자의 GPS 좌표가 국외 입니다. 다른 나라 날씨를 내가 어떻게 아냐?",
-            [{ text: "확인" }]
-          );
-        }
-        const { x, y } = await dfs_xy_conv(
+        const { x, y } = dfs_xy_conv(
           "toXY",
           location.coords.latitude,
           location.coords.longitude
@@ -64,7 +57,13 @@ export default function Weather() {
             ? true
             : false
         );
-      } catch (err) {}
+      } catch (err) {
+        Alert.alert(
+          "날씨 오류",
+          "날씨를 불러오는 도중 오류가 발생하였습니다.",
+          [{ text: "확인" }]
+        );
+      }
     })();
   }, []);
 
