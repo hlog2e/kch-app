@@ -88,6 +88,7 @@ function FeedItem({ item }) {
         renderItem={({ item: image }) => {
           return (
             <ImageModal
+              resizeMode="contain"
               imageBackgroundColor="#FFFFFF"
               style={{
                 width: SCREEN_WIDTH,
