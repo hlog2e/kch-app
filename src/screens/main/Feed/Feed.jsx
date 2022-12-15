@@ -6,7 +6,7 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useState } from "react";
 import ImageModal from "react-native-image-modal";
@@ -37,7 +37,7 @@ export default function FeedScreen({ navigation }) {
   ];
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <FlatList
         data={DUMMY_FEEDITEMS}
         renderItem={(_prevState) => <FeedItem item={_prevState.item} />}
