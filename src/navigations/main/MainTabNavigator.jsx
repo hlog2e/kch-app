@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ChatStack from "./TabBarItems/ChatStack";
 import CommunityStack from "./TabBarItems/CommunityStack";
 import FeedStack from "./TabBarItems/FeedStack";
 import HomeStack from "./TabBarItems/HomeStack";
@@ -25,6 +24,18 @@ export default function MainTabNavigator() {
       initialRouteName="홈"
     >
       <Tab.Screen
+        name="홈"
+        component={HomeStack}
+        options={{
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Ionicons name="home" size={26} color={color} />
+            ) : (
+              <Ionicons name="home-outline" size={26} color={color} />
+            ),
+        }}
+      ></Tab.Screen>
+      <Tab.Screen
         name="피드"
         component={FeedStack}
         options={{
@@ -48,30 +59,7 @@ export default function MainTabNavigator() {
             ),
         }}
       ></Tab.Screen>
-      <Tab.Screen
-        name="홈"
-        component={HomeStack}
-        options={{
-          tabBarIcon: ({ color, focused }) =>
-            focused ? (
-              <Ionicons name="home" size={26} color={color} />
-            ) : (
-              <Ionicons name="home-outline" size={26} color={color} />
-            ),
-        }}
-      ></Tab.Screen>
-      <Tab.Screen
-        name="채팅"
-        component={ChatStack}
-        options={{
-          tabBarIcon: ({ color, focused }) =>
-            focused ? (
-              <Ionicons name="chatbubbles" size={26} color={color} />
-            ) : (
-              <Ionicons name="chatbubbles-outline" size={26} color={color} />
-            ),
-        }}
-      ></Tab.Screen>
+
       <Tab.Screen
         name="더보기"
         component={MoreStack}
