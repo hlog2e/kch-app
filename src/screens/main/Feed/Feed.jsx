@@ -12,6 +12,7 @@ import { useState } from "react";
 import ImageModal from "react-native-image-modal";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
+import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -42,13 +43,14 @@ export default function FeedScreen({ navigation }) {
   ];
 
   return (
-    <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
+      <SafeTitleHeader title="학교 소식" />
       <FlatList
         data={DUMMY_FEEDITEMS}
         renderItem={(_prevState) => <FeedItem item={_prevState.item} />}
         keyExtractor={(item) => item._id}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

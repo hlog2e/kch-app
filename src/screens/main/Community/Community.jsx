@@ -12,6 +12,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { comma } from "../../../../utils/intl";
 import moment from "moment";
 import "moment/locale/ko";
+import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
 
 export default function CommunityScreen({ navigation }) {
   const DUMMY_DATA = [
@@ -65,7 +66,8 @@ export default function CommunityScreen({ navigation }) {
     },
   });
   return (
-    <SafeAreaView edges={["top"]} style={styles.container}>
+    <View style={styles.container}>
+      <SafeTitleHeader title="커뮤니티" />
       <FlatList
         data={DUMMY_DATA}
         renderItem={(_item) => {
@@ -73,7 +75,7 @@ export default function CommunityScreen({ navigation }) {
         }}
         keyExtractor={(_item) => _item._id}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -81,7 +83,7 @@ function CommunityItem({ item, navigation }) {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
-      marginTop: 8,
+      marginBottom: 8,
     },
     header: { marginTop: 30, paddingHorizontal: 18 },
     title: {

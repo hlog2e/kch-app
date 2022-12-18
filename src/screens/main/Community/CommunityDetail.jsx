@@ -6,13 +6,14 @@ export default function CommunityDetailScreen({ navigation, route }) {
   console.log(route.params);
 
   const styles = StyleSheet.create({
+    container: { backgroundColor: "white", flex: 1 },
     title: {
       fontSize: 20,
       fontWeight: "600",
     },
   });
   return (
-    <SafeAreaView edges={["top"]}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <OnlyLeftArrowHeader navigation={navigation} />
       <Text style={styles.title}>커뮤니티 글 디테일 Stack</Text>
     </SafeAreaView>
