@@ -6,50 +6,32 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useState } from "react";
 import ImageModal from "react-native-image-modal";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
 import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
+import { useQuery } from "react-query";
+import { getFeeds } from "../../../../apis/home/feed";
+import FullScreenLoader from "../../../components/common/FullScreenLoader";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function FeedScreen({ navigation }) {
-  const DUMMY_FEEDITEMS = [
-    {
-      _id: "dfsdfalndkxdla",
-      publisher: "금천고등학교 학생회",
-      desc: "테스트입니다 테스트 아아아아 동해물과 백두산이\n마르고 닳도록 하느님이 보우하사 우리나라 만세",
-      images: [
-        "https://static.kch-app.me/1.jpeg",
-        "https://static.kch-app.me/2.jpeg",
-        "https://static.kch-app.me/3.jpeg",
-      ],
-      createAt: 1671089246,
-    },
-    {
-      _id: "dfsdfalnd22kxdla",
-      publisher: "금천고등학교 학생회2",
-      desc: "테스트입니다 테스트 아아아아 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세",
-      images: [
-        "https://static.kch-app.me/2.jpeg",
-        "https://static.kch-app.me/1.jpeg",
-        "https://static.kch-app.me/3.jpeg",
-      ],
-      createAt: 1671089230,
-    },
-  ];
+  const { data, isLoading } = useQuery("feed", getFeeds, {});
 
   return (
     <View style={{ flex: 1 }}>
       <SafeTitleHeader title="학교 소식" />
-      <FlatList
-        data={DUMMY_FEEDITEMS}
-        renderItem={(_prevState) => <FeedItem item={_prevState.item} />}
-        keyExtractor={(item) => item._id}
-      />
+      {isLoading ? <FullScreenLoader /> : null}
+      {data ? (
+        <FlatList
+          data={data.feeds}
+          renderItem={(_prevState) => <FeedItem item={_prevState.item} />}
+          keyExtractor={(item) => item._id}
+        />
+      ) : null}
     </View>
   );
 }
