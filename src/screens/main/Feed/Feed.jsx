@@ -19,7 +19,8 @@ import FullScreenLoader from "../../../components/common/FullScreenLoader";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function FeedScreen({ navigation }) {
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const [refreshing, setRefreshing] = useState(false);
+  const { data, isLoading, fetchNextPage, refetch, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: "feed",
       queryFn: ({ pageParam = 0 }) => getFeeds(pageParam),
@@ -43,6 +44,13 @@ export default function FeedScreen({ navigation }) {
           ListFooterComponent={() => {
             if (isFetchingNextPage) return <FullScreenLoader />;
           }}
+          onRefresh={() => {
+            setRefreshing(true);
+            refetch().then(() => {
+              setRefreshing(false);
+            });
+          }}
+          refreshing={refreshing}
           data={data.pages.flatMap((_i) => _i.feeds)}
           renderItem={(_prevState) => <FeedItem item={_prevState.item} />}
           keyExtractor={(item) => item._id}
