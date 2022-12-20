@@ -12,22 +12,38 @@ import ImageModal from "react-native-image-modal";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
 import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import { getFeeds } from "../../../../apis/home/feed";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function FeedScreen({ navigation }) {
-  const { data, isLoading } = useQuery("feed", getFeeds, {});
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: "feed",
+      queryFn: ({ pageParam = 0 }) => getFeeds(pageParam),
+      getNextPageParam: (lastPage, allPages) => {
+        if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
+          return undefined;
+        }
+        return lastPage.nextCursor;
+      },
+    });
 
   return (
     <View style={{ flex: 1 }}>
       <SafeTitleHeader title="학교 소식" />
+
       {isLoading ? <FullScreenLoader /> : null}
       {data ? (
         <FlatList
-          data={data.feeds}
+          onEndReachedThreshold={0.8}
+          onEndReached={fetchNextPage}
+          ListFooterComponent={() => {
+            if (isFetchingNextPage) return <FullScreenLoader />;
+          }}
+          data={data.pages.flatMap((_i) => _i.feeds)}
           renderItem={(_prevState) => <FeedItem item={_prevState.item} />}
           keyExtractor={(item) => item._id}
         />

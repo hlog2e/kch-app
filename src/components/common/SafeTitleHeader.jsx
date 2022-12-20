@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function SafeTitleHeader({ title }) {
   const { top: topInsets } = useSafeAreaInsets();
-  console.log(topInsets);
+
   return (
     <View style={[styles.header, { paddingTop: topInsets }]}>
       <Text style={styles.title}>{title}</Text>

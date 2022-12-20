@@ -1,8 +1,11 @@
 import { apiAuthInstance } from "../api";
 
-export const getFeeds = async () => {
+export const getFeeds = async (offset) => {
+  const limit = 5;
+
   const { data } = await apiAuthInstance.get("/feed", {
-    params: {},
+    params: { limit, offset },
   });
+
   return data;
 };
