@@ -13,7 +13,7 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
 import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
 import { useInfiniteQuery, useQuery } from "react-query";
-import { getFeeds } from "../../../../apis/home/feed";
+import { getFeeds } from "../../../../apis/feed/feed";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -122,11 +122,11 @@ function FeedItem({ item }) {
       />
       <View style={styles.footer}>
         <View>
-          <Text style={styles.footer_title}>금천고등학교 학생회</Text>
+          <Text style={styles.footer_title}>{item.publisher}</Text>
           <Text style={styles.footer_desc}>{item.desc}</Text>
         </View>
         <Text style={styles.date}>
-          {moment.unix(item.createAt).format("M월 D일")}
+          {moment(item.createdAt).format("M월 D일")}
         </Text>
       </View>
     </View>
