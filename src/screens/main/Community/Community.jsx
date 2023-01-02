@@ -86,7 +86,8 @@ function CommunityItem({ item, navigation }) {
       marginTop: 18,
       height: 40,
     },
-    image_scroll: {
+    image_container: {
+      flexDirection: "row",
       height: 90,
       marginTop: 18,
       paddingHorizontal: 18,
@@ -118,11 +119,11 @@ function CommunityItem({ item, navigation }) {
       <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
         {item.content}
       </Text>
-      <ScrollView horizontal={true} style={styles.image_scroll}>
+      <View style={styles.image_container}>
         {item.images.map((_item) => (
           <Image key={_item} style={styles.image} source={{ uri: _item }} />
         ))}
-      </ScrollView>
+      </View>
       <View style={styles.footer}>
         <View style={styles.icon_wrap}>
           <FontAwesome name={"heart-o"} size={20} />
