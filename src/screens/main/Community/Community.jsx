@@ -7,59 +7,32 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { comma } from "../../../../utils/intl";
 import moment from "moment";
 import "moment/locale/ko";
 import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
+import { useInfiniteQuery } from "react-query";
+import { getCommunities } from "../../../../apis/community/community";
+import FullScreenLoader from "../../../components/common/FullScreenLoader";
+import { useState } from "react";
 
 export default function CommunityScreen({ navigation }) {
-  const DUMMY_DATA = [
-    {
-      _id: "adslfnlnel2pdn",
-      title: "제목입니다. 가나다라마바사아자차카타파하",
-      content:
-        "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한 으로 길이 보전하세 남산 위에 저 소나무 철갑을 두른 듯",
-      like_count: 2330,
-      comment_count: 2403,
-      images: [
-        "https://static.kch-app.me/3.jpeg",
-        "https://static.kch-app.me/2.jpeg",
-        "https://static.kch-app.me/1.jpeg",
-      ],
-      createAt: 1671093665,
-    },
-    {
-      _id: "adslfnlnel2pdnlkjlj",
-      title: "제목입니다. 가나다라마바사아자차카타파하",
-      content:
-        "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한 으로 길이 보전하세 남산 위에 저 소나무 철갑을 두른 듯",
-      like_count: 2330,
-      comment_count: 2403,
-      images: [
-        "https://static.kch-app.me/3.jpeg",
-        "https://static.kch-app.me/2.jpeg",
-        "https://static.kch-app.me/1.jpeg",
-      ],
-      createAt: 1671093665,
-    },
-    {
-      _id: "adslfnl222nel2pdn",
-      title: "제목입니다. 가나다라마바사아자차카타파하",
-      content:
-        "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한 으로 길이 보전하세 남산 위에 저 소나무 철갑을 두른 듯",
-      like_count: 2330,
-      comment_count: 2403,
-      images: [
-        "https://static.kch-app.me/3.jpeg",
-        "https://static.kch-app.me/2.jpeg",
-        "https://static.kch-app.me/1.jpeg",
-      ],
-      createAt: 1671093665,
-    },
-  ];
+  const [refreshing, setRefreshing] = useState(false);
+  const { isLoading, data, refetch, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: "community",
+      queryFn: ({ pageParam = 0 }) => getCommunities(pageParam),
+      getNextPageParam: (lastPage, allPages) => {
+        if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
+          return undefined;
+        }
+        return lastPage.nextCursor;
+      },
+    });
 
+  console.log(data);
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -68,13 +41,28 @@ export default function CommunityScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <SafeTitleHeader title="커뮤니티" />
-      <FlatList
-        data={DUMMY_DATA}
-        renderItem={(_item) => {
-          return <CommunityItem item={_item.item} navigation={navigation} />;
-        }}
-        keyExtractor={(_item) => _item._id}
-      />
+      {isLoading ? <FullScreenLoader /> : null}
+      {data ? (
+        <FlatList
+          onEndReachedThreshold={0.8}
+          onEndReached={fetchNextPage}
+          ListFooterComponent={() => {
+            if (isFetchingNextPage) return <FullScreenLoader />;
+          }}
+          onRefresh={() => {
+            setRefreshing(true);
+            refetch().then(() => {
+              setRefreshing(false);
+            });
+          }}
+          refreshing={refreshing}
+          data={data.pages.flatMap((_i) => _i.communities)}
+          renderItem={(_item) => {
+            return <CommunityItem item={_item.item} navigation={navigation} />;
+          }}
+          keyExtractor={(_item) => _item._id}
+        />
+      ) : null}
     </View>
   );
 }
@@ -125,7 +113,7 @@ function CommunityItem({ item, navigation }) {
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
           {item.title}
         </Text>
-        <Text style={styles.time}>{moment.unix(item.createAt).fromNow()}</Text>
+        <Text style={styles.time}>{moment(item.createdAt).fromNow()}</Text>
       </View>
       <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
         {item.content}
@@ -138,11 +126,11 @@ function CommunityItem({ item, navigation }) {
       <View style={styles.footer}>
         <View style={styles.icon_wrap}>
           <FontAwesome name={"heart-o"} size={20} />
-          <Text style={styles.icon_text}>{comma(item.like_count)}</Text>
+          <Text style={styles.icon_text}>{comma(item.likeCount)}</Text>
         </View>
         <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
           <Ionicons name={"chatbubble-outline"} size={20} />
-          <Text style={styles.icon_text}>{comma(item.comment_count)}</Text>
+          <Text style={styles.icon_text}>{comma(item.commentCount)}</Text>
         </View>
       </View>
     </TouchableOpacity>
