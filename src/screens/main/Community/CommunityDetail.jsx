@@ -95,13 +95,25 @@ export default function CommunityDetailScreen({ navigation, route }) {
       flexDirection: "row",
     },
     button_text: { fontSize: 12, paddingHorizontal: 10 },
+
+    comment: {
+      backgroundColor: "white",
+      borderTopWidth: 0.2,
+      borderBottomWidth: 0.2,
+      borderColor: "#d4d4d4",
+      padding: 18,
+    },
+    comment_writer_text: { fontSize: 12, color: "gray" },
+    comment_text: { marginTop: 8 },
+    comment_date: { fontSize: 12, color: "#94a3b8", marginTop: 8 },
+
     input_container: {
       paddingHorizontal: 14,
       paddingVertical: 8,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      borderTopColor: "#b8b8b8",
+      borderColor: "#b8b8b8",
       borderTopWidth: 0.2,
     },
   });
@@ -149,6 +161,12 @@ export default function CommunityDetailScreen({ navigation, route }) {
                     <Text style={styles.button_text}>{data.commentCount}</Text>
                   </TouchableOpacity>
                 </View>
+              </View>
+
+              <View style={styles.comment}>
+                <Text style={styles.comment_writer_text}>익명</Text>
+                <Text style={styles.comment_text}>ddjafsldjfkls</Text>
+                <Text style={styles.comment_date}>2분 전</Text>
               </View>
             </ScrollView>
           </View>
