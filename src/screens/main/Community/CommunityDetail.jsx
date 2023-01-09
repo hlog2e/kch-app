@@ -15,14 +15,30 @@ import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader"
 import moment from "moment";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import ImageView from "react-native-image-viewing";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useMutation, useQuery } from "react-query";
+import {
+  getCommunityDetail,
+  postComment,
+} from "../../../../apis/community/community";
+import { UserContext } from "../../../../context/UserContext";
+import FullScreenLoader from "../../../components/common/FullScreenLoader";
 
 export default function CommunityDetailScreen({ navigation, route }) {
-  const data = route.params.item;
+  const itemId = route.params.item._id;
+
+  const { data, isSuccess, isLoading } = useQuery("CommunityDetail", () => {
+    return getCommunityDetail(itemId);
+  });
 
   const [imageIndex, setImageIndex] = useState(0);
   const [imageOpen, setImageOpen] = useState(false);
   const [imageUris, setImageUris] = useState([]);
+
+  const { user } = useContext(UserContext);
+  const [comment, setComment] = useState("");
+
+  const { mutate } = useMutation(postComment);
 
   const handleImageOpen = (index) => {
     let _temp = [];
@@ -32,6 +48,12 @@ export default function CommunityDetailScreen({ navigation, route }) {
     setImageUris(_temp);
     setImageIndex(index);
     setImageOpen(true);
+  };
+
+  const handlePostComment = () => {
+    if (comment !== "") {
+      mutate({ user: user._id, comment: comment });
+    }
   };
 
   const styles = StyleSheet.create({
@@ -86,57 +108,67 @@ export default function CommunityDetailScreen({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
       <OnlyLeftArrowHeader navigation={navigation} />
-
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <View style={styles.scroll_view_wrap}>
-          <ScrollView style={styles.scroll_view}>
-            <View style={styles.wrap}>
-              <Text style={styles.title}>{data.title}</Text>
-              <Text style={styles.date}>
-                {moment(data.createdAt).fromNow()}
-              </Text>
-              <Text style={styles.content}>{data.content}</Text>
-              <ScrollView horizontal>
-                {data.images.map((_item, _index) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleImageOpen(_index);
-                    }}
-                  >
-                    <Image
-                      style={styles.image}
-                      resizeMode={"cover"}
-                      source={{
-                        uri: _item,
+      {isLoading ? <FullScreenLoader /> : null}
+      {isSuccess ? (
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={styles.scroll_view_wrap}>
+            <ScrollView style={styles.scroll_view}>
+              <View style={styles.wrap}>
+                <Text style={styles.title}>{data.title}</Text>
+                <Text style={styles.date}>
+                  {moment(data.createdAt).fromNow()}
+                </Text>
+                <Text style={styles.content}>{data.content}</Text>
+                <ScrollView horizontal>
+                  {data.images.map((_item, _index) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleImageOpen(_index);
                       }}
-                    />
+                    >
+                      <Image
+                        style={styles.image}
+                        resizeMode={"cover"}
+                        source={{
+                          uri: _item,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+                <View style={styles.button_bar}>
+                  <TouchableOpacity style={styles.button}>
+                    <FontAwesome name={"heart-o"} size={20} />
+                    <Text style={styles.button_text}>{data.likeCount}</Text>
                   </TouchableOpacity>
-                ))}
-              </ScrollView>
-              <View style={styles.button_bar}>
-                <TouchableOpacity style={styles.button}>
-                  <FontAwesome name={"heart-o"} size={20} />
-                  <Text style={styles.button_text}>{data.likeCount}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
-                  <Ionicons name={"chatbubble-outline"} size={20} />
-                  <Text style={styles.button_text}>{data.commentCount}</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity style={styles.button}>
+                    <Ionicons name={"chatbubble-outline"} size={20} />
+                    <Text style={styles.button_text}>{data.commentCount}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </ScrollView>
-        </View>
+            </ScrollView>
+          </View>
 
-        <View style={styles.input_container}>
-          <TextInput placeholder="댓글을 입력해주세요." multiline />
-          <TouchableOpacity>
-            <Text>작성</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+          <View style={styles.input_container}>
+            <TextInput
+              value={comment}
+              onChangeText={(_text) => {
+                setComment(_text);
+              }}
+              placeholder="댓글을 입력해주세요."
+              multiline
+            />
+            <TouchableOpacity onPress={handlePostComment}>
+              <Text>작성</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      ) : null}
+
       <ImageView
         visible={imageOpen}
         images={imageUris}

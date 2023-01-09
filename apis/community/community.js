@@ -9,3 +9,20 @@ export const getCommunities = async (offset) => {
 
   return data;
 };
+
+export const getCommunityDetail = async (_id) => {
+  const { data } = await apiAuthInstance.get("/community/detail", {
+    params: { id: _id },
+  });
+
+  return data;
+};
+
+export const postComment = async (props) => {
+  const { data } = await apiAuthInstance.post("/community/comment", {
+    user: props.user,
+    comment: props.comment,
+  });
+
+  return data;
+};
