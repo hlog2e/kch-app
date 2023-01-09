@@ -151,6 +151,7 @@ function FeedItem({ item }) {
         onRequestClose={() => {
           setImageOpen(false);
         }}
+        imageIndex={activeSnapIndex}
       />
     </View>
   );
