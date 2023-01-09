@@ -20,15 +20,17 @@ import { useState } from "react";
 export default function CommunityDetailScreen({ navigation, route }) {
   const data = route.params.item;
 
+  const [imageIndex, setImageIndex] = useState(0);
   const [imageOpen, setImageOpen] = useState(false);
   const [imageUris, setImageUris] = useState([]);
 
-  const handleImageOpen = () => {
+  const handleImageOpen = (index) => {
     let _temp = [];
     data.images.map((_i) => {
       _temp.push({ uri: _i });
     });
     setImageUris(_temp);
+    setImageIndex(index);
     setImageOpen(true);
   };
 
@@ -98,8 +100,12 @@ export default function CommunityDetailScreen({ navigation, route }) {
               </Text>
               <Text style={styles.content}>{data.content}</Text>
               <ScrollView horizontal>
-                {data.images.map((_item) => (
-                  <TouchableOpacity onPress={handleImageOpen}>
+                {data.images.map((_item, _index) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleImageOpen(_index);
+                    }}
+                  >
                     <Image
                       style={styles.image}
                       resizeMode={"cover"}
@@ -134,6 +140,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       <ImageView
         visible={imageOpen}
         images={imageUris}
+        imageIndex={imageIndex}
         onRequestClose={() => {
           setImageOpen(false);
         }}
