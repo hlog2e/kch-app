@@ -5,6 +5,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  TextInput,
+  Button,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
@@ -30,6 +34,9 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
   const styles = StyleSheet.create({
     container: { backgroundColor: "white", flex: 1 },
+
+    scroll_view_wrap: { flex: 1 },
+    scroll_view: { backgroundColor: "#f4f4f4", height: 100 },
     wrap: { padding: 20, backgroundColor: "white" },
     title: {
       fontSize: 24,
@@ -64,40 +71,70 @@ export default function CommunityDetailScreen({ navigation, route }) {
       flexDirection: "row",
     },
     button_text: { fontSize: 12, paddingHorizontal: 10 },
+    input_container: {
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      borderTopColor: "#b8b8b8",
+      borderTopWidth: 0.2,
+    },
   });
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
       <OnlyLeftArrowHeader navigation={navigation} />
-      <ScrollView style={{ backgroundColor: "#f4f4f4" }}>
-        <View style={styles.wrap}>
-          <Text style={styles.title}>{data.title}</Text>
-          <Text style={styles.date}>{moment(data.createdAt).fromNow()}</Text>
-          <Text style={styles.content}>{data.content}</Text>
-          <ScrollView horizontal>
-            {data.images.map((_item) => (
-              <TouchableOpacity onPress={handleImageOpen}>
-                <Image
-                  style={styles.image}
-                  resizeMode={"cover"}
-                  source={{
-                    uri: _item,
-                  }}
-                />
-              </TouchableOpacity>
-            ))}
+
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.scroll_view_wrap}>
+          <ScrollView style={styles.scroll_view}>
+            <View style={styles.wrap}>
+              <Text style={styles.title}>{data.title}</Text>
+              <Text style={styles.date}>
+                {moment(data.createdAt).fromNow()}
+              </Text>
+              <Text style={styles.content}>
+                {
+                  "동해물과 백두산이 마르고 닳도록\\n 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세   동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세 동해물과 백두산이 마르고 닳도록\\n 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세   동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세 동해물과 백두산이 마르고 닳도록\\n 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세   동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세 동해물과 백두산이 마르고 닳도록\\n 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세   동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세 동해물과 백두산이 마르고 닳도록\\n 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세   동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세 동해물과 백두산이 마르고 닳도록\\n 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세   동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한 사람 대한으로 길이 보전하세"
+                }
+              </Text>
+              <ScrollView horizontal>
+                {data.images.map((_item) => (
+                  <TouchableOpacity onPress={handleImageOpen}>
+                    <Image
+                      style={styles.image}
+                      resizeMode={"cover"}
+                      source={{
+                        uri: _item,
+                      }}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+              <View style={styles.button_bar}>
+                <TouchableOpacity style={styles.button}>
+                  <FontAwesome name={"heart-o"} size={20} />
+                  <Text style={styles.button_text}>{data.likeCount}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button}>
+                  <Ionicons name={"chatbubble-outline"} size={20} />
+                  <Text style={styles.button_text}>{data.commentCount}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </ScrollView>
-          <View style={styles.button_bar}>
-            <TouchableOpacity style={styles.button}>
-              <FontAwesome name={"heart-o"} size={20} />
-              <Text style={styles.button_text}>200</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Ionicons name={"chatbubble-outline"} size={20} />
-              <Text style={styles.button_text}>200</Text>
-            </TouchableOpacity>
-          </View>
         </View>
-      </ScrollView>
+
+        <View style={styles.input_container}>
+          <TextInput placeholder="댓글을 입력해주세요." multiline />
+          <TouchableOpacity>
+            <Text>작성</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
       <ImageView
         visible={imageOpen}
         images={imageUris}
