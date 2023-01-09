@@ -5,16 +5,17 @@ import {
   View,
   Dimensions,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 
 import { useState } from "react";
-import ImageModal from "react-native-image-modal";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
 import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import { getFeeds } from "../../../../apis/feed/feed";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
+import ImageView from "react-native-image-viewing";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -62,6 +63,18 @@ export default function FeedScreen({ navigation }) {
 
 function FeedItem({ item }) {
   const [activeSnapIndex, setActiveSnapIndex] = useState(0);
+  const [imageOpen, setImageOpen] = useState(false);
+  const [imageUris, setImageUris] = useState([]);
+
+  const handleImageOpen = () => {
+    let _temp = [];
+    item.images.map((_i) => {
+      _temp.push({ uri: _i });
+    });
+    setImageUris(_temp);
+    setImageOpen(true);
+  };
+
   const styles = StyleSheet.create({
     container: { backgroundColor: "white", marginBottom: 10 },
     header: {
@@ -95,15 +108,17 @@ function FeedItem({ item }) {
         onSnapToItem={(_index) => setActiveSnapIndex(_index)}
         renderItem={({ item: image }) => {
           return (
-            <ImageModal
-              resizeMode="contain"
-              imageBackgroundColor="#FFFFFF"
-              style={{
-                width: SCREEN_WIDTH,
-                height: SCREEN_WIDTH,
-              }}
-              source={{ uri: image }}
-            />
+            <TouchableOpacity onPress={handleImageOpen}>
+              <Image
+                resizeMode="contain"
+                imageBackgroundColor="#FFFFFF"
+                style={{
+                  width: SCREEN_WIDTH,
+                  height: SCREEN_WIDTH,
+                }}
+                source={{ uri: image }}
+              />
+            </TouchableOpacity>
           );
         }}
         itemWidth={SCREEN_WIDTH}
@@ -129,6 +144,14 @@ function FeedItem({ item }) {
           {moment(item.createdAt).format("M월 D일")}
         </Text>
       </View>
+
+      <ImageView
+        visible={imageOpen}
+        images={imageUris}
+        onRequestClose={() => {
+          setImageOpen(false);
+        }}
+      />
     </View>
   );
 }

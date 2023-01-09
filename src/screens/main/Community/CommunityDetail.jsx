@@ -4,15 +4,29 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import moment from "moment";
-import ImageModal from "react-native-image-modal";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import ImageView from "react-native-image-viewing";
+import { useState } from "react";
 
 export default function CommunityDetailScreen({ navigation, route }) {
   const data = route.params.item;
+
+  const [imageOpen, setImageOpen] = useState(false);
+  const [imageUris, setImageUris] = useState([]);
+
+  const handleImageOpen = () => {
+    let _temp = [];
+    data.images.map((_i) => {
+      _temp.push({ uri: _i });
+    });
+    setImageUris(_temp);
+    setImageOpen(true);
+  };
 
   const styles = StyleSheet.create({
     container: { backgroundColor: "white", flex: 1 },
@@ -61,13 +75,15 @@ export default function CommunityDetailScreen({ navigation, route }) {
           <Text style={styles.content}>{data.content}</Text>
           <ScrollView horizontal>
             {data.images.map((_item) => (
-              <ImageModal
-                style={styles.image}
-                resizeMode={"contain"}
-                source={{
-                  uri: _item,
-                }}
-              />
+              <TouchableOpacity onPress={handleImageOpen}>
+                <Image
+                  style={styles.image}
+                  resizeMode={"cover"}
+                  source={{
+                    uri: _item,
+                  }}
+                />
+              </TouchableOpacity>
             ))}
           </ScrollView>
           <View style={styles.button_bar}>
@@ -82,6 +98,13 @@ export default function CommunityDetailScreen({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
+      <ImageView
+        visible={imageOpen}
+        images={imageUris}
+        onRequestClose={() => {
+          setImageOpen(false);
+        }}
+      />
     </SafeAreaView>
   );
 }
