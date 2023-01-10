@@ -160,7 +160,9 @@ export default function CommunityDetailScreen({ navigation, route }) {
                 </View>
               </View>
               {data.comments.map((_i) => {
-                return <Comment comment={_i.comment} createdAt={_i.date} />;
+                return (
+                  <Comment comment={_i.comment} createdAt={_i.createdAt} />
+                );
               })}
             </ScrollView>
           </View>
@@ -206,6 +208,7 @@ function Comment({ comment, createdAt }) {
     comment_text: { marginTop: 8 },
     comment_date: { fontSize: 12, color: "#94a3b8", marginTop: 8 },
   });
+
   return (
     <View style={styles.comment}>
       <Text style={styles.comment_writer_text}>익명</Text>
