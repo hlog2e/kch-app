@@ -25,6 +25,8 @@ import {
 
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import { UserContext } from "../../../../context/UserContext";
+import BadWordChecker from "../../../../utils/badWordChecker";
+import badWordChecker from "../../../../utils/badWordChecker";
 
 export default function CommunityDetailScreen({ navigation, route }) {
   const itemId = route.params.item._id;
@@ -55,6 +57,17 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
   const handlePostComment = async () => {
     if (comment !== "") {
+      //비속어 체크 로직
+      const { isBad, word } = await badWordChecker(comment);
+      if (isBad) {
+        Alert.alert(
+          "알림",
+          "작성중인 내용에 비속어가 포함 되어있습니다. '" + word + "'",
+          ["확인"]
+        );
+        return;
+      }
+      //서버로 댓글 전송
       await mutate(
         { comment: comment, communityId: itemId },
         {
