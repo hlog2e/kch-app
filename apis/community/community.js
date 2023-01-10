@@ -20,8 +20,8 @@ export const getCommunityDetail = async (_id) => {
 
 export const postComment = async (props) => {
   const { data } = await apiAuthInstance.post("/community/comment", {
-    user: props.user,
     comment: props.comment,
+    communityId: props.communityId,
   });
 
   return data;

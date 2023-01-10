@@ -6,7 +6,6 @@ import {
   ScrollView,
   Image,
   TextInput,
-  Button,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -15,13 +14,13 @@ import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader"
 import moment from "moment";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import ImageView from "react-native-image-viewing";
-import { useContext, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   getCommunityDetail,
   postComment,
 } from "../../../../apis/community/community";
-import { UserContext } from "../../../../context/UserContext";
+
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 
 export default function CommunityDetailScreen({ navigation, route }) {
@@ -35,9 +34,9 @@ export default function CommunityDetailScreen({ navigation, route }) {
   const [imageOpen, setImageOpen] = useState(false);
   const [imageUris, setImageUris] = useState([]);
 
-  const { user } = useContext(UserContext);
   const [comment, setComment] = useState("");
 
+  const queryClient = useQueryClient();
   const { mutate } = useMutation(postComment);
 
   const handleImageOpen = (index) => {
@@ -52,7 +51,15 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
   const handlePostComment = () => {
     if (comment !== "") {
-      mutate({ user: user._id, comment: comment });
+      mutate(
+        { comment: comment, communityId: itemId },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries("CommunityDetail");
+          },
+        }
+      );
+      setComment("");
     }
   };
 
@@ -96,17 +103,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
     },
     button_text: { fontSize: 12, paddingHorizontal: 10 },
 
-    comment: {
-      backgroundColor: "white",
-      borderTopWidth: 0.2,
-      borderBottomWidth: 0.2,
-      borderColor: "#d4d4d4",
-      padding: 18,
-    },
-    comment_writer_text: { fontSize: 12, color: "gray" },
-    comment_text: { marginTop: 8 },
-    comment_date: { fontSize: 12, color: "#94a3b8", marginTop: 8 },
-
     input_container: {
       paddingHorizontal: 14,
       paddingVertical: 8,
@@ -117,6 +113,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       borderTopWidth: 0.2,
     },
   });
+
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
       <OnlyLeftArrowHeader navigation={navigation} />
@@ -162,12 +159,9 @@ export default function CommunityDetailScreen({ navigation, route }) {
                   </TouchableOpacity>
                 </View>
               </View>
-
-              <View style={styles.comment}>
-                <Text style={styles.comment_writer_text}>익명</Text>
-                <Text style={styles.comment_text}>ddjafsldjfkls</Text>
-                <Text style={styles.comment_date}>2분 전</Text>
-              </View>
+              {data.comments.map((_i) => {
+                return <Comment comment={_i.comment} createdAt={_i.date} />;
+              })}
             </ScrollView>
           </View>
 
@@ -196,5 +190,27 @@ export default function CommunityDetailScreen({ navigation, route }) {
         }}
       />
     </SafeAreaView>
+  );
+}
+
+function Comment({ comment, createdAt }) {
+  const styles = StyleSheet.create({
+    comment: {
+      backgroundColor: "white",
+      borderTopWidth: 0.2,
+      borderBottomWidth: 0.2,
+      borderColor: "#d4d4d4",
+      padding: 18,
+    },
+    comment_writer_text: { fontSize: 12, color: "gray" },
+    comment_text: { marginTop: 8 },
+    comment_date: { fontSize: 12, color: "#94a3b8", marginTop: 8 },
+  });
+  return (
+    <View style={styles.comment}>
+      <Text style={styles.comment_writer_text}>익명</Text>
+      <Text style={styles.comment_text}>{comment}</Text>
+      <Text style={styles.comment_date}>{moment(createdAt).fromNow()}</Text>
+    </View>
   );
 }
