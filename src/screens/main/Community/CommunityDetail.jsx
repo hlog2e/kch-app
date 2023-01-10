@@ -25,7 +25,7 @@ import {
 
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import { UserContext } from "../../../../context/UserContext";
-import BadWordChecker from "../../../../utils/badWordChecker";
+
 import badWordChecker from "../../../../utils/badWordChecker";
 
 export default function CommunityDetailScreen({ navigation, route }) {
@@ -122,7 +122,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
     input_container: {
       paddingHorizontal: 14,
-      paddingVertical: 8,
+      paddingVertical: 12,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
@@ -201,9 +201,11 @@ export default function CommunityDetailScreen({ navigation, route }) {
               placeholder="댓글을 입력해주세요."
               multiline
             />
-            <TouchableOpacity onPress={handlePostComment}>
-              <Text>작성</Text>
-            </TouchableOpacity>
+            {comment !== "" ? (
+              <TouchableOpacity onPress={handlePostComment}>
+                <Text style={{ fontSize: 16 }}>작성</Text>
+              </TouchableOpacity>
+            ) : null}
           </View>
         </KeyboardAvoidingView>
       ) : null}
