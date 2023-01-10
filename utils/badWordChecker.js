@@ -11,8 +11,6 @@ export default async function badWordChecker(_sentense) {
   const reg = /[`0-9~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
   const pure_sentence = _sentense.replace(reg, "");
 
-  console.log(pure_sentence);
-
   let isBad = false;
   let badWord = "";
 
