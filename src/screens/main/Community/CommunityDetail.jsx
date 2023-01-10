@@ -8,23 +8,27 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import moment from "moment";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import ImageView from "react-native-image-viewing";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+  deleteComment,
   getCommunityDetail,
   postComment,
 } from "../../../../apis/community/community";
 
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
+import { UserContext } from "../../../../context/UserContext";
 
 export default function CommunityDetailScreen({ navigation, route }) {
   const itemId = route.params.item._id;
+  const { user } = useContext(UserContext);
 
   const { data, isSuccess, isLoading } = useQuery("CommunityDetail", () => {
     return getCommunityDetail(itemId);
@@ -49,9 +53,9 @@ export default function CommunityDetailScreen({ navigation, route }) {
     setImageOpen(true);
   };
 
-  const handlePostComment = () => {
+  const handlePostComment = async () => {
     if (comment !== "") {
-      mutate(
+      await mutate(
         { comment: comment, communityId: itemId },
         {
           onSuccess: () => {
@@ -161,7 +165,15 @@ export default function CommunityDetailScreen({ navigation, route }) {
               </View>
               {data.comments.map((_i) => {
                 return (
-                  <Comment comment={_i.comment} createdAt={_i.createdAt} />
+                  <Comment
+                    key={_i._id}
+                    communityId={itemId}
+                    commentId={_i._id}
+                    comment={_i.comment}
+                    createdAt={_i.createdAt}
+                    issuer={_i.issuer}
+                    currentUser={user}
+                  />
                 );
               })}
             </ScrollView>
@@ -195,23 +207,67 @@ export default function CommunityDetailScreen({ navigation, route }) {
   );
 }
 
-function Comment({ comment, createdAt }) {
+function Comment({
+  communityId,
+  commentId,
+  comment,
+  createdAt,
+  issuer,
+  currentUser,
+}) {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(deleteComment);
   const styles = StyleSheet.create({
     comment: {
       backgroundColor: "white",
       borderTopWidth: 0.2,
       borderBottomWidth: 0.2,
       borderColor: "#d4d4d4",
-      padding: 18,
+      padding: 17,
     },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+
     comment_writer_text: { fontSize: 12, color: "gray" },
+    delete_text: { fontSize: 13, color: "gray" },
     comment_text: { marginTop: 8 },
     comment_date: { fontSize: 12, color: "#94a3b8", marginTop: 8 },
   });
 
+  const handleCommentDelete = async () => {
+    Alert.alert("", "댓글을 삭제하시겠습니까?", [
+      { text: "취소", style: "cancel" },
+      {
+        text: "확인",
+        onPress: () => {
+          mutate(
+            { communityId: communityId, commentId: commentId },
+            {
+              onSuccess: () => {
+                queryClient.invalidateQueries("CommunityDetail");
+              },
+            }
+          );
+        },
+      },
+    ]);
+  };
+
   return (
     <View style={styles.comment}>
-      <Text style={styles.comment_writer_text}>익명</Text>
+      <View style={styles.header}>
+        <Text style={styles.comment_writer_text}>익명</Text>
+        {/*작성자 본인일 때 삭제버튼 보이기*/}
+        {issuer === currentUser._id ? (
+          <TouchableOpacity onPress={handleCommentDelete}>
+            <Text style={styles.delete_text}>삭제</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
+
       <Text style={styles.comment_text}>{comment}</Text>
       <Text style={styles.comment_date}>{moment(createdAt).fromNow()}</Text>
     </View>

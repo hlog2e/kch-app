@@ -26,3 +26,14 @@ export const postComment = async (props) => {
 
   return data;
 };
+
+export const deleteComment = async (props) => {
+  const { data } = await apiAuthInstance.delete("/community/comment", {
+    data: {
+      commentId: props.commentId,
+      communityId: props.communityId,
+    },
+  });
+
+  return data;
+};
