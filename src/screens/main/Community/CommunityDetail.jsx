@@ -15,10 +15,12 @@ import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader"
 import moment from "moment";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import ImageView from "react-native-image-viewing";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+  addLike,
   deleteComment,
+  deleteLike,
   getCommunityDetail,
   postComment,
 } from "../../../../apis/community/community";
@@ -43,7 +45,11 @@ export default function CommunityDetailScreen({ navigation, route }) {
   const [comment, setComment] = useState("");
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(postComment);
+  const { mutate: commentMutate } = useMutation(postComment);
+  const { mutate: likeAddMutate } = useMutation(addLike);
+  const { mutate: likeDeleteMutate } = useMutation(deleteLike);
+
+  const commentInputRef = useRef();
 
   const handleImageOpen = (index) => {
     let _temp = [];
@@ -68,7 +74,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
         return;
       }
       //서버로 댓글 전송
-      await mutate(
+      await commentMutate(
         { comment: comment, communityId: itemId },
         {
           onSuccess: () => {
@@ -77,6 +83,31 @@ export default function CommunityDetailScreen({ navigation, route }) {
         }
       );
       setComment("");
+    }
+  };
+
+  const handleLike = async () => {
+    //만약 data.likes 에 해당 유저 ID가 없다면 좋아요 추가
+    if (!data.likes.includes(user._id)) {
+      likeAddMutate(
+        { communityId: itemId },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries("CommunityDetail");
+          },
+        }
+      );
+    }
+    //else 좋아요 삭제
+    else {
+      likeDeleteMutate(
+        { communityId: itemId },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries("CommunityDetail");
+          },
+        }
+      );
     }
   };
 
@@ -165,12 +196,36 @@ export default function CommunityDetailScreen({ navigation, route }) {
                     </TouchableOpacity>
                   ))}
                 </ScrollView>
+
                 <View style={styles.button_bar}>
-                  <TouchableOpacity style={styles.button}>
-                    <FontAwesome name={"heart-o"} size={20} />
-                    <Text style={styles.button_text}>{data.likeCount}</Text>
+                  <TouchableOpacity style={styles.button} onPress={handleLike}>
+                    {/*만약 data.likes 배열에 유저ID 가 존재 한다면*/}
+                    {data.likes.includes(user._id) ? (
+                      <>
+                        <FontAwesome
+                          color={"#CF5858"}
+                          name={"heart"}
+                          size={20}
+                        />
+                        <Text
+                          style={[styles.button_text, { color: "#CF5858" }]}
+                        >
+                          {data.likeCount}
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesome name={"heart-o"} size={20} />
+                        <Text style={styles.button_text}>{data.likeCount}</Text>
+                      </>
+                    )}
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.button}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      commentInputRef.current.focus();
+                    }}
+                  >
                     <Ionicons name={"chatbubble-outline"} size={20} />
                     <Text style={styles.button_text}>{data.commentCount}</Text>
                   </TouchableOpacity>
@@ -194,6 +249,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
           <View style={styles.input_container}>
             <TextInput
+              ref={commentInputRef}
               value={comment}
               onChangeText={(_text) => {
                 setComment(_text);

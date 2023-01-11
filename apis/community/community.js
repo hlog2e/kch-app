@@ -37,3 +37,19 @@ export const deleteComment = async (props) => {
 
   return data;
 };
+
+export const addLike = async (props) => {
+  const { data } = await apiAuthInstance.post("/community/like", {
+    communityId: props.communityId,
+  });
+
+  return data;
+};
+
+export const deleteLike = async (props) => {
+  const { data } = await apiAuthInstance.delete("/community/like", {
+    data: { communityId: props.communityId },
+  });
+
+  return data;
+};
