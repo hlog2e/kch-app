@@ -8,6 +8,8 @@ import { navigationRef } from "./RootNavigation";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import FullScreenLoader from "../components/common/FullScreenLoader";
+import * as Linking from "expo-linking";
+import MealScreen from "../screens/main/Home/Meal";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,8 +19,38 @@ export default function RootStack() {
   if (isLoading) {
     return <FullScreenLoader />;
   }
+
+  const config = {
+    screens: {
+      Main: {
+        screens: {
+          HomeStack: {
+            initialRouteName: "HomeScreen",
+            screens: {
+              MealScreen: "meal",
+              TimetableScreen: "timetable",
+              CalendarScreen: "calendar",
+              NotificationScreen: "notification",
+            },
+          },
+          FeedStack: {
+            screens: { FeedScreen: "feed" },
+          },
+          CommunityStack: {
+            screens: { CommunityScreen: "community" },
+          },
+        },
+      },
+      CommunityDetailScreen: "community-detail-screen/:id",
+    },
+  };
+
+  const linking = {
+    prefixes: [Linking.createURL("/"), "kch://"],
+    config,
+  };
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer linking={linking} ref={navigationRef}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           <>

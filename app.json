@@ -1,6 +1,7 @@
 {
   "expo": {
-    "name": "kch-app",
+    "name": "금천고등학교",
+    "scheme": "kch",
     "slug": "kch-app",
     "version": "1.0.0",
     "orientation": "portrait",

@@ -32,7 +32,8 @@ import { UserContext } from "../../../../context/UserContext";
 import badWordChecker from "../../../../utils/badWordChecker";
 
 export default function CommunityDetailScreen({ navigation, route }) {
-  const itemId = route.params.item._id;
+  const itemId = route.params.id;
+
   const { user } = useContext(UserContext);
 
   const { data, isSuccess, isLoading } = useQuery(

@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { registerForPushNotificationsAsync } from "./utils/expo_notification";
 import * as Notifications from "expo-notifications";
 import Toast, { BaseToast } from "react-native-toast-message";
+import * as Haptics from "expo-haptics";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +17,6 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   //for Expo Notification
   const [expoPushToken, setExpoPushToken] = useState(null);
-  const [notification, setNotification] = useState(null);
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -31,13 +31,13 @@ export default function App() {
     getUserOnAsyncStorage();
     registerForPushNotificationsAsync().then((_token) => {
       setExpoPushToken(_token);
+      console.log(_token);
     });
 
     //알림이 도착했을때 리스너
     notificationListener.current =
       Notifications.addNotificationReceivedListener((_notification) => {
-        setNotification(_notification);
-        console.log(_notification);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         Toast.show({
           text1: _notification.request.content.title,
           text2: _notification.request.content.body,

@@ -21,10 +21,10 @@ export default function MainTabNavigator() {
         tabBarInactiveTintColor: "black",
         headerShown: false,
       }}
-      initialRouteName="홈"
+      initialRouteName="HomeStack"
     >
       <Tab.Screen
-        name="홈"
+        name="HomeStack"
         component={HomeStack}
         options={{
           tabBarIcon: ({ color, focused }) =>
@@ -36,7 +36,7 @@ export default function MainTabNavigator() {
         }}
       ></Tab.Screen>
       <Tab.Screen
-        name="피드"
+        name="FeedStack"
         component={FeedStack}
         options={{
           tabBarIcon: ({ color, focused }) =>
@@ -48,7 +48,7 @@ export default function MainTabNavigator() {
         }}
       ></Tab.Screen>
       <Tab.Screen
-        name="커뮤니티"
+        name="CommunityStack"
         component={CommunityStack}
         options={{
           tabBarIcon: ({ color, focused }) =>
@@ -61,7 +61,7 @@ export default function MainTabNavigator() {
       ></Tab.Screen>
 
       <Tab.Screen
-        name="더보기"
+        name="MoreStack"
         component={MoreStack}
         options={{
           tabBarIcon: ({ color, focused }) =>

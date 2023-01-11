@@ -105,7 +105,7 @@ function CommunityItem({ item, navigation }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push("CommunityDetailScreen", { item: item });
+        navigation.push("CommunityDetailScreen", { id: item._id });
       }}
       style={styles.container}
     >

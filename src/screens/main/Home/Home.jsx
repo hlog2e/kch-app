@@ -63,14 +63,14 @@ export default function HomeScreen({ navigation }) {
       margin: 10,
       borderRadius: 20,
       backgroundColor: "white",
-      padding: 17,
+      paddingVertical: 17,
       alignItems: "center",
       justifyContent: "space-between",
     },
     small_card_title: {
       color: "black",
-      fontWeight: "600",
-      fontSize: 13,
+      fontWeight: "700",
+      fontSize: 12,
     },
   });
 
@@ -141,7 +141,7 @@ export default function HomeScreen({ navigation }) {
           <View style={{ flex: 0.6 }}>
             <TouchableOpacity style={styles.small_card}>
               <Ionicons name="notifications-outline" size={22} color="gray" />
-              <Text style={styles.small_card_title}>알림센터</Text>
+              <Text style={styles.small_card_title}>공지사항</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.small_card}>
               <Ionicons name="newspaper-outline" size={22} color="gray" />
