@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { UserContext } from "../../../../context/UserContext";
+import FullScreenLoader from "../../../components/common/FullScreenLoader";
 
 export default function TimetableScreen({ navigation }) {
   const { user } = useContext(UserContext);
@@ -50,7 +51,7 @@ export default function TimetableScreen({ navigation }) {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <OnlyLeftArrowHeader navigation={navigation} />
 
       <View style={styles.header_container}>
@@ -145,7 +146,9 @@ export default function TimetableScreen({ navigation }) {
             </View>
           </View>
         </View>
-      ) : null}
+      ) : (
+        <FullScreenLoader />
+      )}
     </SafeAreaView>
   );
 }
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
 
   column_wrap: { flexDirection: "row" },
 
-  side_column: { backgroundColor: "blue", marginRight: 15 },
+  side_column: { marginRight: 15 },
   side_item: {
     height: 50,
     alignItems: "center",
