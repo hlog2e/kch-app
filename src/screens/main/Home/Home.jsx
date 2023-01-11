@@ -9,8 +9,71 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Weather from "../../../components/home/Weather";
+import { Ionicons } from "@expo/vector-icons";
+import Banner from "../../../components/home/Banner";
 
 export default function HomeScreen({ navigation }) {
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 25,
+      paddingTop: 35,
+      paddingBottom: 15,
+    },
+    header_text: { fontSize: 45, fontWeight: "700" },
+
+    card_container: {
+      height: 200,
+      flexDirection: "row",
+      paddingHorizontal: 15,
+    },
+    card_item: {
+      flex: 1,
+      margin: 10,
+      borderRadius: 20,
+      backgroundColor: "white",
+      padding: 20,
+    },
+    card_title: {
+      fontSize: 24,
+      fontWeight: "700",
+    },
+    desc: {
+      fontSize: 12,
+      fontWeight: "500",
+      color: "gray",
+      marginTop: 10,
+      lineHeight: 16,
+    },
+    card_image: {
+      position: "absolute",
+      bottom: 20,
+      right: 20,
+      width: 40,
+      height: 40,
+    },
+
+    small_card: {
+      flex: 1,
+      margin: 10,
+      borderRadius: 20,
+      backgroundColor: "white",
+      padding: 17,
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    small_card_title: {
+      color: "black",
+      fontWeight: "600",
+      fontSize: 13,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView>
@@ -18,6 +81,8 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.header_text}>홈</Text>
           <Weather />
         </View>
+
+        <Banner />
 
         <View style={styles.card_container}>
           <TouchableOpacity
@@ -28,28 +93,12 @@ export default function HomeScreen({ navigation }) {
           >
             <View>
               <Text style={styles.card_title}>급식</Text>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: "500",
-                  color: "gray",
-                  marginTop: 10,
-                  lineHeight: 16,
-                }}
-              >
-                {"이번주 급식\n메뉴 보러가기"}
-              </Text>
+              <Text style={styles.desc}>{"이번주 급식\n메뉴 보러가기"}</Text>
             </View>
 
             <Image
               source={require("../../../../assets/svgs/rice.png")}
-              style={{
-                width: 50,
-                height: 50,
-                position: "absolute",
-                bottom: 20,
-                right: 20,
-              }}
+              style={styles.card_image}
             />
           </TouchableOpacity>
 
@@ -61,28 +110,12 @@ export default function HomeScreen({ navigation }) {
           >
             <View>
               <Text style={styles.card_title}>시간표</Text>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: "500",
-                  color: "gray",
-                  marginTop: 10,
-                  lineHeight: 16,
-                }}
-              >
-                {"이번주 시간표\n보러가기"}
-              </Text>
+              <Text style={styles.desc}>{"이번주 시간표\n보러가기"}</Text>
             </View>
 
             <Image
               source={require("../../../../assets/svgs/timetable.png")}
-              style={{
-                width: 40,
-                height: 40,
-                position: "absolute",
-                bottom: 20,
-                right: 20,
-              }}
+              style={styles.card_image}
             />
           </TouchableOpacity>
         </View>
@@ -96,63 +129,27 @@ export default function HomeScreen({ navigation }) {
           >
             <View>
               <Text style={styles.card_title}>학사일정</Text>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: "500",
-                  color: "gray",
-                  marginTop: 10,
-                  lineHeight: 16,
-                }}
-              >
-                {"이번달 학사일정\n보러가기"}
-              </Text>
+              <Text style={styles.desc}>{"이번달 학사일정\n보러가기"}</Text>
             </View>
 
             <Image
               source={require("../../../../assets/svgs/calendar.png")}
-              style={{
-                width: 40,
-                height: 40,
-                position: "absolute",
-                bottom: 20,
-                right: 20,
-              }}
+              style={styles.card_image}
             />
           </TouchableOpacity>
-          <View style={{ flex: 0.8 }}>
-            <TouchableOpacity style={styles.card_item}></TouchableOpacity>
-            <TouchableOpacity style={styles.card_item}></TouchableOpacity>
+
+          <View style={{ flex: 0.6 }}>
+            <TouchableOpacity style={styles.small_card}>
+              <Ionicons name="notifications-outline" size={22} color="gray" />
+              <Text style={styles.small_card_title}>알림센터</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.small_card}>
+              <Ionicons name="newspaper-outline" size={22} color="gray" />
+              <Text style={styles.small_card_title}>패치노트</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 35,
-    paddingHorizontal: 25,
-  },
-  header_text: { fontSize: 45, fontWeight: "700" },
-
-  card_container: { height: 200, flexDirection: "row", paddingHorizontal: 15 },
-  card_item: {
-    flex: 1,
-    margin: 10,
-    borderRadius: 20,
-    backgroundColor: "white",
-    padding: 20,
-  },
-  card_title: {
-    fontSize: 24,
-    fontWeight: "700",
-  },
-});
