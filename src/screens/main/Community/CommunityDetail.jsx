@@ -23,6 +23,7 @@ import {
   deleteLike,
   getCommunityDetail,
   postComment,
+  communityDelete,
 } from "../../../../apis/community/community";
 
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
@@ -34,9 +35,26 @@ export default function CommunityDetailScreen({ navigation, route }) {
   const itemId = route.params.item._id;
   const { user } = useContext(UserContext);
 
-  const { data, isSuccess, isLoading } = useQuery("CommunityDetail", () => {
-    return getCommunityDetail(itemId);
-  });
+  const { data, isSuccess, isLoading } = useQuery(
+    "CommunityDetail",
+    () => {
+      return getCommunityDetail(itemId);
+    },
+    {
+      retry: false,
+      onError: (_err) => {
+        console.log(_err);
+        Alert.alert("오류", "존재하지 않거나, 삭제된 게시글 입니다.", [
+          {
+            text: "확인",
+            onPress: () => {
+              navigation.goBack();
+            },
+          },
+        ]);
+      },
+    }
+  );
 
   const [imageIndex, setImageIndex] = useState(0);
   const [imageOpen, setImageOpen] = useState(false);
@@ -46,8 +64,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
   const queryClient = useQueryClient();
   const { mutate: commentMutate } = useMutation(postComment);
-  const { mutate: likeAddMutate } = useMutation(addLike);
-  const { mutate: likeDeleteMutate } = useMutation(deleteLike);
 
   const commentInputRef = useRef();
 
@@ -86,31 +102,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
     }
   };
 
-  const handleLike = async () => {
-    //만약 data.likes 에 해당 유저 ID가 없다면 좋아요 추가
-    if (!data.likes.includes(user._id)) {
-      likeAddMutate(
-        { communityId: itemId },
-        {
-          onSuccess: () => {
-            queryClient.invalidateQueries("CommunityDetail");
-          },
-        }
-      );
-    }
-    //else 좋아요 삭제
-    else {
-      likeDeleteMutate(
-        { communityId: itemId },
-        {
-          onSuccess: () => {
-            queryClient.invalidateQueries("CommunityDetail");
-          },
-        }
-      );
-    }
-  };
-
   const styles = StyleSheet.create({
     container: { backgroundColor: "white", flex: 1 },
 
@@ -137,19 +128,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
       borderRadius: 20,
       marginTop: 32,
     },
-    button_bar: {
-      marginTop: 20,
-      height: 40,
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    button: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      flexDirection: "row",
-    },
-    button_text: { fontSize: 12, paddingHorizontal: 10 },
 
     input_container: {
       paddingHorizontal: 14,
@@ -196,40 +174,13 @@ export default function CommunityDetailScreen({ navigation, route }) {
                     </TouchableOpacity>
                   ))}
                 </ScrollView>
-
-                <View style={styles.button_bar}>
-                  <TouchableOpacity style={styles.button} onPress={handleLike}>
-                    {/*만약 data.likes 배열에 유저ID 가 존재 한다면*/}
-                    {data.likes.includes(user._id) ? (
-                      <>
-                        <FontAwesome
-                          color={"#CF5858"}
-                          name={"heart"}
-                          size={20}
-                        />
-                        <Text
-                          style={[styles.button_text, { color: "#CF5858" }]}
-                        >
-                          {data.likeCount}
-                        </Text>
-                      </>
-                    ) : (
-                      <>
-                        <FontAwesome name={"heart-o"} size={20} />
-                        <Text style={styles.button_text}>{data.likeCount}</Text>
-                      </>
-                    )}
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      commentInputRef.current.focus();
-                    }}
-                  >
-                    <Ionicons name={"chatbubble-outline"} size={20} />
-                    <Text style={styles.button_text}>{data.commentCount}</Text>
-                  </TouchableOpacity>
-                </View>
+                <ButtonBar
+                  data={data}
+                  user={user}
+                  communityId={itemId}
+                  commentInputRef={commentInputRef}
+                  navigation={navigation}
+                />
               </View>
               {data.comments.map((_i) => {
                 return (
@@ -275,6 +226,108 @@ export default function CommunityDetailScreen({ navigation, route }) {
         }}
       />
     </SafeAreaView>
+  );
+}
+
+function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
+  const queryClient = useQueryClient();
+  const { mutate: likeAddMutate } = useMutation(addLike);
+  const { mutate: likeDeleteMutate } = useMutation(deleteLike);
+  const { mutate: communityDeleteMutate } = useMutation(communityDelete);
+
+  const handleLike = async () => {
+    //만약 data.likes 에 해당 유저 ID가 없다면 좋아요 추가
+    if (!data.likes.includes(user._id)) {
+      likeAddMutate(
+        { communityId: communityId },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries("CommunityDetail");
+          },
+        }
+      );
+    }
+    //else 좋아요 삭제
+    else {
+      likeDeleteMutate(
+        { communityId: communityId },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries("CommunityDetail");
+          },
+        }
+      );
+    }
+  };
+
+  const handleDeleteCommunity = async () => {
+    Alert.alert("", '"' + data.title + '" 을(를) 삭제하시겠습니까?', [
+      { text: "취소", style: "cancel" },
+      {
+        text: "확인",
+        onPress: () => {
+          communityDeleteMutate(
+            { communityId: communityId },
+            {
+              onSuccess: () => {
+                navigation.goBack();
+              },
+            }
+          );
+        },
+      },
+    ]);
+  };
+
+  const styles = StyleSheet.create({
+    button_bar: {
+      marginTop: 20,
+      height: 40,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    button: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "row",
+    },
+    button_text: { fontSize: 12, paddingHorizontal: 10 },
+  });
+  return (
+    <View style={styles.button_bar}>
+      <TouchableOpacity style={styles.button} onPress={handleLike}>
+        {/*만약 data.likes 배열에 유저ID 가 존재 한다면*/}
+        {data.likes.includes(user._id) ? (
+          <>
+            <FontAwesome color={"#CF5858"} name={"heart"} size={20} />
+            <Text style={[styles.button_text, { color: "#CF5858" }]}>
+              {data.likeCount}
+            </Text>
+          </>
+        ) : (
+          <>
+            <FontAwesome name={"heart-o"} size={20} />
+            <Text style={styles.button_text}>{data.likeCount}</Text>
+          </>
+        )}
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          commentInputRef.current.focus();
+        }}
+      >
+        <Ionicons name={"chatbubble-outline"} size={20} />
+        <Text style={styles.button_text}>{data.commentCount}</Text>
+      </TouchableOpacity>
+      {data.publisher === user._id ? (
+        <TouchableOpacity style={styles.button} onPress={handleDeleteCommunity}>
+          <Ionicons color={"#CF5858"} name={"close"} size={24} />
+          <Text style={{ fontSize: 12, color: "#CF5858" }}>삭제하기</Text>
+        </TouchableOpacity>
+      ) : null}
+    </View>
   );
 }
 

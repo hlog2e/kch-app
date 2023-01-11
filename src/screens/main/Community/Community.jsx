@@ -32,7 +32,6 @@ export default function CommunityScreen({ navigation }) {
       },
     });
 
-  console.log(data);
   const styles = StyleSheet.create({
     container: {
       flex: 1,

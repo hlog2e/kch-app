@@ -53,3 +53,11 @@ export const deleteLike = async (props) => {
 
   return data;
 };
+
+export const communityDelete = async (props) => {
+  const { data } = await apiAuthInstance.delete("/community", {
+    data: { communityId: props.communityId },
+  });
+
+  return data;
+};
