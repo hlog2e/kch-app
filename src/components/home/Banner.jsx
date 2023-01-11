@@ -15,25 +15,33 @@ import { useState } from "react";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function Banner() {
-  const { data } = useQuery("banner", getBanners);
-  const dataLength = data.length;
+  const { data, isLoading } = useQuery("banner", getBanners, {
+    onSuccess: (_data) => {
+      setDataLength(_data.length);
+    },
+  });
+  const [dataLength, setDataLength] = useState(0);
   const [nowIndex, setNowIndex] = useState(0);
 
   return (
-    <Carousel
-      data={data}
-      renderItem={({ item }) => {
-        return <Item item={item} dataLength={dataLength} nowIndex={nowIndex} />;
-      }}
-      itemWidth={SCREEN_WIDTH}
-      sliderWidth={SCREEN_WIDTH}
-      autoplay
-      autoplayDelay={0}
-      autoplayInterval={6000}
-      onSnapToItem={(_index) => {
-        setNowIndex(_index);
-      }}
-    />
+    <>
+      <Carousel
+        data={data}
+        renderItem={({ item }) => {
+          return (
+            <Item item={item} dataLength={dataLength} nowIndex={nowIndex} />
+          );
+        }}
+        itemWidth={SCREEN_WIDTH}
+        sliderWidth={SCREEN_WIDTH}
+        autoplay
+        autoplayDelay={0}
+        autoplayInterval={6000}
+        onSnapToItem={(_index) => {
+          setNowIndex(_index);
+        }}
+      />
+    </>
   );
 }
 

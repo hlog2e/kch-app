@@ -31,6 +31,7 @@
     "react-native-snap-carousel": "4.0.0-beta.6",
     "react-native-uuid": "^2.0.1",
     "react-query": "^3.39.2"
+
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
