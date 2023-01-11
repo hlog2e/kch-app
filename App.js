@@ -9,6 +9,7 @@ import { registerForPushNotificationsAsync } from "./utils/expo_notification";
 import * as Notifications from "expo-notifications";
 import Toast, { BaseToast } from "react-native-toast-message";
 import * as Haptics from "expo-haptics";
+import * as Linking from "expo-linking";
 
 const queryClient = new QueryClient();
 
@@ -38,15 +39,23 @@ export default function App() {
     notificationListener.current =
       Notifications.addNotificationReceivedListener((_notification) => {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
         Toast.show({
           text1: _notification.request.content.title,
           text2: _notification.request.content.body,
+          onPress: () => {
+            if (_notification.request.content.data.link) {
+              Linking.openURL(_notification.request.content.data.link);
+            }
+          },
         });
       });
     //사용자가 푸쉬알림에 반응했을 때 리스너
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((_response) => {
-        console.log("리스폰스", _response);
+        if (_response.notification.request.content.data.link) {
+          Linking.openURL(_response.notification.request.content.data.link);
+        }
       });
 
     return () => {

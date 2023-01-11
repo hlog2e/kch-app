@@ -139,7 +139,10 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
 
           <View style={{ flex: 0.6 }}>
-            <TouchableOpacity style={styles.small_card}>
+            <TouchableOpacity
+              style={styles.small_card}
+              onPress={() => navigation.push("NotificationScreen")}
+            >
               <Ionicons name="notifications-outline" size={22} color="gray" />
               <Text style={styles.small_card_title}>공지사항</Text>
             </TouchableOpacity>
