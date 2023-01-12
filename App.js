@@ -27,7 +27,8 @@ export default function App() {
   //async storage 에서 유저 데이터 불러오기
   async function getUserOnAsyncStorage() {
     const _user = await AsyncStorage.getItem("user");
-    setUser(_user);
+    const parsedUserData = JSON.parse(_user);
+    setUser(parsedUserData);
     setIsLoading(false);
   }
 

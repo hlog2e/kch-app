@@ -7,7 +7,6 @@ import moment from "moment";
 
 export default function StudentIDScreen({ navigation }) {
   const { user } = useContext(UserContext);
-  const userData = JSON.parse(user);
 
   const styles = StyleSheet.create({
     container: { flex: 1 },
@@ -17,8 +16,13 @@ export default function StudentIDScreen({ navigation }) {
       paddingHorizontal: 45,
     },
     title: { fontSize: 16, fontWeight: "700", paddingVertical: 7 },
-    card: { backgroundColor: "white", height: 450, borderRadius: 10 },
-    image: { height: 150, borderTopLeftRadius: 10, borderTopRightRadius: 10 },
+    card: { backgroundColor: "white", borderRadius: 10 },
+    image: {
+      height: 150,
+
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+    },
     name_section: {
       marginTop: 30,
       alignItems: "center",
@@ -61,7 +65,7 @@ export default function StudentIDScreen({ navigation }) {
       justifyContent: "center",
       paddingVertical: 10,
     },
-    logo: { height: 40 },
+    logo: { height: 40, marginVertical: 10 },
   });
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
@@ -70,12 +74,11 @@ export default function StudentIDScreen({ navigation }) {
       <View style={styles.card_wrap}>
         <View style={styles.card}>
           <Image
-            resizeMethod={"contain"}
             style={styles.image}
-            source={{ uri: "https://static.kch-app.me/student_id.png" }}
+            source={{ uri: "https://static.kch-app.me/student_id_banner.png" }}
           />
           <View style={styles.name_section}>
-            <Text style={styles.name}>{userData.name}</Text>
+            <Text style={styles.name}>{user.name}</Text>
             <Text style={styles.school_name}>청주 금천고등학교</Text>
           </View>
           <View style={styles.divider} />
@@ -83,22 +86,22 @@ export default function StudentIDScreen({ navigation }) {
             <View style={styles.info_row}>
               <Text style={styles.info_title}>나이</Text>
               <Text style={styles.info_text}>
-                {userData.grade === "1" ? "17" : null}
-                {userData.grade === "2" ? "18" : null}
-                {userData.grade === "3" ? "19" : null}세
+                {user.grade === "1" ? "17" : null}
+                {user.grade === "2" ? "18" : null}
+                {user.grade === "3" ? "19" : null}세
               </Text>
             </View>
             <View style={styles.info_row}>
               <Text style={styles.info_title}>학년</Text>
-              <Text style={styles.info_text}>{userData.grade}학년</Text>
+              <Text style={styles.info_text}>{user.grade}학년</Text>
             </View>
             <View style={styles.info_row}>
               <Text style={styles.info_title}>반</Text>
-              <Text style={styles.info_text}>{userData.class}반</Text>
+              <Text style={styles.info_text}>{user.class}반</Text>
             </View>
             <View style={styles.info_row}>
               <Text style={styles.info_title}>번호</Text>
-              <Text style={styles.info_text}>{userData.number}번</Text>
+              <Text style={styles.info_text}>{user.number}번</Text>
             </View>
             <View style={styles.info_row}>
               <Text style={styles.info_title}>유효기간</Text>
