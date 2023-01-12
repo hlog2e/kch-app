@@ -4,6 +4,7 @@ import MealScreen from "../../../screens/main/Home/Meal";
 import TimetableScreen from "../../../screens/main/Home/TimeTable";
 import CalendarScreen from "../../../screens/main/Home/Calendar";
 import NoticeScreen from "../../../screens/main/Home/Notice";
+import StudentIDScreen from "../../../screens/main/Home/StudentID";
 
 const Stack = createNativeStackNavigator();
 export default function HomeStack() {
@@ -17,6 +18,7 @@ export default function HomeStack() {
       <Stack.Screen name="TimetableScreen" component={TimetableScreen} />
       <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
       <Stack.Screen name="NoticeScreen" component={NoticeScreen} />
+      <Stack.Screen name="StudentIDScreen" component={StudentIDScreen} />
     </Stack.Navigator>
   );
 }

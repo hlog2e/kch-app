@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Weather from "../../../components/home/Weather";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Banner from "../../../components/home/Banner";
 
 export default function HomeScreen({ navigation }) {
@@ -146,9 +146,14 @@ export default function HomeScreen({ navigation }) {
               <Ionicons name="notifications-outline" size={22} color="gray" />
               <Text style={styles.small_card_title}>공지사항</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.small_card}>
-              <Ionicons name="newspaper-outline" size={22} color="gray" />
-              <Text style={styles.small_card_title}>패치노트</Text>
+            <TouchableOpacity
+              style={styles.small_card}
+              onPress={() => {
+                navigation.push("StudentIDScreen");
+              }}
+            >
+              <FontAwesome name="vcard-o" size={22} color="gray" />
+              <Text style={styles.small_card_title}>모바일 학생증</Text>
             </TouchableOpacity>
           </View>
         </View>
