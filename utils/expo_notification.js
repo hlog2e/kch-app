@@ -31,7 +31,7 @@ export async function registerForPushNotificationsAsync() {
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
   } else {
-    alert("애뮬레이터 기기에서는 푸쉬알림을 이용할 수 없습니다.");
+    alert("애뮬레이터 기기에서는 푸시 알림을 이용할 수 없습니다.");
   }
 
   return token;

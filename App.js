@@ -36,9 +36,11 @@ export default function App() {
     //Expo Push Token 을 얻은 후 DB에 POST
     registerForPushNotificationsAsync().then((_token) => {
       setExpoPushToken(_token);
-      registerPushTokenToDB(_token).catch((err) =>
-        alert("푸쉬 알림서비스 등록을 실패하였습니다.")
-      );
+      if (_token) {
+        registerPushTokenToDB(_token).catch((err) =>
+          alert("푸시알림 서비스 등록을 실패하였습니다.")
+        );
+      }
     });
 
     //알림이 도착했을때 리스너
