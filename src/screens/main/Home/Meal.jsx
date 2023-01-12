@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
 
   row_container: { paddingVertical: 10 },
   date_text: { padding: 20, fontSize: 20, fontWeight: "700" },
-  scroll_container: { height: 200 },
+  scroll_container: { minHeight: 200 },
   item: {
     width: 200,
     backgroundColor: "white",
