@@ -10,16 +10,19 @@ import * as Notifications from "expo-notifications";
 import Toast, { BaseToast } from "react-native-toast-message";
 import * as Haptics from "expo-haptics";
 import * as Linking from "expo-linking";
+import { registerPushTokenToDB } from "./apis/push-noti";
 
 const queryClient = new QueryClient();
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  //for Expo Notification
+
+  //for Expo Notification ----
   const [expoPushToken, setExpoPushToken] = useState(null);
   const notificationListener = useRef();
   const responseListener = useRef();
+  //--------------------------
 
   //async storage 에서 유저 데이터 불러오기
   async function getUserOnAsyncStorage() {
@@ -30,9 +33,12 @@ export default function App() {
 
   useEffect(() => {
     getUserOnAsyncStorage();
+    //Expo Push Token 을 얻은 후 DB에 POST
     registerForPushNotificationsAsync().then((_token) => {
       setExpoPushToken(_token);
-      console.log(_token);
+      registerPushTokenToDB(_token).catch((err) =>
+        alert("푸쉬 알림서비스 등록을 실패하였습니다.")
+      );
     });
 
     //알림이 도착했을때 리스너
