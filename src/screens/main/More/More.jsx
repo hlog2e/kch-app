@@ -76,7 +76,7 @@ iOS Model ID: ${Device.modelId}
     },
     card: {
       backgroundColor: "white",
-      marginHorizontal: 20,
+      marginHorizontal: 25,
       marginTop: 50,
       borderRadius: 15,
       paddingVertical: 20,
@@ -164,15 +164,16 @@ iOS Model ID: ${Device.modelId}
           </View>
         </View>
 
-        <ListButtonSection />
+        <ListButtonSection navigation={navigation} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function ListButtonSection() {
+function ListButtonSection({ navigation }) {
   const buttons = [
     {
+      id: 1,
       name: "개발자 정보",
       onPress: () => {
         console.log("test");
@@ -180,14 +181,16 @@ function ListButtonSection() {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      name: "금천고를 빛낸 사람들",
+      id: 2,
+      name: "제 34기 학생회",
       onPress: () => {
-        console.log("test");
+        navigation.push("StudentCouncilScreen");
       },
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
-    { name: "margin" },
+    { id: 3, name: "margin" },
     {
+      id: 4,
       name: "개인정보 처리방침",
       onPress: async () => {
         await WebBrowser.openBrowserAsync(
@@ -197,17 +200,19 @@ function ListButtonSection() {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
+      id: 5,
       name: "오픈소스",
       onPress: async () => {
         await WebBrowser.openBrowserAsync("https://github.com/hlog2e/kch-app");
       },
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
-    { name: "margin" },
+    { id: 6, name: "margin" },
     {
+      id: 7,
       name: "앱 버전",
       onPress: () => {
-        alert(`현재 앱 버전은 v.${Constants.manifest.apiServer} 입니다.`);
+        alert(`현재 앱 버전은 v.${Constants.manifest.version} 입니다.`);
       },
       right: (
         <Text style={{ fontSize: 10, color: "gray" }}>
@@ -233,12 +238,12 @@ function ListButtonSection() {
   });
   return (
     <View style={styles.container}>
-      {buttons.map(({ name, right, onPress }) => {
+      {buttons.map(({ id, name, right, onPress }) => {
         if (name === "margin") {
-          return <View style={styles.margin} />;
+          return <View key={id} style={styles.margin} />;
         }
         return (
-          <TouchableOpacity style={styles.button} onPress={onPress}>
+          <TouchableOpacity key={id} style={styles.button} onPress={onPress}>
             <Text style={styles.button_text}>{name}</Text>
             {right}
           </TouchableOpacity>

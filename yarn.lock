@@ -3165,7 +3165,7 @@ expo-constants@~13.2.0, expo-constants@~13.2.2, expo-constants@~13.2.4:
     "@expo/config" "~7.0.0"
     uuid "^3.3.2"
 
-expo-device@^5.0.0:
+expo-device@~5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/expo-device/-/expo-device-5.0.0.tgz#2039e01a9d8bc696c060771145b764758e3ed242"
   integrity sha512-FWlbOUMzAjHojLER8fnS42vLT7aqZ7IoEY+nw/RqmW17SA3GE2lzcYxRYZs1vAIgDnLzcS5CQMp08Eu+EXih1g==
@@ -3254,6 +3254,11 @@ expo-notifications@~0.16.1:
     expo-constants "~13.2.0"
     fs-extra "^9.1.0"
     uuid "^3.4.0"
+
+expo-sms@~10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/expo-sms/-/expo-sms-10.2.0.tgz#7a0eda76ff6dc0b4167fdebc587a7307a1751d90"
+  integrity sha512-CvLD/TfoG+ZarDGhz7Da0hrxJ5GLppC0F3vKh95Iu4ScexsM824Uhwx5u7GyWN4x+AbTCG7L7xi5vTMmKHQKkQ==
 
 expo-splash-screen@~0.16.2:
   version "0.16.2"
