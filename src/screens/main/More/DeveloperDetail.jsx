@@ -188,7 +188,14 @@ export default function DeveloperDetailScreen({ navigation }) {
           <Text style={styles.stack_title}>금천고 앱의 기술 스택</Text>
           <ScrollView horizontal style={styles.stack_item_row}>
             {stacks.map(({ icon, title, onPress }) => {
-              return <StackItem icon={icon} title={title} onPress={onPress} />;
+              return (
+                <StackItem
+                  key={title}
+                  icon={icon}
+                  title={title}
+                  onPress={onPress}
+                />
+              );
             })}
           </ScrollView>
         </View>
