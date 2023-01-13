@@ -66,7 +66,7 @@ iOS Model ID: ${Device.modelId}
     if (smsIsAvailable) {
       await SMS.sendSMSAsync(["01095645490"], message, {});
     } else {
-      alert("디바이스가 문자메세지를 전송할 수 없는 상태입니다.");
+      alert("디바이스가 SMS를 전송할 수 없는 상태입니다.");
     }
   };
 
@@ -174,9 +174,9 @@ function ListButtonSection({ navigation }) {
   const buttons = [
     {
       id: 1,
-      name: "개발자 정보",
+      name: "개발자",
       onPress: () => {
-        console.log("test");
+        navigation.push("DeveloperDetailScreen");
       },
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
