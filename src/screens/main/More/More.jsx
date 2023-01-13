@@ -174,7 +174,7 @@ function ListButtonSection({ navigation }) {
   const buttons = [
     {
       id: 1,
-      name: "개발자",
+      name: "개발자 정보",
       onPress: () => {
         navigation.push("DeveloperDetailScreen");
       },
