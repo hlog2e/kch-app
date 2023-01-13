@@ -93,7 +93,7 @@ export default function HomeScreen({ navigation }) {
           >
             <View>
               <Text style={styles.card_title}>급식</Text>
-              <Text style={styles.desc}>{"이번주 급식\n메뉴 보러가기"}</Text>
+              <Text style={styles.desc}>{"맛있는 급식\n메뉴 보러가기"}</Text>
             </View>
 
             <Image
@@ -129,7 +129,7 @@ export default function HomeScreen({ navigation }) {
           >
             <View>
               <Text style={styles.card_title}>학사일정</Text>
-              <Text style={styles.desc}>{"이번달 학사일정\n보러가기"}</Text>
+              <Text style={styles.desc}>{"금천고 학사일정\n보러가기"}</Text>
             </View>
 
             <Image
