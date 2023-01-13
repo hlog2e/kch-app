@@ -1,5 +1,10 @@
 {
   "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "5b77743f-dfb8-4df6-942e-446f6e72ed63"
+      }
+    },
     "name": "금천고등학교",
     "scheme": "kch",
     "slug": "kch-app",
@@ -19,9 +24,12 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "me.kch-app.kch",
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
+      "package": "me.kch_app.kch",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
