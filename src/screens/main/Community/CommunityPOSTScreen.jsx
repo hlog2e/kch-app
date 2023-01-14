@@ -18,8 +18,11 @@ import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "react-query";
 import { postCommunity } from "../../../../apis/community/community";
+import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
 
 export default function CommunityPOSTScreen({ navigation }) {
+  const [loading, setLoading] = useState(false);
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -67,6 +70,7 @@ export default function CommunityPOSTScreen({ navigation }) {
   };
 
   const handlePOST = () => {
+    setLoading(true);
     formData.append("title", title);
     formData.append("content", content);
     images.map(({ uri }) => {
@@ -75,6 +79,7 @@ export default function CommunityPOSTScreen({ navigation }) {
 
     mutate(formData, {
       onSuccess: () => {
+        setLoading(false);
         setTitle("");
         setContent("");
         setImages([]);
@@ -130,6 +135,7 @@ export default function CommunityPOSTScreen({ navigation }) {
       edges={["top", "bottom"]}
       style={{ flex: 1, backgroundColor: "white" }}
     >
+      <FullScreenBlurLoader loading={loading} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
