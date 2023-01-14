@@ -161,6 +161,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
                 <ScrollView horizontal>
                   {data.images.map((_item, _index) => (
                     <TouchableOpacity
+                      key={_item}
                       onPress={() => {
                         handleImageOpen(_index);
                       }}
