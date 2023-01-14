@@ -114,6 +114,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       fontWeight: "600",
     },
     date: {
+      marginTop: 6,
       fontSize: 12,
       color: "gray",
     },
