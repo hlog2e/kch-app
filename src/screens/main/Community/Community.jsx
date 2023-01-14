@@ -133,11 +133,14 @@ function CommunityItem({ item, navigation }) {
       <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
         {item.content}
       </Text>
-      <View style={styles.image_container}>
-        {item.images.map((_item) => (
-          <Image key={_item} style={styles.image} source={{ uri: _item }} />
-        ))}
-      </View>
+      {item.images.length > 0 ? (
+        <View style={styles.image_container}>
+          {item.images.map((_item) => (
+            <Image key={_item} style={styles.image} source={{ uri: _item }} />
+          ))}
+        </View>
+      ) : null}
+
       <View style={styles.footer}>
         <View style={styles.icon_wrap}>
           <FontAwesome name={"heart-o"} size={20} />

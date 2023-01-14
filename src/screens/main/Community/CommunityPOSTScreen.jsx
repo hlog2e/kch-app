@@ -8,7 +8,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Dimensions,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -19,6 +18,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "react-query";
 import { postCommunity } from "../../../../apis/community/community";
 import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
+import badWordChecker from "../../../../utils/badWordChecker";
 
 export default function CommunityPOSTScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -69,25 +69,57 @@ export default function CommunityPOSTScreen({ navigation }) {
     ]);
   };
 
-  const handlePOST = () => {
+  const checkBeforePOST = async () => {
     setLoading(true);
-    formData.append("title", title);
-    formData.append("content", content);
-    images.map(({ uri }) => {
-      formData.append("image", { uri: uri, name: "test", type: "image" });
-    });
+    const { isBad: titleIsBad, word: titleBadWord } = await badWordChecker(
+      title
+    );
+    const { isBad: contentIsBad, word: contentBadWord } = await badWordChecker(
+      content
+    );
 
-    mutate(formData, {
-      onSuccess: () => {
-        setLoading(false);
-        setTitle("");
-        setContent("");
-        setImages([]);
+    if (titleIsBad) {
+      alert("제목에 비속어가 포함되어 있습니다. '" + titleBadWord + "'");
+      setLoading(false);
+      return { passed: false };
+    }
 
-        queryClient.invalidateQueries("community");
-        navigation.goBack();
-      },
-    });
+    if (contentIsBad) {
+      alert("내용에 비속어가 포함되어 있습니다. '" + contentBadWord + "'");
+      setLoading(false);
+      return { passed: false };
+    }
+
+    if (title === "" || content === "") {
+      alert("제목이랑 내용 모두 작성해주세요.");
+      setLoading(false);
+      return { passed: false };
+    }
+
+    return { passed: true };
+  };
+
+  const handlePOST = async () => {
+    const { passed } = await checkBeforePOST();
+    if (passed) {
+      formData.append("title", title);
+      formData.append("content", content);
+      images.map(({ uri }) => {
+        formData.append("image", { uri: uri, name: "test", type: "image" });
+      });
+
+      mutate(formData, {
+        onSuccess: () => {
+          setLoading(false);
+          setTitle("");
+          setContent("");
+          setImages([]);
+
+          queryClient.invalidateQueries("community");
+          navigation.goBack();
+        },
+      });
+    }
   };
 
   const styles = StyleSheet.create({
