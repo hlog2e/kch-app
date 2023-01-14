@@ -10,6 +10,14 @@ export const getCommunities = async (offset) => {
   return data;
 };
 
+export const postCommunity = async (formData) => {
+  const { data } = await apiAuthInstance.post("/community", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return data;
+};
+
 export const getCommunityDetail = async (_id) => {
   const { data } = await apiAuthInstance.get("/community/detail", {
     params: { id: _id },

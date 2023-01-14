@@ -4,7 +4,6 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 
@@ -17,20 +16,27 @@ import { useInfiniteQuery } from "react-query";
 import { getCommunities } from "../../../../apis/community/community";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import { useState } from "react";
+import FABPlus from "../../../components/common/FABPlus";
 
 export default function CommunityScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
-  const { isLoading, data, refetch, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: "community",
-      queryFn: ({ pageParam = 0 }) => getCommunities(pageParam),
-      getNextPageParam: (lastPage, allPages) => {
-        if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
-          return undefined;
-        }
-        return lastPage.nextCursor;
-      },
-    });
+  const {
+    isLoading,
+    isSuccess,
+    data,
+    refetch,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: "community",
+    queryFn: ({ pageParam = 0 }) => getCommunities(pageParam),
+    getNextPageParam: (lastPage, allPages) => {
+      if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
+        return undefined;
+      }
+      return lastPage.nextCursor;
+    },
+  });
 
   const styles = StyleSheet.create({
     container: {
@@ -41,6 +47,15 @@ export default function CommunityScreen({ navigation }) {
     <View style={styles.container}>
       <SafeTitleHeader title="커뮤니티" />
       {isLoading ? <FullScreenLoader /> : null}
+      {isSuccess ? (
+        <FABPlus
+          color={"#2563eb"}
+          onPress={() => {
+            navigation.push("CommunityPOSTScreen");
+          }}
+        />
+      ) : null}
+
       {data ? (
         <FlatList
           onEndReachedThreshold={0.8}

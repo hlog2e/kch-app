@@ -271,6 +271,7 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
             { communityId: communityId },
             {
               onSuccess: () => {
+                queryClient.invalidateQueries("community");
                 navigation.goBack();
               },
             }

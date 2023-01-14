@@ -3,6 +3,7 @@ import MainTabNavigator from "./main/MainTabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "./auth/AuthStack";
 import CommunityDetailScreen from "../screens/main/Community/CommunityDetail";
+import CommunityPOSTScreen from "../screens/main/Community/CommunityPOSTScreen";
 
 import { navigationRef } from "./RootNavigation";
 import { useContext } from "react";
@@ -59,6 +60,10 @@ export default function RootStack() {
             <Stack.Screen
               name="CommunityDetailScreen"
               component={CommunityDetailScreen}
+            />
+            <Stack.Screen
+              name="CommunityPOSTScreen"
+              component={CommunityPOSTScreen}
             />
           </>
         ) : (
