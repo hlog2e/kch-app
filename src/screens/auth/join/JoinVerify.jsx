@@ -16,7 +16,7 @@ import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader"
 import { numRegexChecker } from "../../../../utils/regex";
 import AlertSucess from "../../../components/common/AlertSucess";
 import AlertError from "../../../components/common/AlertError";
-import { postValidateVerifyCode, postVerifyCode } from "../../../../apis/auth";
+import { postVerifyCode } from "../../../../apis/auth";
 
 export default function JoinVerfiyScreen({ navigation, route }) {
   const [status, setStatus] = useState({
