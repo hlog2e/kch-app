@@ -4,12 +4,14 @@ import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { navigate } from "../src/navigations/RootNavigation";
 
+import Constants from "expo-constants";
+
 export const apiInstance = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: Constants.expoConfig.extra.apiUrl,
 });
 
 export const apiAuthInstance = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: Constants.expoConfig.extra.apiUrl,
 });
 
 // Auth api 인터셉터

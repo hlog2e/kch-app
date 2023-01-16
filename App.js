@@ -5,12 +5,10 @@ import RootStack from "./src/navigations/RootStack";
 import { UserContext } from "./context/UserContext";
 import { useEffect, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { registerForPushNotificationsAsync } from "./utils/expo_notification";
 import * as Notifications from "expo-notifications";
 import Toast, { BaseToast } from "react-native-toast-message";
 import * as Haptics from "expo-haptics";
 import * as Linking from "expo-linking";
-import { registerPushTokenToDB } from "./apis/push-noti";
 
 const queryClient = new QueryClient();
 

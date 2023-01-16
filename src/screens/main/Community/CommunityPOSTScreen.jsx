@@ -38,7 +38,7 @@ export default function CommunityPOSTScreen({ navigation }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
         aspect: [1, 1],
-        quality: 0.7,
+        quality: 0,
         allowsMultipleSelection: true,
       });
 
