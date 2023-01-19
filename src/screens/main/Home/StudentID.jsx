@@ -19,7 +19,7 @@ export default function StudentIDScreen({ navigation }) {
     card: { backgroundColor: "white", borderRadius: 10 },
     image: {
       height: 150,
-
+      backgroundColor: "#001396",
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
     },
@@ -74,6 +74,7 @@ export default function StudentIDScreen({ navigation }) {
       <View style={styles.card_wrap}>
         <View style={styles.card}>
           <Image
+            resizeMode={"contain"}
             style={styles.image}
             source={{ uri: "https://static.kch-app.me/student_id_banner.png" }}
           />

@@ -47,8 +47,11 @@ export default function Banner() {
 
 const Item = ({ item, dataLength, nowIndex }) => {
   const styles = StyleSheet.create({
-    container: { paddingHorizontal: 25, paddingVertical: 10 },
-    image: { height: 75, borderRadius: 8 },
+    container: {
+      paddingVertical: 10,
+      paddingHorizontal: 25,
+    },
+    image: { height: 75, borderRadius: 8, backgroundColor: "white" },
     pagination: {
       position: "absolute",
       bottom: 17,
@@ -73,6 +76,7 @@ const Item = ({ item, dataLength, nowIndex }) => {
       }}
     >
       <Image
+        resizeMode={"contain"}
         style={styles.image}
         source={{
           uri: item.uri,
