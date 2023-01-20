@@ -106,7 +106,13 @@ function CommunityItem({ item, navigation }) {
       marginTop: 18,
       paddingHorizontal: 18,
     },
-    image: { height: 80, width: 80, borderRadius: 15, marginRight: 8 },
+    image: {
+      height: 80,
+      width: 80,
+      borderRadius: 15,
+      marginRight: 8,
+      backgroundColor: "#f9f9f9",
+    },
     footer: {
       flexDirection: "row",
       height: 50,

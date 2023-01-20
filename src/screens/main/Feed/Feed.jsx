@@ -92,6 +92,11 @@ function FeedItem({ item }) {
     footer_title: { fontWeight: "700", fontSize: 12 },
     footer_desc: { fontSize: 12, marginTop: 5 },
 
+    image: {
+      height: SCREEN_WIDTH,
+      width: SCREEN_WIDTH,
+      backgroundColor: "#f9f9f9",
+    },
     date: { fontSize: 10, color: "gray", marginTop: 10 },
   });
   return (
@@ -110,12 +115,8 @@ function FeedItem({ item }) {
           return (
             <TouchableOpacity onPress={handleImageOpen}>
               <Image
-                resizeMode="contain"
-                imageBackgroundColor="#FFFFFF"
-                style={{
-                  width: SCREEN_WIDTH,
-                  height: SCREEN_WIDTH,
-                }}
+                resizeMode={"contain"}
+                style={styles.image}
                 source={{ uri: image }}
               />
             </TouchableOpacity>

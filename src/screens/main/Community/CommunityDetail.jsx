@@ -129,6 +129,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       marginRight: 20,
       borderRadius: 20,
       marginTop: 32,
+      backgroundColor: "#f9f9f9",
     },
 
     input_container: {
