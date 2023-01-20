@@ -12,7 +12,7 @@ module.exports = {
     name: "금천고등학교",
     scheme: "kch",
     slug: "kch-app",
-    version: "1.0.0",
+    version: "1.0.1",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
@@ -22,8 +22,10 @@ module.exports = {
       backgroundColor: "#ffffff",
     },
     updates: {
+      url: "https://u.expo.dev/5b77743f-dfb8-4df6-942e-446f6e72ed63",
       fallbackToCacheTimeout: 0,
     },
+    runtimeVersion: { policy: "appVersion" },
     assetBundlePatterns: ["**/*"],
     ios: {
       bundleIdentifier: "me.kch-app.kch",
