@@ -98,6 +98,13 @@ export default function JoinFormScreen({ navigation, route }) {
   const [registerCode, setRegisterCode] = useState("");
   const [name, setName] = useState("");
 
+  useEffect(() => {
+    if (gradeValue === "teacher") {
+      setClassValue("선생님");
+      setNumValue("선생님");
+    }
+  }, [gradeValue]);
+
   //DropDown 메뉴들 모두다 선택했는지 Validation
   useEffect(() => {
     if (gradeValue && name) {

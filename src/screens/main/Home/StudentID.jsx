@@ -8,6 +8,13 @@ import moment from "moment";
 export default function StudentIDScreen({ navigation }) {
   const { user } = useContext(UserContext);
 
+  useEffect(() => {
+    if (user.grade === "teacher") {
+      alert("선생님께서는 학생증 서비스를 이용하실 수 없습니다.");
+      navigation.goBack();
+    }
+  });
+
   const styles = StyleSheet.create({
     container: { flex: 1 },
     card_wrap: {

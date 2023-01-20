@@ -126,9 +126,15 @@ iOS Model ID: ${Device.modelId}
           <View style={styles.header}>
             <View>
               <Text style={styles.name}>{user.name}</Text>
-              <Text style={styles.personal_info}>
-                {user.grade}학년 {user.class}반
-              </Text>
+              {user.grade === "teacher" ? (
+                <Text style={styles.personal_info}>
+                  자랑스러운 금천고 선생님
+                </Text>
+              ) : (
+                <Text style={styles.personal_info}>
+                  {user.grade}학년 {user.class}반
+                </Text>
+              )}
             </View>
             <Image
               style={styles.icon}
