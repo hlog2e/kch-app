@@ -9,7 +9,7 @@ module.exports = {
       },
       apiUrl: process.env.API_SERVER,
     },
-    name: "금천고등학교",
+    name: "kch-app",
     scheme: "kch",
     slug: "kch-app",
     version: "1.0.1",
@@ -25,7 +25,7 @@ module.exports = {
       url: "https://u.expo.dev/5b77743f-dfb8-4df6-942e-446f6e72ed63",
       fallbackToCacheTimeout: 0,
     },
-    runtimeVersion: { policy: "appVersion" },
+    runtimeVersion: { policy: "sdkVersion" },
     assetBundlePatterns: ["**/*"],
     ios: {
       bundleIdentifier: "me.kch-app.kch",
