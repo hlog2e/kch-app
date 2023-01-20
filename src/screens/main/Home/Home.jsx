@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import Weather from "../../../components/home/Weather";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Banner from "../../../components/home/Banner";
+import DDay from "../../../components/home/DDay";
 
 export default function HomeScreen({ navigation }) {
   const styles = StyleSheet.create({
@@ -79,7 +79,7 @@ export default function HomeScreen({ navigation }) {
       <ScrollView>
         <View style={styles.header}>
           <Text style={styles.header_text}>홈</Text>
-          <Weather />
+          <DDay />
         </View>
 
         <Banner />
