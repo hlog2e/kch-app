@@ -64,7 +64,6 @@ export default function StudentCouncilScreen({ navigation }) {
       justifyContent: "space-between",
     },
     leader_item: {
-      height: 80,
       width: 100,
       borderRadius: 10,
       backgroundColor: "white",
@@ -136,7 +135,6 @@ function StudentItem({ name, type }) {
   const styles = StyleSheet.create({
     student_item: {
       width: 80,
-      height: 110,
       marginHorizontal: 5,
       marginVertical: 10,
       backgroundColor: "white",
