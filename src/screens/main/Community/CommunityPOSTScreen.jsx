@@ -42,8 +42,8 @@ export default function CommunityPOSTScreen({ navigation }) {
         allowsMultipleSelection: true,
       });
 
-      if (!result.cancelled) {
-        setImages(result.selected);
+      if (!result.canceled) {
+        setImages(result.assets);
       } else {
         console.log("이미지 선택 취소");
       }
