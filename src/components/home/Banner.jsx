@@ -51,12 +51,12 @@ const Item = ({ item, dataLength, nowIndex }) => {
       paddingVertical: 10,
       paddingHorizontal: 25,
     },
-    image: { height: 75, borderRadius: 8, backgroundColor: "red" },
+    image: { height: 75, borderRadius: 8, backgroundColor: "#e9e9e9" },
     pagination: {
       position: "absolute",
       bottom: 17,
       right: 35,
-      backgroundColor: "#e8e8e8",
+      backgroundColor: "white",
       paddingVertical: 1,
       paddingHorizontal: 5,
       borderRadius: 15,
@@ -78,11 +78,9 @@ const Item = ({ item, dataLength, nowIndex }) => {
       <Image
         resizeMode={"contain"}
         style={styles.image}
-        source={
-          {
-            // uri: item.uri,
-          }
-        }
+        source={{
+          uri: item.uri,
+        }}
       />
       <View style={styles.pagination}>
         <Text style={styles.pagination_text}>
