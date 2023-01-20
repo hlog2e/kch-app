@@ -212,11 +212,11 @@ function ListButtonSection({ navigation }) {
       id: 7,
       name: "앱 버전",
       onPress: () => {
-        alert(`현재 앱 버전은 v.${Constants.manifest.version} 입니다.`);
+        alert(`현재 앱 버전은 v.${Constants.expoConfig.version} 입니다.`);
       },
       right: (
         <Text style={{ fontSize: 10, color: "gray" }}>
-          v.{Constants.manifest.version}
+          v.{Constants.expoConfig.version}
         </Text>
       ),
     },
