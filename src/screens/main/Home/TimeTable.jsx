@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Alert } from "react-native";
 import { getTimetable } from "../../../../apis/home/timetable";
 import moment from "moment/moment";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -34,6 +34,15 @@ export default function TimetableScreen({ navigation }) {
       weekFirstDay,
       dateArray[4]
     );
+    console.log(data);
+
+    if (!data.hisTimetable) {
+      Alert.alert(
+        "오류",
+        "교육청(NEIS) 서버에 문제가 발생하였습니다. 나중에 다시 시도하세요.",
+        [{ text: "확인" }]
+      );
+    }
 
     const row = data.hisTimetable[1].row;
     const _timetable = row.reduce((acc, e) => {
