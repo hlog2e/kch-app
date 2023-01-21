@@ -32,7 +32,7 @@ module.exports = {
       supportsTablet: true,
     },
     android: {
-      versionCode: 2,
+      versionCode: 3,
       googleServicesFile: "./google-services.json",
       package: "me.kch_app.kch",
       adaptiveIcon: {
