@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text } from "react-native";
 
-export default function ButtonFullWidth({ text, color, onPress }) {
+export default function ButtonFullWidth({ text, color, onPress, disable }) {
   return (
     <TouchableOpacity
       style={{
@@ -12,7 +12,7 @@ export default function ButtonFullWidth({ text, color, onPress }) {
         borderRadius: 15,
         backgroundColor: color,
       }}
-      onPress={onPress}
+      onPress={!disable ? onPress : null}
     >
       <Text
         style={{

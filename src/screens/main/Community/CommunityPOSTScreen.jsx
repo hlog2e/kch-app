@@ -170,7 +170,7 @@ export default function CommunityPOSTScreen({ navigation }) {
       <FullScreenBlurLoader loading={loading} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : null}
       >
         <ScrollView>
           <OnlyLeftArrowHeader navigation={navigation} />

@@ -19,17 +19,15 @@ import AlertError from "../../../components/common/AlertError";
 import { postVerifyCode } from "../../../../apis/auth";
 
 export default function JoinVerfiyScreen({ navigation, route }) {
-  const [status, setStatus] = useState({
-    status: "sucess",
-    message: "문자메세지로 인증번호가 전송되었습니다.",
-  });
+  const [status, setStatus] = useState("success");
+  const [msg, setMsg] = useState("인증번호를 발송했습니다!");
   const [verifyCode, setVerifyCode] = useState("");
   const [done, setDone] = useState(false);
 
   useEffect(() => {
     if (verifyCode.length === 4) {
       setDone(true);
-      setStatus({});
+      setStatus("");
     } else {
       setDone(false);
     }
@@ -47,85 +45,96 @@ export default function JoinVerfiyScreen({ navigation, route }) {
           phoneNumber: route.params.phoneNumber,
         });
       } else {
-        setStatus({ status: "error", message: message });
+        setStatus("error");
+        setMsg(message);
       }
     }
   }
+
+  const styles = StyleSheet.create({
+    title: {
+      fontSize: 40,
+      fontWeight: "700",
+      marginHorizontal: 25,
+      marginVertical: 25,
+    },
+
+    keyboard_view: {
+      flex: 1,
+      paddingHorizontal: 25,
+    },
+  });
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <OnlyLeftArrowHeader navigation={navigation} />
+      <Text style={styles.title}>인증번호</Text>
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboard_view}
+        behavior={Platform.OS === "ios" ? "padding" : null}
       >
-        <Text
-          style={{
-            fontSize: 40,
-            fontWeight: "700",
-            marginHorizontal: 25,
-            marginTop: 20,
-          }}
-        >
-          인증번호
-        </Text>
-
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "space-between",
-            paddingHorizontal: 25,
-            paddingTop: 50,
-          }}
-        >
-          <View>
-            <Text style={{ fontSize: 14, color: "gray", marginBottom: 5 }}>
-              인증번호
-            </Text>
-            <TextInput
-              value={verifyCode}
-              maxLength={4}
-              onChangeText={(_data) => {
-                if (numRegexChecker(_data)) {
-                  setVerifyCode(_data);
-                }
-              }}
-              placeholder="인증번호 4자리"
-              keyboardType="phone-pad"
-              style={[
-                styles.input,
-                status.status === "error" ? styles.input_red : styles.input,
-              ]}
-            />
-            {status.status === "error" ? (
-              <AlertError text={status.message} />
-            ) : null}
-            {status.status === "sucess" ? (
-              <AlertSucess text={status.message} />
-            ) : null}
-          </View>
-
-          <View>
-            <ButtonFullWidth
-              onPress={handleRequestValidateCode}
-              text="다음"
-              color={done ? "#00139B" : "#A1A5C0"}
-            />
-          </View>
-        </View>
+        <Input
+          verifyCode={verifyCode}
+          setVerifyCode={setVerifyCode}
+          status={status}
+          msg={msg}
+        />
+        <Footer
+          handleRequestValidateCode={handleRequestValidateCode}
+          done={done}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  input: {
-    borderBottomColor: "#bdbdbd",
-    borderBottomWidth: 2,
-    padding: 5,
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  input_red: {
-    borderBottomColor: "#fb7185",
-  },
-});
+function Input({ verifyCode, setVerifyCode, status, msg }) {
+  const styles = StyleSheet.create({
+    input_wrap: { flex: 1 },
+    input_title: { fontSize: 14, color: "gray", marginBottom: 5 },
+    input: {
+      borderBottomColor: "#bdbdbd",
+      borderBottomWidth: 2,
+      padding: 5,
+      fontSize: 20,
+      fontWeight: "600",
+    },
+    input_red: {
+      borderBottomColor: "#fb7185",
+    },
+  });
+  return (
+    <View style={styles.input_wrap}>
+      <Text style={styles.input_title}>인증번호</Text>
+      <TextInput
+        value={verifyCode}
+        maxLength={4}
+        onChangeText={(_data) => {
+          if (numRegexChecker(_data)) {
+            setVerifyCode(_data);
+          }
+        }}
+        placeholder="인증번호 4자리"
+        keyboardType="phone-pad"
+        style={[
+          styles.input,
+          status === "error" ? styles.input_red : styles.input,
+        ]}
+      />
+      {status === "error" ? <AlertError text={msg} /> : null}
+      {status === "success" ? <AlertSucess text={msg} /> : null}
+    </View>
+  );
+}
+
+function Footer({ handleRequestValidateCode, done }) {
+  return (
+    <View>
+      <ButtonFullWidth
+        onPress={handleRequestValidateCode}
+        text="다음"
+        disable={!done}
+        color={done ? "#00139B" : "#A1A5C0"}
+      />
+    </View>
+  );
+}

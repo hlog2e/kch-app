@@ -150,7 +150,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       {isSuccess ? (
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          behavior={Platform.OS === "ios" ? "padding" : null}
         >
           <View style={styles.scroll_view_wrap}>
             <ScrollView style={styles.scroll_view}>

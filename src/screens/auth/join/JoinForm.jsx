@@ -175,7 +175,7 @@ export default function JoinFormScreen({ navigation, route }) {
     <SafeAreaView style={{ flex: 1 }}>
       <OnlyLeftArrowHeader navigation={navigation} />
       <KeyboardAwareScrollView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : null}
       >
         <Text
           style={{
