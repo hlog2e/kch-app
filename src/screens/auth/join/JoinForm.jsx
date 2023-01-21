@@ -141,34 +141,39 @@ export default function JoinFormScreen({ navigation, route }) {
 
   async function handlePostJoin() {
     if (dropDownDone && registerCodeDone && registerCodeVerified) {
-      const data = await postJoinUser({
-        phoneNumber: route.params.phoneNumber,
-        name: name,
-        grade: gradeValue,
-        class: classValue,
-        number: numValue,
-        registerCode: registerCode,
-      }).catch((err) => {
-        Alert.alert("회원가입 오류", err.response.data.message, [
-          { text: "확인" },
-        ]);
-      });
+      try {
+        const data = await postJoinUser({
+          phoneNumber: route.params.phoneNumber,
+          name: name,
+          grade: gradeValue,
+          class: classValue,
+          number: numValue,
+          registerCode: registerCode,
+        }).catch((err) => {
+          Alert.alert("회원가입 오류", err.response.data.message, [
+            { text: "확인" },
+          ]);
+        });
 
-      await AsyncStorage.setItem("token", JSON.stringify(data.token)); //asyncStorage에 토큰 저장
-      await AsyncStorage.setItem("user", JSON.stringify(data.user)); //asyncStorage에 유저 정보 저장
-      setUser(data.user);
+        await AsyncStorage.setItem("token", JSON.stringify(data.token)); //asyncStorage에 토큰 저장
+        await AsyncStorage.setItem("user", JSON.stringify(data.user)); //asyncStorage에 유저 정보 저장
+        setUser(data.user);
 
-      //Expo Push Token 을 얻은 후 DB에 POST
-      registerForPushNotificationsAsync().then((_token) => {
-        if (_token) {
-          console.log(_token);
-          registerPushTokenToDB(_token).catch((err) =>
-            alert("푸시알림 서비스 등록을 실패하였습니다.")
-          );
-        }
-      });
+        //Expo Push Token 을 얻은 후 DB에 POST
+        registerForPushNotificationsAsync().then((_token) => {
+          if (_token) {
+            console.log(_token);
+            registerPushTokenToDB(_token).catch((err) =>
+              alert("푸시알림 서비스 등록을 실패하였습니다.")
+            );
+          }
+        });
 
-      navigation.replace("Main");
+        navigation.replace("Main");
+      } catch (err) {
+        console.log(err);
+        alert("회원가입 도중 오류가 발생 하였습니다.");
+      }
     }
   }
   return (
