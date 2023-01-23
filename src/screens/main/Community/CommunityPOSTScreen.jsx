@@ -19,6 +19,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { postCommunity } from "../../../../apis/community/community";
 import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
 import badWordChecker from "../../../../utils/badWordChecker";
+import mime from "mime";
 
 export default function CommunityPOSTScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -37,8 +38,7 @@ export default function CommunityPOSTScreen({ navigation }) {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
-        aspect: [1, 1],
-        quality: 0,
+        quality: 0.1,
         allowsMultipleSelection: true,
       });
 
@@ -102,23 +102,33 @@ export default function CommunityPOSTScreen({ navigation }) {
   const handlePOST = async () => {
     const { passed } = await checkBeforePOST();
     if (passed) {
-      formData.append("title", title);
-      formData.append("content", content);
-      images.map(({ uri }) => {
-        formData.append("image", { uri: uri, name: "test", type: "image" });
-      });
+      try {
+        formData.append("title", title);
+        formData.append("content", content);
+        images.map(({ uri }) => {
+          formData.append("image", {
+            uri: uri,
+            name: uri.split("/").pop(),
+            type: mime.getType(uri),
+          });
+        });
 
-      mutate(formData, {
-        onSuccess: () => {
-          setLoading(false);
-          setTitle("");
-          setContent("");
-          setImages([]);
+        mutate(formData, {
+          onSuccess: () => {
+            setLoading(false);
+            setTitle("");
+            setContent("");
+            setImages([]);
 
-          queryClient.invalidateQueries("community");
-          navigation.goBack();
-        },
-      });
+            queryClient.invalidateQueries("community");
+            navigation.goBack();
+          },
+        });
+      } catch (err) {
+        console.log(err);
+        alert("게시물 작성 도중 오류가 발생하였습니다.");
+        setLoading(false);
+      }
     }
   };
 
