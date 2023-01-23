@@ -28,6 +28,8 @@ import { UserContext } from "../../../../context/UserContext";
 import { registerForPushNotificationsAsync } from "../../../../utils/expo_notification";
 import { registerPushTokenToDB } from "../../../../apis/push-noti";
 
+import * as Linking from "expo-linking";
+
 export default function JoinFormScreen({ navigation, route }) {
   const { setUser } = useContext(UserContext);
 
@@ -345,6 +347,33 @@ export default function JoinFormScreen({ navigation, route }) {
             </View>
           </View>
 
+          <View style={styles.privacy_container}>
+            <View style={styles.privacy_row_text}>
+              <Text style={styles.privacy_text}>회원가입을 진행하면</Text>
+            </View>
+            <View style={styles.privacy_row_text}>
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL("https://static.kch-app.me/privacy.html");
+                }}
+              >
+                <Text style={styles.privacy_link_text}>개인정보처리방침</Text>
+              </TouchableOpacity>
+              <Text style={styles.privacy_text}>과 </Text>
+
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL("https://static.kch-app.me/privacy.html");
+                }}
+              >
+                <Text style={styles.privacy_link_text}>이용약관</Text>
+              </TouchableOpacity>
+              <Text style={styles.privacy_text}>
+                을 동의한 것으로 간주됩니다.
+              </Text>
+            </View>
+          </View>
+
           {registerCodeAlertStatus.status === "error" ? (
             <AlertError text={registerCodeAlertStatus.message} />
           ) : null}
@@ -352,7 +381,7 @@ export default function JoinFormScreen({ navigation, route }) {
             <AlertSucess text={registerCodeAlertStatus.message} />
           ) : null}
 
-          <View style={{ marginTop: 60, zIndex: -1 }}>
+          <View style={{ marginTop: 20, zIndex: -1 }}>
             <ButtonFullWidth
               text="가입하기"
               onPress={handlePostJoin}
@@ -408,5 +437,22 @@ const styles = StyleSheet.create({
   dropdown_selected_item_container: {
     backgroundColor: "#f4f4f4",
     borderRadius: 10,
+  },
+
+  privacy_container: {
+    marginTop: 30,
+  },
+  privacy_row_text: {
+    paddingVertical: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  privacy_text: {
+    fontSize: 12,
+    fontWeight: "300",
+  },
+  privacy_link_text: {
+    fontSize: 12,
+    fontWeight: "700",
   },
 });

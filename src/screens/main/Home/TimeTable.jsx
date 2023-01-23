@@ -34,7 +34,6 @@ export default function TimetableScreen({ navigation }) {
       weekFirstDay,
       dateArray[4]
     );
-    console.log(data);
 
     if (!data.hisTimetable) {
       Alert.alert(

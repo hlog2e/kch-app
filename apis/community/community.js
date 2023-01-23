@@ -10,6 +10,37 @@ export const getCommunities = async (offset) => {
   return data;
 };
 
+export const getBlockedUsers = async () => {
+  const { data } = await apiAuthInstance.get("/community/blocked_users");
+
+  return data;
+};
+
+export const postBlockUser = async (props) => {
+  const { data } = await apiAuthInstance.post("/community/block_user", {
+    blockUserId: props.blockUserId,
+  });
+
+  return data;
+};
+
+export const postReportCommunityItem = async (props) => {
+  const { data } = await apiAuthInstance.post("/community/report", {
+    postId: props.postId,
+  });
+
+  return data;
+};
+
+export const postReportComment = async (props) => {
+  const { data } = await apiAuthInstance.post("/community/report/comment", {
+    postId: props.postId,
+    commentId: props.commentId,
+  });
+
+  return data;
+};
+
 export const postCommunity = async (formData) => {
   const { data } = await apiAuthInstance.post("/community", formData, {
     headers: { "Content-Type": "multipart/form-data" },
