@@ -363,7 +363,7 @@ export default function JoinFormScreen({ navigation, route }) {
 
               <TouchableOpacity
                 onPress={() => {
-                  Linking.openURL("https://static.kch-app.me/privacy.html");
+                  Linking.openURL("https://terms.kch-app.me");
                 }}
               >
                 <Text style={styles.privacy_link_text}>이용약관</Text>
