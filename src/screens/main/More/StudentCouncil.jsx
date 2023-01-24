@@ -21,7 +21,7 @@ export default function StudentCouncilScreen({ navigation }) {
       type: "미디어홍보부",
     },
     {
-      name: ["공\n \n석", "곽\n서\n은"],
+      name: ["곽\n서\n은", "공\n \n석"],
       type: "예능기획부",
     },
     {
