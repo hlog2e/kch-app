@@ -1,12 +1,30 @@
-import { View, StyleSheet, Text, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
+import { Ionicons } from "@expo/vector-icons";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  getUserInfo,
+  postRegisterPhoto,
+} from "../../../../apis/home/studentID";
+import * as ImagePicker from "expo-image-picker";
+import mime from "mime";
+import FullScreenLoader from "../../../components/common/FullScreenLoader";
 
 export default function StudentIDScreen({ navigation }) {
   const { user } = useContext(UserContext);
+  const { data: userData } = useQuery("userData", getUserInfo);
 
   useEffect(() => {
     if (user.grade === "teacher") {
@@ -18,8 +36,7 @@ export default function StudentIDScreen({ navigation }) {
   const styles = StyleSheet.create({
     container: { flex: 1 },
     card_wrap: {
-      flex: 1,
-      marginTop: 50,
+      marginTop: 10,
       paddingHorizontal: 45,
     },
     title: { fontSize: 16, fontWeight: "700", paddingVertical: 7 },
@@ -31,7 +48,6 @@ export default function StudentIDScreen({ navigation }) {
       borderTopRightRadius: 10,
     },
     name_section: {
-      marginTop: 30,
       alignItems: "center",
     },
     name: {
@@ -78,13 +94,14 @@ export default function StudentIDScreen({ navigation }) {
     <SafeAreaView style={styles.container} edges={["top"]}>
       <OnlyLeftArrowHeader navigation={navigation} />
 
-      <View style={styles.card_wrap}>
+      <ScrollView style={styles.card_wrap}>
         <View style={styles.card}>
           <Image
             resizeMode={"contain"}
             style={styles.image}
             source={{ uri: "https://static.kch-app.me/student_id_banner.png" }}
           />
+          <Photo userData={userData} />
           <View style={styles.name_section}>
             <Text style={styles.name}>{user.name}</Text>
             <Text style={styles.school_name}>청주 금천고등학교</Text>
@@ -126,7 +143,118 @@ export default function StudentIDScreen({ navigation }) {
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function Photo({ userData }) {
+  const [loading, setLoading] = useState(false);
+
+  const { mutate } = useMutation(postRegisterPhoto);
+  const queryClient = useQueryClient();
+
+  const formData = new FormData();
+
+  const handleImagePicking = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        allowsMultipleSelection: false,
+        quality: 0.3,
+      });
+
+      if (!result.canceled) {
+        const image = result.assets[0];
+        await handlePOSTRegisterPhoto(image);
+      } else {
+        console.log("이미지 선택 취소");
+      }
+    } catch (_err) {
+      alert("이미지를 로드하는 중 오류가 발생하였습니다.");
+    }
+  };
+
+  const handlePOSTRegisterPhoto = async (image) => {
+    setLoading(true);
+    formData.append("image", {
+      uri: image.uri,
+      name: image.uri.split("/").pop(),
+      type: mime.getType(image.uri),
+    });
+
+    mutate(formData, {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userData");
+        setLoading(false);
+      },
+    });
+  };
+
+  const styles = StyleSheet.create({
+    container: { paddingVertical: 15, alignItems: "center" },
+    dummy_image: {
+      backgroundColor: "#e4e4e4",
+      height: 125,
+      width: 100,
+      borderRadius: 5,
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingVertical: 27,
+    },
+    dummy_desc: {
+      fontSize: 10,
+      fontWeight: "700",
+      color: "gray",
+    },
+    image: {
+      height: 125,
+      width: 100,
+      borderRadius: 5,
+    },
+  });
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <View style={[styles.dummy_image, { justifyContent: "center" }]}>
+          <ActivityIndicator />
+        </View>
+      </View>
+    );
+  }
+
+  // userData === undefinded 일때 처리
+  if (!userData) {
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.dummy_image}
+          onPress={handleImagePicking}
+        >
+          <Ionicons name="camera" size={30} color="gray" />
+          <Text style={styles.dummy_desc}>사진을 등록해주세요</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      {userData.photo ? (
+        <TouchableOpacity onPress={handleImagePicking}>
+          <Image style={styles.image} source={{ uri: userData.photo }} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.dummy_image}
+          onPress={handleImagePicking}
+        >
+          <Ionicons name="camera" size={30} color="gray" />
+          <Text style={styles.dummy_desc}>사진을 등록해주세요</Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 }
