@@ -28,6 +28,8 @@ import { UserContext } from "../../../../context/UserContext";
 import { registerForPushNotificationsAsync } from "../../../../utils/expo_notification";
 import { registerPushTokenToDB } from "../../../../apis/push-noti";
 
+import studentSelectionDataJSON from "../../../../data/studentSeletionData.json";
+
 import * as Linking from "expo-linking";
 
 export default function JoinFormScreen({ navigation, route }) {
@@ -40,61 +42,19 @@ export default function JoinFormScreen({ navigation, route }) {
 
   //DropDown 구분 선택
   const [gradeOpen, setGradeOpen] = useState(false);
+
   const [gradeItems, setGradeItems] = useState([
-    { label: "1학년", value: 1 },
-    { label: "2학년", value: 2 },
-    { label: "3학년", value: 3 },
+    ...studentSelectionDataJSON.grade,
     { label: "선생님", value: "teacher" },
   ]);
   const [gradeValue, setGradeValue] = useState(1);
   //DropDown 반 선택
   const [classOpen, setClassOpen] = useState(false);
-  const [classItems, setClassItems] = useState([
-    { label: "1반", value: 1 },
-    { label: "2반", value: 2 },
-    { label: "3반", value: 3 },
-    { label: "4반", value: 4 },
-    { label: "5반", value: 5 },
-    { label: "6반", value: 6 },
-    { label: "7반", value: 7 },
-    { label: "8반", value: 8 },
-    { label: "9반", value: 9 },
-  ]);
+  const [classItems, setClassItems] = useState(studentSelectionDataJSON.class);
   const [classValue, setClassValue] = useState();
   //DropDown 번호 선택
   const [numOpen, setNumOpen] = useState(false);
-  const [numItems, setNumItems] = useState([
-    { label: "1번", value: 1 },
-    { label: "2번", value: 2 },
-    { label: "3번", value: 3 },
-    { label: "4번", value: 4 },
-    { label: "5번", value: 5 },
-    { label: "6번", value: 6 },
-    { label: "7번", value: 7 },
-    { label: "8번", value: 8 },
-    { label: "9번", value: 9 },
-    { label: "10번", value: 10 },
-    { label: "11번", value: 11 },
-    { label: "12번", value: 12 },
-    { label: "13번", value: 13 },
-    { label: "14번", value: 14 },
-    { label: "15번", value: 15 },
-    { label: "16번", value: 16 },
-    { label: "17번", value: 17 },
-    { label: "18번", value: 18 },
-    { label: "19번", value: 19 },
-    { label: "20번", value: 20 },
-    { label: "21번", value: 21 },
-    { label: "22번", value: 22 },
-    { label: "23번", value: 23 },
-    { label: "24번", value: 24 },
-    { label: "25번", value: 25 },
-    { label: "26번", value: 26 },
-    { label: "27번", value: 27 },
-    { label: "28번", value: 28 },
-    { label: "29번", value: 29 },
-    { label: "30번", value: 30 },
-  ]);
+  const [numItems, setNumItems] = useState(studentSelectionDataJSON.number);
   const [numValue, setNumValue] = useState();
   //가입코드 state
   const [registerCode, setRegisterCode] = useState("");

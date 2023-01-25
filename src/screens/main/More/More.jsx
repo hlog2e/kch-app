@@ -36,40 +36,6 @@ export default function MoreScreen({ navigation }) {
     ]);
   };
 
-  const handleSendSMS = async (_type) => {
-    const smsIsAvailable = await SMS.isAvailableAsync();
-
-    let message = "";
-    const bugTemplate = `[Bug Report]
-timestamp: ${moment().format("YYYY-MM-DD-HH-mm:ss.SSS")}
-User ID: ${user._id}
-Device: ${Device.modelName}
-OS: ${Device.osName}
-OS Version: ${Device.osVersion} 
-iOS Model ID: ${Device.modelId}
-
-[버그내용]
-
-(해당부분을 지우고 오류가 발생한 것을 자세히 설명해주세요... 버그가 발생한 부분의 스크린샷도 첨부해주시면 감사하겠습니다.)`;
-    const ideaTemplate = `[의견제출]
-
-`;
-
-    if (_type === "bug") {
-      message = bugTemplate;
-    }
-
-    if (_type === "idea") {
-      message = ideaTemplate;
-    }
-
-    if (smsIsAvailable) {
-      await SMS.sendSMSAsync(["01095645490"], message, {});
-    } else {
-      alert("디바이스가 SMS를 전송할 수 없는 상태입니다.");
-    }
-  };
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -116,7 +82,7 @@ iOS Model ID: ${Device.modelId}
     },
     button_text: {
       fontSize: 11,
-      color: "gray",
+      color: "#334155",
     },
   });
   return (
@@ -146,20 +112,28 @@ iOS Model ID: ${Device.modelId}
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                handleSendSMS("idea");
+                alert("개발 중 입니다......");
               }}
             >
-              <Ionicons name="bulb-outline" size={24} color="gray" />
-              <Text style={[styles.button_text]}>의견제출</Text>
+              <Ionicons
+                name="md-notifications-outline"
+                size={24}
+                color="#334155"
+              />
+              <Text style={[styles.button_text]}>알림 설정</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                handleSendSMS("bug");
+                navigation.push("ModifyUserInfoScreen");
               }}
             >
-              <Ionicons name="bug-outline" size={24} color="gray" />
-              <Text style={[styles.button_text]}>버그·오류 신고</Text>
+              <Ionicons
+                name="person-circle-outline"
+                size={24}
+                color="#334155"
+              />
+              <Text style={[styles.button_text]}>내 정보 수정</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleLogout}>
               <Ionicons name="exit-outline" size={24} color="#CF5858" />
@@ -170,13 +144,13 @@ iOS Model ID: ${Device.modelId}
           </View>
         </View>
 
-        <ListButtonSection navigation={navigation} />
+        <ListButtonSection navigation={navigation} user={user} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function ListButtonSection({ navigation }) {
+function ListButtonSection({ navigation, user }) {
   const buttons = [
     {
       id: 1,
@@ -197,6 +171,24 @@ function ListButtonSection({ navigation }) {
     { id: 3, name: "margin" },
     {
       id: 4,
+      name: "의견 제출",
+      onPress: () => {
+        handleSendSMS("idea");
+      },
+      right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
+    },
+    {
+      id: 5,
+      name: "버그·오류 신고",
+      onPress: () => {
+        handleSendSMS("bug");
+      },
+      right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
+    },
+
+    { id: 6, name: "margin" },
+    {
+      id: 7,
       name: "개인정보 처리방침",
       onPress: async () => {
         await WebBrowser.openBrowserAsync(
@@ -206,16 +198,15 @@ function ListButtonSection({ navigation }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 5,
+      id: 8,
       name: "오픈소스",
       onPress: async () => {
         await WebBrowser.openBrowserAsync("https://github.com/hlog2e/kch-app");
       },
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
-    { id: 6, name: "margin" },
     {
-      id: 7,
+      id: 9,
       name: "앱 버전",
       onPress: () => {
         alert(`현재 앱 버전은 v.${Constants.expoConfig.version} 입니다.`);
@@ -227,6 +218,41 @@ function ListButtonSection({ navigation }) {
       ),
     },
   ];
+
+  const handleSendSMS = async (_type) => {
+    const smsIsAvailable = await SMS.isAvailableAsync();
+
+    let message = "";
+    const bugTemplate = `[Bug Report]
+timestamp: ${moment().format("YYYY-MM-DD-HH-mm:ss.SSS")}
+User ID: ${user._id}
+Device: ${Device.modelName}
+OS: ${Device.osName}
+OS Version: ${Device.osVersion} 
+iOS Model ID: ${Device.modelId}
+
+[버그내용]
+
+(해당부분을 지우고 오류가 발생한 것을 자세히 설명해주세요... 버그가 발생한 부분의 스크린샷도 첨부해주시면 감사하겠습니다.)`;
+    const ideaTemplate = `[의견제출]
+
+`;
+
+    if (_type === "bug") {
+      message = bugTemplate;
+    }
+
+    if (_type === "idea") {
+      message = ideaTemplate;
+    }
+
+    if (smsIsAvailable) {
+      await SMS.sendSMSAsync(["01095645490"], message, {});
+    } else {
+      alert("디바이스가 SMS를 전송할 수 없는 상태입니다.");
+    }
+  };
+
   const styles = StyleSheet.create({
     container: { marginTop: 40 },
     button: {
