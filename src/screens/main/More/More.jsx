@@ -199,6 +199,14 @@ function ListButtonSection({ navigation, user }) {
     },
     {
       id: 8,
+      name: "이용약관",
+      onPress: async () => {
+        await WebBrowser.openBrowserAsync("https://terms.kch-app.me");
+      },
+      right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
+    },
+    {
+      id: 9,
       name: "오픈소스",
       onPress: async () => {
         await WebBrowser.openBrowserAsync("https://github.com/hlog2e/kch-app");
@@ -206,7 +214,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 9,
+      id: 10,
       name: "앱 버전",
       onPress: () => {
         alert(`현재 앱 버전은 v.${Constants.expoConfig.version} 입니다.`);
