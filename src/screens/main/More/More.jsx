@@ -125,7 +125,11 @@ export default function MoreScreen({ navigation }) {
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                navigation.push("ModifyUserInfoScreen");
+                if (user.grade === "teacher") {
+                  alert("선생님이 학생으로 돌아가시는건 불가능한 일 입니다.");
+                } else {
+                  navigation.push("ModifyUserInfoScreen");
+                }
               }}
             >
               <Ionicons

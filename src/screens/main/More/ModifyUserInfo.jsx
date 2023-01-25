@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
 import RNPickerSelect from "react-native-picker-select";
 
@@ -15,12 +15,30 @@ export default function ModifyUserInfoScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
 
   const [isChanged, setIsChanged] = useState(false);
+  const [pickerDone, setPickerDone] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const [gradeValue, setGradeValue] = useState(Number(user.grade));
   const [classValue, setClassValue] = useState(Number(user.class));
   const [numValue, setNumValue] = useState(Number(user.number));
 
   const { mutate } = useMutation(postModifyUserInfo);
+
+  useEffect(() => {
+    if (!gradeValue || !classValue || !numValue) {
+      setPickerDone(false);
+    } else {
+      setPickerDone(true);
+    }
+  }, [gradeValue, classValue, numValue]);
+
+  useEffect(() => {
+    if (pickerDone && isChanged) {
+      setIsDone(true);
+    } else {
+      setIsDone(false);
+    }
+  }, [pickerDone, isChanged]);
 
   const styles = StyleSheet.create({
     container: { flex: 1 },
@@ -40,7 +58,7 @@ export default function ModifyUserInfoScreen({ navigation }) {
       fontWeight: "300",
       paddingVertical: 8,
     },
-    inputAndroid: {},
+    inputAndroid: { fontSize: 16, fontWeight: "300", paddingVertical: 8 },
   });
 
   const handleModifyUserInfo = async () => {
@@ -118,9 +136,9 @@ export default function ModifyUserInfoScreen({ navigation }) {
           </View>
         </View>
         <ButtonFullWidth
-          disable={!isChanged}
+          disable={!isDone}
           onPress={handleModifyUserInfo}
-          color={isChanged ? "#00139B" : "#A1A5C0"}
+          color={isDone ? "#00139B" : "#A1A5C0"}
           text={"수정 완료"}
         />
       </View>
