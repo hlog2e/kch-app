@@ -97,6 +97,7 @@ export default function ModifyUserInfoScreen({ navigation }) {
             <View style={styles.picker}>
               <RNPickerSelect
                 style={pickerStyle}
+                placeholder={{ label: "학년", value: null }}
                 onValueChange={(_value) => {
                   setIsChanged(true);
                   setGradeValue(_value);
@@ -111,6 +112,7 @@ export default function ModifyUserInfoScreen({ navigation }) {
             <View style={styles.picker}>
               <RNPickerSelect
                 style={pickerStyle}
+                placeholder={{ label: "반", value: null }}
                 onValueChange={(_value) => {
                   setIsChanged(true);
                   setClassValue(_value);
@@ -125,6 +127,7 @@ export default function ModifyUserInfoScreen({ navigation }) {
             <View style={styles.picker}>
               <RNPickerSelect
                 style={pickerStyle}
+                placeholder={{ label: "번호", value: null }}
                 onValueChange={(_value) => {
                   setIsChanged(true);
                   setNumValue(_value);

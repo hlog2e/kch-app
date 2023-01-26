@@ -156,6 +156,12 @@ function CommunityItem({ item, navigation }) {
           <Ionicons name={"chatbubble-outline"} size={20} />
           <Text style={styles.icon_text}>{comma(item.commentCount)}</Text>
         </View>
+        <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
+          <Ionicons name={"eye-outline"} size={24} />
+          <Text style={styles.icon_text}>
+            {item.views ? comma(item.views) : 0}
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
