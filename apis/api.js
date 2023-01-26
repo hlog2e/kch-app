@@ -6,12 +6,16 @@ import { navigate } from "../src/navigations/RootNavigation";
 
 import Constants from "expo-constants";
 
+const baseUrl = __DEV__
+  ? Constants.expoConfig.extra.devApiUrl
+  : Constants.expoConfig.extra.apiUrl;
+
 export const apiInstance = axios.create({
-  baseURL: Constants.expoConfig.extra.apiUrl,
+  baseURL: baseUrl,
 });
 
 export const apiAuthInstance = axios.create({
-  baseURL: Constants.expoConfig.extra.apiUrl,
+  baseURL: baseUrl,
 });
 
 // Auth api 인터셉터
