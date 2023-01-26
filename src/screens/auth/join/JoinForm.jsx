@@ -382,7 +382,6 @@ function JoinButton({
         //Expo Push Token 을 얻은 후 DB에 POST
         registerForPushNotificationsAsync().then((_token) => {
           if (_token) {
-            console.log(_token);
             registerPushTokenToDB(_token).catch((err) =>
               alert("푸시알림 서비스 등록을 실패하였습니다.")
             );

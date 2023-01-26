@@ -17,20 +17,38 @@ import moment from "moment";
 import * as Device from "expo-device";
 import * as WebBrowser from "expo-web-browser";
 import Constants from "expo-constants";
+import { getExpoPushTokenAsync } from "expo-notifications";
+import { unRegisterPushTokenToDB } from "../../../../apis/push-noti";
 
 export default function MoreScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
 
   const handleLogout = async () => {
+    const removePushTokenOnDB = async () => {
+      const { data: pushToken } = await getExpoPushTokenAsync();
+      await unRegisterPushTokenToDB(pushToken);
+    };
+
     Alert.alert("알림", "로그아웃 하시겠습니까?", [
       { text: "취소", style: "cancel" },
       {
         text: "확인",
         onPress: async () => {
-          await AsyncStorage.removeItem("user");
-          await AsyncStorage.removeItem("token");
-          setUser(null);
-          navigation.push("Auth");
+          try {
+            // 실제 디바이스 경우 푸시 토큰을 DB에서 지우는 로직
+            if (Device.isDevice) {
+              await removePushTokenOnDB();
+            }
+            await AsyncStorage.removeItem("user");
+            await AsyncStorage.removeItem("token");
+            setUser(null);
+            navigation.push("Auth");
+          } catch (_err) {
+            alert(
+              "로그아웃을 실패하였습니다. 일시적인 네트워크 오류일 수 있으니, 잠시 후 다시 시도해주세요"
+            );
+            console.log(_err);
+          }
         },
       },
     ]);
