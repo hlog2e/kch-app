@@ -16,22 +16,63 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   getUserInfo,
+  postRegisterBarCode,
   postRegisterPhoto,
 } from "../../../../apis/home/studentID";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
-import FullScreenLoader from "../../../components/common/FullScreenLoader";
+
+import { BarCodeScanner } from "expo-barcode-scanner";
+import * as Haptics from "expo-haptics";
+
+import { Dimensions } from "react-native";
+import Barcode from "@kichiyaki/react-native-barcode-generator";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function StudentIDScreen({ navigation }) {
   const { user } = useContext(UserContext);
+  const queryClient = useQueryClient();
   const { data: userData } = useQuery("userData", getUserInfo);
+  const { mutate: registerBarcodeMutate } = useMutation(postRegisterBarCode);
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [barCodeScannerOpen, setBarCodeScannerOpen] = useState(false);
 
   useEffect(() => {
     if (user.grade === "teacher") {
       alert("선생님께서는 학생증 서비스를 이용하실 수 없습니다.");
       navigation.goBack();
     }
+    // 마운트시 바코드 스캐너 카메라 권한 요청
+    requestBarCodeScannerPermissions();
   });
+
+  const requestBarCodeScannerPermissions = async () => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
+
+  const openBarCodeScanner = () => {
+    if (hasPermission) {
+      setBarCodeScannerOpen(true);
+    } else {
+      alert(
+        "카메라 권한이 허용되지 않아서 바코드를 스캔할 수 없어요! 설정에서 카메라 권한을 허용해 주세요."
+      );
+    }
+  };
+
+  const handleBarCodeScanned = async ({ type, data }) => {
+    setBarCodeScannerOpen(false);
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    registerBarcodeMutate(data, {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userData");
+        alert("바코드 등록을 성공하였습니다!");
+      },
+    });
+  };
 
   const styles = StyleSheet.create({
     container: { flex: 1 },
@@ -84,15 +125,21 @@ export default function StudentIDScreen({ navigation }) {
       fontSize: 14,
       fontWeight: "600",
     },
+
     logo_row: {
-      justifyContent: "center",
+      alignItems: "center",
       paddingVertical: 10,
     },
-    logo: { height: 40, marginVertical: 10 },
+    logo: { height: 45, width: 200, marginVertical: 10 },
   });
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <OnlyLeftArrowHeader navigation={navigation} />
+      <WrapBarCodeScanner
+        barCodeScannerOpen={barCodeScannerOpen}
+        handleBarCodeScanned={handleBarCodeScanned}
+        setBarCodeScannerOpen={setBarCodeScannerOpen}
+      />
 
       <ScrollView style={styles.card_wrap}>
         <View style={styles.card}>
@@ -129,16 +176,27 @@ export default function StudentIDScreen({ navigation }) {
               <Text style={styles.info_text}>{user.number}번</Text>
             </View>
             <View style={styles.info_row}>
-              <Text style={styles.info_title}>유효기간</Text>
+              <Text
+                style={styles.info_title}
+                onPress={() => {
+                  openBarCodeScanner();
+                }}
+              >
+                유효기간
+              </Text>
               <Text style={styles.info_text}>
                 {moment().add("1", "y").format("YYYY") + "-03-01"}
               </Text>
             </View>
+            <BarCodeSection
+              userData={userData}
+              openBarCodeScanner={openBarCodeScanner}
+            />
             <View style={styles.logo_row}>
               <Image
                 resizeMode={"contain"}
                 style={styles.logo}
-                source={{ uri: "https://static.kch-app.me/logo_title.jpeg" }}
+                source={require("../../../../assets/images/logo_title.jpeg")}
               />
             </View>
           </View>
@@ -227,17 +285,7 @@ function Photo({ userData }) {
 
   // userData === undefinded 일때 처리
   if (!userData) {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.dummy_image}
-          onPress={handleImagePicking}
-        >
-          <Ionicons name="camera" size={30} color="gray" />
-          <Text style={styles.dummy_desc}>사진을 등록해주세요</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    return null;
   }
 
   return (
@@ -257,4 +305,124 @@ function Photo({ userData }) {
       )}
     </View>
   );
+}
+
+function BarCodeSection({ userData, openBarCodeScanner }) {
+  const styles = StyleSheet.create({
+    barcode: { marginTop: 20 },
+    text: { fontSize: 10 },
+
+    dummy_barcode_container: { alignItems: "center" },
+    dummy_barcode: {
+      height: 55,
+      width: 150,
+      borderRadius: 5,
+      backgroundColor: "#f4f4f4",
+      marginTop: 10,
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingVertical: 6,
+    },
+    dummy_text: { fontSize: 10, color: "gray" },
+  });
+  if (!userData) {
+    return null;
+  }
+
+  if (userData.barcode) {
+    return (
+      <Barcode
+        style={styles.barcode}
+        value={userData.barcode}
+        text={userData.barcode}
+        textStyle={styles.text}
+        format={"CODE39"}
+        height={40}
+        width={1.2}
+      />
+    );
+  }
+
+  if (!userData.barcode || userData.barcode === "") {
+    return (
+      <View style={styles.dummy_barcode_container}>
+        <TouchableOpacity
+          style={styles.dummy_barcode}
+          onPress={() => {
+            openBarCodeScanner();
+          }}
+        >
+          <Ionicons name="barcode" size={24} color="gray" />
+          <Text style={styles.dummy_text}>바코드를 등록해주세요</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+function WrapBarCodeScanner({
+  barCodeScannerOpen,
+  setBarCodeScannerOpen,
+  handleBarCodeScanned,
+}) {
+  const styles = StyleSheet.create({
+    toast: {
+      position: "absolute",
+      top: 100,
+      left: SCREEN_WIDTH / 2 - 130,
+      width: 260,
+      height: 40,
+      backgroundColor: "rgba(244,244,244,0.3)",
+      borderRadius: 8,
+      zIndex: 15,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    toast_text: {
+      color: "white",
+      marginLeft: 8,
+      fontWeight: "700",
+    },
+    close_button: {
+      position: "absolute",
+      bottom: 150,
+      left: SCREEN_WIDTH / 2 - 30,
+      width: 60,
+      height: 60,
+      backgroundColor: "rgba(255,255,255,0.8)",
+      borderRadius: 30,
+      zIndex: 15,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });
+
+  if (barCodeScannerOpen) {
+    return (
+      <>
+        <View style={styles.toast}>
+          <Ionicons name="alert-circle" size={24} color="white" />
+          <Text style={styles.toast_text}>
+            학생증 뒷면의 바코드를 스캔해주세요 !
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.close_button}
+          onPress={() => {
+            setBarCodeScannerOpen(false);
+          }}
+        >
+          <Ionicons name="close" size={32} color="#a4a4a4" />
+        </TouchableOpacity>
+
+        <BarCodeScanner
+          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
+          onBarCodeScanned={handleBarCodeScanned}
+          style={{ ...StyleSheet.absoluteFillObject, zIndex: 10 }}
+        />
+      </>
+    );
+  }
 }

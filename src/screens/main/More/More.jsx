@@ -127,19 +127,19 @@ export default function MoreScreen({ navigation }) {
           </View>
 
           <View style={styles.button_box}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                alert("개발 중 입니다......");
-              }}
-            >
-              <Ionicons
-                name="md-notifications-outline"
-                size={24}
-                color="#334155"
-              />
-              <Text style={[styles.button_text]}>알림 설정</Text>
-            </TouchableOpacity>
+            {/*<TouchableOpacity*/}
+            {/*  style={styles.button}*/}
+            {/*  onPress={() => {*/}
+            {/*    alert("개발 중 입니다......");*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  <Ionicons*/}
+            {/*    name="md-notifications-outline"*/}
+            {/*    size={24}*/}
+            {/*    color="#334155"*/}
+            {/*  />*/}
+            {/*  <Text style={[styles.button_text]}>알림 설정</Text>*/}
+            {/*</TouchableOpacity>*/}
             <TouchableOpacity
               style={styles.button}
               onPress={() => {

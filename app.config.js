@@ -31,6 +31,10 @@ module.exports = {
     ios: {
       bundleIdentifier: "me.kch-app.kch",
       supportsTablet: true,
+      infoPlist: {
+        NSCameraUsageDescription:
+          "금천고등학교 앱은 학생증의 바코드를 스캔하기 위하여 카메라 권한이 필요합니다.",
+      },
     },
     android: {
       versionCode: 4,

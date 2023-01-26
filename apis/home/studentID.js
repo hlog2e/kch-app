@@ -12,3 +12,11 @@ export const postRegisterPhoto = async (formData) => {
 
   return data;
 };
+
+export const postRegisterBarCode = async (_barcode) => {
+  const { data } = await apiAuthInstance.post("/user/register/barcode", {
+    barcode: _barcode,
+  });
+
+  return data;
+};
