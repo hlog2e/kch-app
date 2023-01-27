@@ -19,8 +19,6 @@ export default function NotificationSettingScreen({ navigation }) {
     postUpdateNotificationSetting
   );
 
-  console.log(currentSettings);
-
   const notificationSettings = [
     {
       id: "meal",
