@@ -3,6 +3,7 @@ import MoreScreen from "../../../screens/main/More/More";
 import StudentCouncilScreen from "../../../screens/main/More/StudentCouncil";
 import DeveloperDetailScreen from "../../../screens/main/More/DeveloperDetail";
 import ModifyUserInfoScreen from "../../../screens/main/More/ModifyUserInfo";
+import CommunitiesWrittenByMeScreen from "../../../screens/main/More/CommunitiesWrittenByMe";
 
 const Stack = createNativeStackNavigator();
 export default function MoreStack() {
@@ -23,6 +24,10 @@ export default function MoreStack() {
       <Stack.Screen
         name="ModifyUserInfoScreen"
         component={ModifyUserInfoScreen}
+      />
+      <Stack.Screen
+        name="CommunitiesWrittenByMeScreen"
+        component={CommunitiesWrittenByMeScreen}
       />
     </Stack.Navigator>
   );

@@ -104,7 +104,7 @@ export default function MoreScreen({ navigation }) {
     },
   });
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <ScrollView>
         <View style={styles.card}>
           <View style={styles.header}>
@@ -175,7 +175,16 @@ export default function MoreScreen({ navigation }) {
 function ListButtonSection({ navigation, user }) {
   const buttons = [
     {
-      id: 1,
+      id: 0,
+      name: "내가 작성한 글",
+      onPress: () => {
+        navigation.push("CommunitiesWrittenByMeScreen");
+      },
+      right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
+    },
+    { id: 1, name: "margin" },
+    {
+      id: 2,
       name: "개발자 정보",
       onPress: () => {
         navigation.push("DeveloperDetailScreen");
@@ -183,16 +192,16 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 2,
+      id: 3,
       name: "제 34기 학생회",
       onPress: () => {
         navigation.push("StudentCouncilScreen");
       },
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
-    { id: 3, name: "margin" },
+    { id: 4, name: "margin" },
     {
-      id: 4,
+      id: 5,
       name: "의견 제출",
       onPress: () => {
         handleSendSMS("idea");
@@ -200,7 +209,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 5,
+      id: 6,
       name: "버그·오류 신고",
       onPress: () => {
         handleSendSMS("bug");
@@ -208,9 +217,9 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
 
-    { id: 6, name: "margin" },
+    { id: 7, name: "margin" },
     {
-      id: 7,
+      id: 8,
       name: "개인정보 처리방침",
       onPress: async () => {
         await WebBrowser.openBrowserAsync(
@@ -220,7 +229,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 8,
+      id: 9,
       name: "이용약관",
       onPress: async () => {
         await WebBrowser.openBrowserAsync("https://terms.kch-app.me");
@@ -228,7 +237,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 9,
+      id: 10,
       name: "오픈소스",
       onPress: async () => {
         await WebBrowser.openBrowserAsync("https://github.com/hlog2e/kch-app");
@@ -236,7 +245,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 10,
+      id: 11,
       name: "앱 버전",
       onPress: () => {
         alert(`현재 앱 버전은 v.${Constants.expoConfig.version} 입니다.`);

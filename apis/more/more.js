@@ -8,3 +8,9 @@ export const postModifyUserInfo = async (props) => {
   });
   return data;
 };
+
+export const getCommunitiesWrittenByMe = async () => {
+  const { data } = await apiAuthInstance.get("/community/mine");
+
+  return data;
+};
