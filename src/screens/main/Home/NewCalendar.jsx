@@ -101,15 +101,15 @@ export default function NewCalendarScreen({ navigation }) {
       "12월",
     ],
     dayNames: [
+      "일요일",
       "월요일",
       "화요일",
       "수요일",
       "목요일",
       "금요일",
       "토요일",
-      "일요일",
     ],
-    dayNamesShort: ["월", "화", "수", "목", "금", "토", "일"],
+    dayNamesShort: ["일", "월", "화", "수", "목", "금", "토"],
     today: "일",
   };
   LocaleConfig.defaultLocale = "kr";
