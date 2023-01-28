@@ -334,7 +334,9 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
             { postId: communityId },
             {
               onSuccess: () => {
-                alert("정상적으로 신고가 접수되었습니다.");
+                Alert.alert("알림", "정상적으로 신고가 접수되었습니다.", [
+                  { text: "확인" },
+                ]);
               },
             }
           );
@@ -535,7 +537,9 @@ function Comment({
             { postId: communityId, commentId: commentId },
             {
               onSuccess: () => {
-                alert("정상적으로 해당 댓글을 신고하였습니다.");
+                Alert.alert("알림", "정상적으로 해당 댓글을 신고하였습니다.", [
+                  { text: "확인" },
+                ]);
               },
             }
           );

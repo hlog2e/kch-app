@@ -56,7 +56,11 @@ export default function TimetableScreen({ navigation }) {
 
   useEffect(() => {
     if (user.grade === "teacher") {
-      alert("선생님께서는 시간표 서비스를 이용하실 수 없습니다.");
+      Alert.alert(
+        "알림",
+        "선생님께서는 시간표 서비스를 이용하실 수 없습니다.",
+        [{ text: "확인" }]
+      );
       navigation.goBack();
       return;
     }

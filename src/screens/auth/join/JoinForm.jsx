@@ -383,7 +383,9 @@ function JoinButton({
         registerForPushNotificationsAsync().then((_token) => {
           if (_token) {
             registerPushTokenToDB(_token).catch((err) =>
-              alert("푸시알림 서비스 등록을 실패하였습니다.")
+              Alert.alert("오류", "푸시알림 서비스 등록을 실패하였습니다.", [
+                { text: "확인" },
+              ])
             );
           }
         });
@@ -391,7 +393,9 @@ function JoinButton({
         navigation.replace("Main");
       } catch (err) {
         console.log(err);
-        alert("회원가입 도중 오류가 발생 하였습니다.");
+        Alert.alert("오류", "회원가입 도중 오류가 발생 하였습니다.", [
+          { text: "확인" },
+        ]);
       }
     }
   }

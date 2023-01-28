@@ -48,7 +48,9 @@ export default function CommunityPOSTScreen({ navigation }) {
         console.log("이미지 선택 취소");
       }
     } catch (_err) {
-      alert("이미지를 로드하는 중 오류가 발생하였습니다.");
+      Alert.alert("오류", "이미지를 로드하는 중 오류가 발생하였습니다.", [
+        { text: "확인" },
+      ]);
     }
   };
 
@@ -79,19 +81,29 @@ export default function CommunityPOSTScreen({ navigation }) {
     );
 
     if (titleIsBad) {
-      alert("제목에 비속어가 포함되어 있습니다. '" + titleBadWord + "'");
+      Alert.alert(
+        "오류",
+        "제목에 비속어가 포함되어 있습니다. '" + titleBadWord + "'",
+        [{ text: "확인" }]
+      );
       setLoading(false);
       return { passed: false };
     }
 
     if (contentIsBad) {
-      alert("내용에 비속어가 포함되어 있습니다. '" + contentBadWord + "'");
+      Alert.alert(
+        "오류",
+        "내용에 비속어가 포함되어 있습니다. '" + contentBadWord + "'",
+        [{ text: "확인" }]
+      );
       setLoading(false);
       return { passed: false };
     }
 
     if (title === "" || content === "") {
-      alert("제목이랑 내용 모두 작성해주세요.");
+      Alert.alert("오류", "제목이랑 내용 모두 작성해주세요.", [
+        { text: "확인" },
+      ]);
       setLoading(false);
       return { passed: false };
     }
@@ -126,7 +138,9 @@ export default function CommunityPOSTScreen({ navigation }) {
         });
       } catch (err) {
         console.log(err);
-        alert("게시물 작성 도중 오류가 발생하였습니다.");
+        Alert.alert("오류", "게시물 작성 도중 오류가 발생하였습니다.", [
+          { text: "확인" },
+        ]);
         setLoading(false);
       }
     }

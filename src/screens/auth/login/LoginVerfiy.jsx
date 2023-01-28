@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -51,7 +52,9 @@ export default function LoginVerfiyScreen({ navigation, route }) {
       registerForPushNotificationsAsync().then((_token) => {
         if (_token) {
           registerPushTokenToDB(_token).catch((err) =>
-            alert("푸시알림 서비스 등록을 실패하였습니다.")
+            Alert.alert("오류", "푸시알림 서비스 등록을 실패하였습니다.", [
+              { text: "확인" },
+            ])
           );
         }
       });

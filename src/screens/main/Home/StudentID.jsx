@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
@@ -41,7 +42,11 @@ export default function StudentIDScreen({ navigation }) {
 
   useEffect(() => {
     if (user.grade === "teacher") {
-      alert("선생님께서는 학생증 서비스를 이용하실 수 없습니다.");
+      Alert.alert(
+        "알림",
+        "선생님께서는 학생증 서비스를 이용하실 수 없습니다.",
+        [{ text: "확인" }]
+      );
       navigation.goBack();
     }
     // 마운트시 바코드 스캐너 카메라 권한 요청
@@ -57,8 +62,10 @@ export default function StudentIDScreen({ navigation }) {
     if (hasPermission) {
       setBarCodeScannerOpen(true);
     } else {
-      alert(
-        "카메라 권한이 허용되지 않아서 바코드를 스캔할 수 없어요! 설정에서 카메라 권한을 허용해 주세요."
+      Alert.alert(
+        "오류",
+        "카메라 권한이 허용되지 않아서 바코드를 스캔할 수 없어요! 설정에서 카메라 권한을 허용해 주세요.",
+        [{ text: "확인" }]
       );
     }
   };
@@ -69,7 +76,9 @@ export default function StudentIDScreen({ navigation }) {
     registerBarcodeMutate(data, {
       onSuccess: () => {
         queryClient.invalidateQueries("userData");
-        alert("바코드 등록을 성공하였습니다!");
+        Alert.alert("알림", "바코드 등록을 성공하였습니다!", [
+          { text: "확인" },
+        ]);
       },
     });
   };
@@ -230,7 +239,9 @@ function Photo({ userData }) {
         console.log("이미지 선택 취소");
       }
     } catch (_err) {
-      alert("이미지를 로드하는 중 오류가 발생하였습니다.");
+      Alert.alert("오류", "이미지를 로드하는 중 오류가 발생하였습니다.", [
+        { text: "확인" },
+      ]);
     }
   };
 

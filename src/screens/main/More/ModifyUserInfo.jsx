@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Alert } from "react-native";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
@@ -80,7 +80,9 @@ export default function ModifyUserInfoScreen({ navigation }) {
         },
         onError: (_err) => {
           console.log(_err);
-          alert("정보 수정 중 오류가 발생하였습니다!");
+          Alert.alert("오류", "정보 수정 중 오류가 발생하였습니다!", [
+            { text: "확인" },
+          ]);
         },
       }
     );

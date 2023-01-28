@@ -1,6 +1,6 @@
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { Platform } from "react-native";
+import { Platform, Alert } from "react-native";
 
 //
 export async function registerForPushNotificationsAsync() {
@@ -24,14 +24,20 @@ export async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      alert(
-        "알림 권한이 비활성화 되어있습니다. 설정에서 알림 권한을 허용해주세요!"
+      Alert.alert(
+        "알림",
+        "알림 권한이 비활성화 되어있습니다. 설정에서 알림 권한을 허용해주세요!",
+        [{ text: "확인" }]
       );
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
   } else {
-    alert("애뮬레이터 기기에서는 푸시 알림을 이용할 수 없습니다.");
+    Alert.alert(
+      "알림",
+      "애뮬레이터 기기에서는 푸시 알림을 이용할 수 없습니다.",
+      [{ text: "확인" }]
+    );
   }
 
   return token;

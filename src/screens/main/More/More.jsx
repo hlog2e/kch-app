@@ -44,8 +44,10 @@ export default function MoreScreen({ navigation }) {
             setUser(null);
             navigation.push("Auth");
           } catch (_err) {
-            alert(
-              "로그아웃을 실패하였습니다. 일시적인 네트워크 오류일 수 있으니, 잠시 후 다시 시도해주세요"
+            Alert.alert(
+              "오류",
+              "로그아웃을 실패하였습니다. 일시적인 네트워크 오류일 수 있으니, 잠시 후 다시 시도해주세요",
+              [{ text: "확인" }]
             );
             console.log(_err);
           }
@@ -144,7 +146,11 @@ export default function MoreScreen({ navigation }) {
               style={styles.button}
               onPress={() => {
                 if (user.grade === "teacher") {
-                  alert("선생님이 학생으로 돌아가시는건 불가능한 일 입니다.");
+                  Alert.alert(
+                    "알림",
+                    "선생님이 학생으로 돌아가시는건 불가능한 일 입니다.",
+                    [{ text: "확인" }]
+                  );
                 } else {
                   navigation.push("ModifyUserInfoScreen");
                 }
@@ -248,7 +254,11 @@ function ListButtonSection({ navigation, user }) {
       id: 11,
       name: "앱 버전",
       onPress: () => {
-        alert(`현재 앱 버전은 v.${Constants.expoConfig.version} 입니다.`);
+        Alert.alert(
+          "알림",
+          `현재 앱 버전은 v.${Constants.expoConfig.version} 입니다.`,
+          [{ text: "확인" }]
+        );
       },
       right: (
         <Text style={{ fontSize: 10, color: "gray" }}>
@@ -288,7 +298,9 @@ iOS Model ID: ${Device.modelId}
     if (smsIsAvailable) {
       await SMS.sendSMSAsync(["01095645490"], message, {});
     } else {
-      alert("디바이스가 SMS를 전송할 수 없는 상태입니다.");
+      Alert.alert("오류", "디바이스가 SMS를 전송할 수 없는 상태입니다.", [
+        { text: "확인" },
+      ]);
     }
   };
 
