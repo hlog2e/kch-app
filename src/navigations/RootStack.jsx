@@ -30,7 +30,7 @@ export default function RootStack() {
             screens: {
               MealScreen: "meal",
               TimetableScreen: "timetable",
-              CalendarScreen: "calendar",
+              NewCalendarScreen: "calendar",
               NoticeScreen: "notice",
             },
           },

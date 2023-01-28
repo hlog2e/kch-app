@@ -124,7 +124,7 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity
             style={styles.card_item}
             onPress={() => {
-              navigation.push("CalendarScreen");
+              navigation.push("NewCalendarScreen");
             }}
           >
             <View>
