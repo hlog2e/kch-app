@@ -13,7 +13,7 @@ module.exports = {
     name: "금천고등학교",
     scheme: "kch",
     slug: "kch-app",
-    version: "1.0.6",
+    version: "1.0.7",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
@@ -37,7 +37,7 @@ module.exports = {
       },
     },
     android: {
-      versionCode: 5,
+      versionCode: 6,
       googleServicesFile: "./google-services.json",
       package: "me.kch_app.kch",
       adaptiveIcon: {
