@@ -431,7 +431,11 @@ function WrapBarCodeScanner({
         <BarCodeScanner
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
           onBarCodeScanned={handleBarCodeScanned}
-          style={{ ...StyleSheet.absoluteFillObject, zIndex: 10 }}
+          style={{
+            ...StyleSheet.absoluteFillObject,
+            zIndex: 10,
+            backgroundColor: "black",
+          }}
         />
       </>
     );
