@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  useColorScheme,
 } from "react-native";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { Ionicons, Entypo } from "@expo/vector-icons";
@@ -13,6 +14,8 @@ import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 
 export default function DeveloperDetailScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const stacks = [
     {
       icon: <Ionicons name="logo-react" size={38} color="#82D7F7" />,
@@ -164,7 +167,11 @@ export default function DeveloperDetailScreen({ navigation }) {
 
   const styles = StyleSheet.create({
     app_introduce: { paddingHorizontal: 14, marginTop: 30 },
-    stack_title: { fontSize: 14, fontWeight: "600", color: "gray" },
+    stack_title: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: NowColorState === "light" ? "gray" : "white",
+    },
     stack_item_row: {
       marginTop: 12,
     },
@@ -174,11 +181,20 @@ export default function DeveloperDetailScreen({ navigation }) {
     title: {
       fontSize: 12,
       fontWeight: "300",
-      color: "gray",
+      color: NowColorState === "light" ? "gray" : "white",
       paddingVertical: 4,
     },
-    name: { fontSize: 20, fontWeight: "700" },
-    desc: { fontSize: 13, fontWeight: "300", paddingVertical: 4 },
+    name: {
+      fontSize: 20,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
+    desc: {
+      fontSize: 13,
+      fontWeight: "300",
+      paddingVertical: 4,
+      color: NowColorState === "light" ? "black" : "white",
+    },
   });
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
@@ -254,6 +270,7 @@ export default function DeveloperDetailScreen({ navigation }) {
 }
 
 function StackItem({ icon, title, onPress }) {
+  const NowColorState = useColorScheme();
   const styles = StyleSheet.create({
     stack_item: {
       marginRight: 15,

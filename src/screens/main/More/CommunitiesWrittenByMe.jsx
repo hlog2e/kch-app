@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useColorScheme,
 } from "react-native";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +17,8 @@ import { comma } from "../../../../utils/intl";
 import { useState } from "react";
 
 export default function CommunitiesWrittenByMeScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const { data, isLoading, isSuccess, refetch } = useQuery(
     "CommunitiesWrittenByMe",
     getCommunitiesWrittenByMe
@@ -29,6 +32,7 @@ export default function CommunitiesWrittenByMeScreen({ navigation }) {
       paddingVertical: 18,
       marginLeft: 20,
       fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
     },
   });
   return (
@@ -60,19 +64,28 @@ export default function CommunitiesWrittenByMeScreen({ navigation }) {
 }
 
 function TouchableCommunityItem({ item, navigation }) {
+  const NowColorState = useColorScheme();
   const styles = StyleSheet.create({
     item: {
-      backgroundColor: "white",
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
       marginBottom: 6,
       padding: 14,
     },
-    title: { fontSize: 18, fontWeight: "600" },
+    title: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: NowColorState === "light" ? "black" : "white",
+    },
     row: {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
     },
-    content: { fontSize: 14, color: "gray", marginTop: 14 },
+    content: {
+      fontSize: 14,
+      marginTop: 14,
+      color: NowColorState === "light" ? "gray" : "white",
+    },
     datetime: { fontSize: 11, color: "gray", marginTop: 14 },
   });
   return (

@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Alert,
+  useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
@@ -17,11 +18,30 @@ import { getMeals } from "../../../../apis/home/meal";
 import moment from "moment";
 
 export default function MealScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const { status, data, error } = useQuery("meals", getMeals, {
     onError: () => {
       Alert.alert("오류", "급식 데이터를 가져오는데 오류가 발생하였습니다.", [
         { text: "확인" },
       ]);
+    },
+  });
+
+  const styles = StyleSheet.create({
+    container: { flex: 1 },
+    header_container: {
+      paddingVertical: 28,
+      paddingHorizontal: 20,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    header_title: {
+      fontSize: 32,
+      fontWeight: "700",
+      marginLeft: 16,
+      marginTop: 6,
+      color: NowColorState === "light" ? "black" : "white",
     },
   });
 
@@ -64,6 +84,8 @@ export default function MealScreen({ navigation }) {
 }
 
 function Row({ _id, meals }) {
+  const NowColorState = useColorScheme();
+
   const days = [
     "일요일",
     "월요일",
@@ -73,6 +95,17 @@ function Row({ _id, meals }) {
     "금요일",
     "토요일",
   ];
+
+  const styles = StyleSheet.create({
+    row_container: { paddingVertical: 10 },
+    date_text: {
+      padding: 20,
+      fontSize: 20,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
+    scroll_container: { minHeight: 200 },
+  });
   return (
     <View style={styles.row_container}>
       <Text style={styles.date_text}>
@@ -93,6 +126,30 @@ function Row({ _id, meals }) {
 }
 
 function Item({ type, menu, kcal }) {
+  const NowColorState = useColorScheme();
+
+  const styles = StyleSheet.create({
+    item: {
+      width: 200,
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
+      borderRadius: 30,
+      marginLeft: 15,
+      padding: 20,
+    },
+    meal_type_text: {
+      fontSize: 22,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
+    meal_kcal_text: { fontSize: 12, color: "gray", marginLeft: 6 },
+    meal_menu_text: {
+      lineHeight: 17,
+      fontWeight: "500",
+      fontSize: 14,
+      color: NowColorState === "light" ? "gray" : "white",
+    },
+  });
+
   return (
     <View style={styles.item}>
       <View
@@ -115,38 +172,3 @@ function Item({ type, menu, kcal }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header_container: {
-    paddingVertical: 28,
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  header_title: {
-    fontSize: 32,
-    fontWeight: "700",
-    marginLeft: 16,
-    marginTop: 6,
-  },
-
-  row_container: { paddingVertical: 10 },
-  date_text: { padding: 20, fontSize: 20, fontWeight: "700" },
-  scroll_container: { minHeight: 200 },
-  item: {
-    width: 200,
-    backgroundColor: "white",
-    borderRadius: 30,
-    marginLeft: 15,
-    padding: 20,
-  },
-  meal_type_text: { fontSize: 22, fontWeight: "700" },
-  meal_kcal_text: { fontSize: 12, color: "gray", marginLeft: 6 },
-  meal_menu_text: {
-    lineHeight: 17,
-    fontWeight: "500",
-    fontSize: 14,
-    color: "gray",
-  },
-});

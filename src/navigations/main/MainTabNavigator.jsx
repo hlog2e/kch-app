@@ -6,10 +6,12 @@ import HomeStack from "./TabBarItems/HomeStack";
 import MoreStack from "./TabBarItems/MoreStack";
 
 import { Ionicons } from "@expo/vector-icons";
+import { useColorScheme } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
+  const NowColorState = useColorScheme();
   const { bottom: bottomInsets } = useSafeAreaInsets();
 
   return (
@@ -17,8 +19,8 @@ export default function MainTabNavigator() {
       screenOptions={{
         tabBarStyle: { height: bottomInsets + 50 },
         tabBarShowLabel: false,
-        tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "black",
+        tabBarActiveTintColor: NowColorState === "light" ? "black" : "white",
+        tabBarInactiveTintColor: NowColorState === "light" ? "black" : "gray",
         headerShown: false,
       }}
       initialRouteName="HomeStack"

@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Alert } from "react-native";
+import { Text, View, StyleSheet, Alert, useColorScheme } from "react-native";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
@@ -12,6 +12,8 @@ import { postModifyUserInfo } from "../../../../apis/more/more";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ModifyUserInfoScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const { user, setUser } = useContext(UserContext);
 
   const [isChanged, setIsChanged] = useState(false);
@@ -44,12 +46,25 @@ export default function ModifyUserInfoScreen({ navigation }) {
     container: { flex: 1 },
 
     wrap: { flex: 1, paddingHorizontal: 18 },
-    header_title: { fontSize: 32, fontWeight: "700", marginTop: 16 },
+    header_title: {
+      fontSize: 32,
+      fontWeight: "700",
+      marginTop: 16,
+      color: NowColorState === "light" ? "black" : "white",
+    },
     picker_section: { paddingVertical: 28 },
     picker_wrap: { paddingVertical: 14 },
-    title: { fontSize: 20, fontWeight: "600" },
+    title: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: NowColorState === "light" ? "black" : "white",
+    },
 
-    picker: { borderBottomWidth: 1, borderColor: "#b4b4b4", marginTop: 8 },
+    picker: {
+      borderBottomWidth: 1,
+      borderColor: "#b4b4b4",
+      marginTop: 8,
+    },
   });
 
   const pickerStyle = StyleSheet.create({
@@ -57,8 +72,14 @@ export default function ModifyUserInfoScreen({ navigation }) {
       fontSize: 16,
       fontWeight: "300",
       paddingVertical: 8,
+      color: NowColorState === "light" ? "black" : "white",
     },
-    inputAndroid: { fontSize: 16, fontWeight: "300", paddingVertical: 8 },
+    inputAndroid: {
+      fontSize: 16,
+      fontWeight: "300",
+      paddingVertical: 8,
+      color: NowColorState === "light" ? "black" : "white",
+    },
   });
 
   const handleModifyUserInfo = async () => {

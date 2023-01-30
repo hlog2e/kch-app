@@ -1,21 +1,25 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MainTabNavigator from "./main/MainTabNavigator";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
 import AuthStack from "./auth/AuthStack";
 import CommunityDetailScreen from "../screens/main/Community/CommunityDetail";
 import CommunityPOSTScreen from "../screens/main/Community/CommunityPOSTScreen";
-
+import { useColorScheme } from "react-native";
 import { navigationRef } from "./RootNavigation";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import FullScreenLoader from "../components/common/FullScreenLoader";
 import * as Linking from "expo-linking";
-import MealScreen from "../screens/main/Home/Meal";
 
 const Stack = createNativeStackNavigator();
 
 export default function RootStack() {
   const { user, isLoading } = useContext(UserContext);
+  const NowColorState = useColorScheme();
 
   if (isLoading) {
     return <FullScreenLoader />;
@@ -50,8 +54,32 @@ export default function RootStack() {
     prefixes: [Linking.createURL("/"), "kch://"],
     config,
   };
+
+  const lightTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: "#f5f5f5",
+    },
+  };
+
+  const darkTheme = {
+    ...DarkTheme,
+    dark: true,
+    colors: {
+      ...DarkTheme.colors,
+      background: "#18171c",
+      card: "#2c2c36",
+      border: "#2c2c36",
+    },
+  };
+
   return (
-    <NavigationContainer linking={linking} ref={navigationRef}>
+    <NavigationContainer
+      theme={NowColorState === "light" ? lightTheme : darkTheme}
+      linking={linking}
+      ref={navigationRef}
+    >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           <>

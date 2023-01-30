@@ -6,6 +6,7 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 
 import { useState } from "react";
@@ -62,6 +63,7 @@ export default function FeedScreen({ navigation }) {
 }
 
 function FeedItem({ item }) {
+  const NowColorState = useColorScheme();
   const [activeSnapIndex, setActiveSnapIndex] = useState(0);
   const [imageOpen, setImageOpen] = useState(false);
   const [imageUris, setImageUris] = useState([]);
@@ -76,26 +78,42 @@ function FeedItem({ item }) {
   };
 
   const styles = StyleSheet.create({
-    container: { backgroundColor: "white", marginBottom: 10 },
+    container: {
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
+      marginBottom: 10,
+    },
     header: {
-      paddingVertical: 8,
-      paddingHorizontal: 12,
+      paddingVertical: 12,
+      paddingHorizontal: 18,
       flexDirection: "row",
       alignItems: "center",
     },
-    header_icon: { width: 40, height: 40 },
-    header_text: { fontSize: 15, fontWeight: "700", marginLeft: 6 },
+    header_icon: { width: 34, height: 34 },
+    header_text: {
+      fontSize: 15,
+      fontWeight: "700",
+      marginLeft: 10,
+      color: NowColorState === "light" ? "black" : "white",
+    },
 
     footer: {
       padding: 12,
     },
-    footer_title: { fontWeight: "700", fontSize: 12 },
-    footer_desc: { fontSize: 12, marginTop: 5 },
+    footer_title: {
+      fontWeight: "700",
+      fontSize: 12,
+      color: NowColorState === "light" ? "black" : "white",
+    },
+    footer_desc: {
+      fontSize: 12,
+      marginTop: 5,
+      color: NowColorState === "light" ? "black" : "white",
+    },
 
     image: {
       height: SCREEN_WIDTH,
       width: SCREEN_WIDTH,
-      backgroundColor: "#f9f9f9",
+      backgroundColor: NowColorState === "light" ? "#f9f9f9" : "#18171c",
     },
     date: { fontSize: 10, color: "gray", marginTop: 10 },
   });
@@ -104,7 +122,7 @@ function FeedItem({ item }) {
       <View style={styles.header}>
         <Image
           style={styles.header_icon}
-          source={require("../../../../assets/adaptive-icon.png")}
+          source={require("../../../../assets/images/kch-icon.png")}
         />
         <Text style={styles.header_text}>{item.publisher}</Text>
       </View>

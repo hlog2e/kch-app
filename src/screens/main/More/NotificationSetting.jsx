@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, StyleSheet, Switch } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  useColorScheme,
+} from "react-native";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -106,6 +113,7 @@ export default function NotificationSettingScreen({ navigation }) {
 }
 
 function Item({ title, desc, value, onPress }) {
+  const NowColorState = useColorScheme();
   const styles = StyleSheet.create({
     item: {
       flexDirection: "row",
@@ -116,6 +124,7 @@ function Item({ title, desc, value, onPress }) {
     title: {
       fontSize: 16,
       fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
     },
     desc: { fontSize: 12, color: "gray" },
   });

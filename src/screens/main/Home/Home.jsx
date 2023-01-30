@@ -5,6 +5,7 @@ import {
   View,
   Image,
   ScrollView,
+  useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -13,6 +14,8 @@ import Banner from "../../../components/home/Banner";
 import DDay from "../../../components/home/DDay";
 
 export default function HomeScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -25,7 +28,11 @@ export default function HomeScreen({ navigation }) {
       paddingTop: 35,
       paddingBottom: 15,
     },
-    header_text: { fontSize: 45, fontWeight: "700" },
+    header_text: {
+      fontSize: 45,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
 
     card_container: {
       height: 200,
@@ -36,12 +43,13 @@ export default function HomeScreen({ navigation }) {
       flex: 1,
       margin: 10,
       borderRadius: 20,
-      backgroundColor: "white",
       padding: 20,
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
     },
     card_title: {
       fontSize: 24,
       fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
     },
     desc: {
       fontSize: 12,
@@ -62,13 +70,13 @@ export default function HomeScreen({ navigation }) {
       flex: 1,
       margin: 10,
       borderRadius: 20,
-      backgroundColor: "white",
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
       paddingVertical: 17,
       alignItems: "center",
       justifyContent: "space-between",
     },
     small_card_title: {
-      color: "black",
+      color: NowColorState === "light" ? "black" : "white",
       fontWeight: "700",
       fontSize: 12,
     },
@@ -143,7 +151,11 @@ export default function HomeScreen({ navigation }) {
               style={styles.small_card}
               onPress={() => navigation.push("NoticeScreen")}
             >
-              <Ionicons name="notifications-outline" size={22} color="gray" />
+              <Ionicons
+                name="notifications-outline"
+                size={22}
+                color={NowColorState === "light" ? "gray" : "white"}
+              />
               <Text style={styles.small_card_title}>공지사항</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -152,7 +164,11 @@ export default function HomeScreen({ navigation }) {
                 navigation.push("StudentIDScreen");
               }}
             >
-              <FontAwesome name="vcard-o" size={22} color="gray" />
+              <FontAwesome
+                name="vcard-o"
+                size={22}
+                color={NowColorState === "light" ? "gray" : "white"}
+              />
               <Text style={styles.small_card_title}>모바일 학생증</Text>
             </TouchableOpacity>
           </View>

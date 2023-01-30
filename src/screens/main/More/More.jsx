@@ -6,6 +6,7 @@ import {
   View,
   Alert,
   Image,
+  useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
@@ -21,6 +22,7 @@ import { getExpoPushTokenAsync } from "expo-notifications";
 import { unRegisterPushTokenToDB } from "../../../../apis/push-noti";
 
 export default function MoreScreen({ navigation }) {
+  const NowColorState = useColorScheme();
   const { user, setUser } = useContext(UserContext);
 
   const handleLogout = async () => {
@@ -61,7 +63,7 @@ export default function MoreScreen({ navigation }) {
       flex: 1,
     },
     card: {
-      backgroundColor: "white",
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
       marginHorizontal: 25,
       marginTop: 50,
       borderRadius: 15,
@@ -73,10 +75,11 @@ export default function MoreScreen({ navigation }) {
       alignItems: "center",
       justifyContent: "space-between",
     },
-    icon: { height: 52, width: 52 },
+    icon: { height: 38, width: 38 },
     name: {
       fontSize: 18,
       fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
     },
     personal_info: {
       fontSize: 12,
@@ -96,13 +99,13 @@ export default function MoreScreen({ navigation }) {
       width: 80,
       borderRadius: 13,
       paddingVertical: 10,
-      backgroundColor: "#f2f2f2",
+      backgroundColor: NowColorState === "light" ? "#f2f2f2" : "#18171c",
       alignItems: "center",
       justifyContent: "space-between",
     },
     button_text: {
       fontSize: 11,
-      color: "#334155",
+      color: NowColorState === "light" ? "#334155" : "white",
     },
   });
   return (
@@ -124,7 +127,7 @@ export default function MoreScreen({ navigation }) {
             </View>
             <Image
               style={styles.icon}
-              source={require("../../../../assets/adaptive-icon.png")}
+              source={require("../../../../assets/images/kch-icon.png")}
             />
           </View>
 
@@ -138,7 +141,7 @@ export default function MoreScreen({ navigation }) {
               <Ionicons
                 name="md-notifications-outline"
                 size={24}
-                color="#334155"
+                color={NowColorState === "light" ? "#334155" : "white"}
               />
               <Text style={[styles.button_text]}>알림 설정</Text>
             </TouchableOpacity>
@@ -159,7 +162,7 @@ export default function MoreScreen({ navigation }) {
               <Ionicons
                 name="person-circle-outline"
                 size={24}
-                color="#334155"
+                color={NowColorState === "light" ? "#334155" : "white"}
               />
               <Text style={[styles.button_text]}>내 정보 수정</Text>
             </TouchableOpacity>
@@ -179,6 +182,7 @@ export default function MoreScreen({ navigation }) {
 }
 
 function ListButtonSection({ navigation, user }) {
+  const NowColorState = useColorScheme();
   const buttons = [
     {
       id: 0,
@@ -307,16 +311,17 @@ iOS Model ID: ${Device.modelId}
   const styles = StyleSheet.create({
     container: { marginTop: 40 },
     button: {
-      backgroundColor: "white",
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
       height: 45,
-      borderTopWidth: 0.2,
-      borderColor: "#e9e9e9",
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
       paddingHorizontal: 15,
     },
-    button_text: { fontWeight: "600" },
+    button_text: {
+      fontWeight: "600",
+      color: NowColorState === "light" ? "black" : "white",
+    },
     margin: { height: 8 },
   });
   return (

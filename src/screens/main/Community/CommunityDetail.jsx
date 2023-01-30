@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
@@ -38,6 +39,8 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
 export default function CommunityDetailScreen({ navigation, route }) {
+  const NowColorState = useColorScheme();
+
   const itemId = route.params.id;
 
   const { user } = useContext(UserContext);
@@ -111,14 +114,24 @@ export default function CommunityDetailScreen({ navigation, route }) {
   };
 
   const styles = StyleSheet.create({
-    container: { backgroundColor: "white", flex: 1 },
+    container: {
+      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      flex: 1,
+    },
 
     scroll_view_wrap: { flex: 1 },
-    scroll_view: { backgroundColor: "#f4f4f4", height: 100 },
-    wrap: { padding: 20, backgroundColor: "white" },
+    scroll_view: {
+      backgroundColor: NowColorState === "light" ? "#f4f4f4" : "#2c2c36",
+      height: 100,
+    },
+    wrap: {
+      padding: 20,
+      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+    },
     title: {
       fontSize: 24,
       fontWeight: "600",
+      color: NowColorState === "light" ? "black" : "white",
     },
     date: {
       marginTop: 6,
@@ -128,7 +141,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
     content: {
       marginTop: 24,
       fontSize: 14,
-      color: "#52525b",
+      color: NowColorState === "light" ? "#52525b" : "white",
     },
     image: {
       width: 200,
@@ -136,7 +149,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       marginRight: 20,
       borderRadius: 20,
       marginTop: 32,
-      backgroundColor: "#f9f9f9",
+      backgroundColor: NowColorState === "light" ? "#f9f9f9" : "#2c2c36",
     },
 
     input_container: {
@@ -145,8 +158,14 @@ export default function CommunityDetailScreen({ navigation, route }) {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      borderColor: "#b8b8b8",
+      borderColor: NowColorState === "light" ? "#b8b8b8" : "black",
       borderTopWidth: 0.2,
+      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+    },
+    comment_input: { color: NowColorState === "light" ? "black" : "white" },
+    comment_send_button: {
+      fontSize: 16,
+      color: NowColorState === "light" ? "black" : "white",
     },
   });
 
@@ -214,6 +233,8 @@ export default function CommunityDetailScreen({ navigation, route }) {
             <View style={styles.input_container}>
               <TextInput
                 ref={commentInputRef}
+                style={styles.comment_input}
+                placeholderTextColor={NowColorState === "dark" ? "gray" : null}
                 value={comment}
                 onChangeText={(_text) => {
                   setComment(_text);
@@ -223,7 +244,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
               />
               {comment !== "" ? (
                 <TouchableOpacity onPress={handlePostComment}>
-                  <Text style={{ fontSize: 16 }}>작성</Text>
+                  <Text style={styles.comment_send_button}>작성</Text>
                 </TouchableOpacity>
               ) : null}
             </View>
@@ -244,6 +265,8 @@ export default function CommunityDetailScreen({ navigation, route }) {
 }
 
 function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
+  const NowColorState = useColorScheme();
+
   const queryClient = useQueryClient();
   const { mutate: likeAddMutate } = useMutation(addLike);
   const { mutate: likeDeleteMutate } = useMutation(deleteLike);
@@ -385,7 +408,11 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
       justifyContent: "center",
       flexDirection: "row",
     },
-    button_text: { fontSize: 12, paddingHorizontal: 10 },
+    button_text: {
+      fontSize: 12,
+      paddingHorizontal: 10,
+      color: NowColorState === "light" ? "black" : "white",
+    },
   });
   return (
     <View style={styles.button_bar}>
@@ -400,7 +427,11 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
           </>
         ) : (
           <>
-            <FontAwesome name={"heart-o"} size={20} />
+            <FontAwesome
+              name={"heart-o"}
+              size={20}
+              color={NowColorState === "light" ? "black" : "white"}
+            />
             <Text style={styles.button_text}>{data.likeCount}</Text>
           </>
         )}
@@ -411,7 +442,11 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
           commentInputRef.current.focus();
         }}
       >
-        <Ionicons name={"chatbubble-outline"} size={20} />
+        <Ionicons
+          name={"chatbubble-outline"}
+          size={20}
+          color={NowColorState === "light" ? "black" : "white"}
+        />
         <Text style={styles.button_text}>{data.commentCount}</Text>
       </TouchableOpacity>
       {data.publisher === user._id ? (
@@ -421,7 +456,11 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
         </TouchableOpacity>
       ) : (
         <TouchableOpacity style={styles.button} onPress={handleOpenActionSheet}>
-          <Ionicons name={"ellipsis-horizontal-outline"} size={24} />
+          <Ionicons
+            name={"ellipsis-horizontal-outline"}
+            size={24}
+            color={NowColorState === "light" ? "black" : "white"}
+          />
           <Text style={styles.button_text}>더보기</Text>
         </TouchableOpacity>
       )}
@@ -438,6 +477,8 @@ function Comment({
   currentUser,
   blockedUsers,
 }) {
+  const NowColorState = useColorScheme();
+
   //react-query
   const queryClient = useQueryClient();
   const { mutate: deleteCommentMutate } = useMutation(deleteComment);
@@ -452,10 +493,10 @@ function Comment({
 
   const styles = StyleSheet.create({
     comment: {
-      backgroundColor: "white",
+      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
       borderTopWidth: 0.2,
       borderBottomWidth: 0.2,
-      borderColor: "#d4d4d4",
+      borderColor: NowColorState === "light" ? "#d4d4d4" : "#3f3f46",
       padding: 17,
     },
     header: {
@@ -466,7 +507,10 @@ function Comment({
 
     comment_writer_text: { fontSize: 12, color: "gray" },
     delete_text: { fontSize: 13, color: "gray" },
-    comment_text: { marginTop: 8 },
+    comment_text: {
+      marginTop: 8,
+      color: NowColorState === "light" ? "black" : "white",
+    },
     comment_date: { fontSize: 12, color: "#94a3b8", marginTop: 8 },
 
     blocked_users_comment: {

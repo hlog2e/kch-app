@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  useColorScheme,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { Calendar, LocaleConfig } from "react-native-calendars";
@@ -10,6 +16,8 @@ import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import uuid from "react-native-uuid";
 
 export default function NewCalendarScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const todayDate = moment().format("YYYY-MM-DD");
 
   const [selDate, setSelDate] = useState(todayDate);
@@ -114,7 +122,10 @@ export default function NewCalendarScreen({ navigation }) {
   LocaleConfig.defaultLocale = "kr";
 
   const styles = StyleSheet.create({
-    container: { backgroundColor: "white", flex: 1 },
+    container: {
+      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      flex: 1,
+    },
 
     calendar: { marginTop: 18 },
     month_title: { padding: 18, fontSize: 20, fontWeight: "700" },
@@ -131,7 +142,14 @@ export default function NewCalendarScreen({ navigation }) {
           <Calendar
             initialDate={selDate}
             style={styles.calendar}
-            theme={{ arrowColor: "black" }}
+            theme={{
+              arrowColor: NowColorState === "light" ? "black" : "white",
+              calendarBackground:
+                NowColorState === "light" ? "white" : "#18171c",
+              dayTextColor: NowColorState === "dark" ? "white" : null,
+              textDisabledColor: NowColorState === "dark" ? "gray" : null,
+              monthTextColor: NowColorState === "dark" ? "white" : null,
+            }}
             enableSwipeMonths={true}
             onDayPress={(day) => {
               setSelDate(day.dateString);
@@ -159,9 +177,10 @@ export default function NewCalendarScreen({ navigation }) {
 }
 
 function Item({ data }) {
+  const NowColorState = useColorScheme();
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: "#f1f5f9",
+      backgroundColor: NowColorState === "light" ? "#f1f5f9" : "#2c2c36",
       marginHorizontal: 20,
       padding: 14,
       borderRadius: 15,
@@ -173,6 +192,7 @@ function Item({ data }) {
     event_name: {
       fontSize: 16,
       fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
     },
     desc: {
       fontSize: 12,

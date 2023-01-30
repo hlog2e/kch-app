@@ -5,6 +5,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
@@ -82,20 +83,22 @@ export default function CommunityScreen({ navigation }) {
 }
 
 function CommunityItem({ item, navigation }) {
+  const NowColorState = useColorScheme();
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: "white",
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
       marginBottom: 8,
     },
     header: { marginTop: 30, paddingHorizontal: 18 },
     title: {
       fontSize: 20,
       fontWeight: "600",
+      color: NowColorState === "light" ? "black" : "white",
     },
     time: { fontSize: 12, color: "#b4b4b4", marginTop: 4 },
     content: {
       fontSize: 14,
-      color: "gray",
+      color: NowColorState === "light" ? "gray" : "white",
       paddingHorizontal: 18,
       marginTop: 18,
       height: 40,
@@ -149,15 +152,27 @@ function CommunityItem({ item, navigation }) {
 
       <View style={styles.footer}>
         <View style={styles.icon_wrap}>
-          <FontAwesome name={"heart-o"} size={20} />
+          <FontAwesome
+            name={"heart-o"}
+            size={20}
+            color={NowColorState === "light" ? "black" : "white"}
+          />
           <Text style={styles.icon_text}>{comma(item.likeCount)}</Text>
         </View>
         <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
-          <Ionicons name={"chatbubble-outline"} size={20} />
+          <Ionicons
+            name={"chatbubble-outline"}
+            size={20}
+            color={NowColorState === "light" ? "black" : "white"}
+          />
           <Text style={styles.icon_text}>{comma(item.commentCount)}</Text>
         </View>
         <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
-          <Ionicons name={"eye-outline"} size={24} />
+          <Ionicons
+            name={"eye-outline"}
+            size={24}
+            color={NowColorState === "light" ? "black" : "white"}
+          />
           <Text style={styles.icon_text}>
             {item.views ? comma(item.views) : 0}
           </Text>

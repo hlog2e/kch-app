@@ -1,9 +1,16 @@
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function DDay() {
+  const NowColorState = useColorScheme();
+
   const today = moment();
   const goalDay = moment("20231116");
   const [remaining, setRemaining] = useState("");
@@ -11,7 +18,11 @@ export default function DDay() {
   const styles = StyleSheet.create({
     container: { paddingHorizontal: 3, alignItems: "flex-end" },
     title: { fontSize: 11, color: "gray", fontWeight: "600" },
-    day: { fontSize: 15, fontWeight: "700" },
+    day: {
+      fontSize: 15,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
   });
 
   useEffect(() => {

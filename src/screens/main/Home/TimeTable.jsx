@@ -1,5 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+  useColorScheme,
+} from "react-native";
 import { getTimetable } from "../../../../apis/home/timetable";
 import moment from "moment/moment";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,6 +16,8 @@ import { UserContext } from "../../../../context/UserContext";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 
 export default function TimetableScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const { user } = useContext(UserContext);
 
   const [timetable, setTimetable] = useState();
@@ -66,6 +75,68 @@ export default function TimetableScreen({ navigation }) {
     }
     getTimetableAndSort();
   }, []);
+
+  const styles = StyleSheet.create({
+    header_container: {
+      paddingVertical: 28,
+      paddingHorizontal: 20,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    header_text_wrap: { paddingHorizontal: 16 },
+    header_title: {
+      fontSize: 24,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
+    header_desc: { color: "gray" },
+
+    table: { flex: 1, paddingHorizontal: 20 },
+
+    table_header: {
+      flexDirection: "row",
+      height: 50,
+      borderBottomWidth: 0.5,
+      borderBottomColor: "#d4d4d4",
+    },
+    table_header_item: {
+      width: 60,
+      justifyContent: "center",
+      alignItems: "center",
+      flex: 1,
+    },
+    table_header_item_text: {
+      fontWeight: "700",
+      fontSize: 16,
+      color: NowColorState === "light" ? "black" : "white",
+    },
+
+    column_wrap: { flexDirection: "row" },
+
+    side_column: { marginRight: 15 },
+    side_item: {
+      height: 50,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    side_item_text: {
+      fontWeight: "700",
+      fontSize: 16,
+      color: NowColorState === "light" ? "black" : "white",
+    },
+
+    column: { flex: 1, alignItems: "center" },
+    item: {
+      height: 50,
+      width: 60,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    item_text: {
+      fontSize: 12,
+      color: NowColorState === "light" ? "black" : "white",
+    },
+  });
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -169,53 +240,3 @@ export default function TimetableScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  header_container: {
-    paddingVertical: 28,
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  header_text_wrap: { paddingHorizontal: 16 },
-  header_title: {
-    fontSize: 24,
-    fontWeight: "700",
-  },
-  header_desc: { color: "gray" },
-
-  table: { flex: 1, paddingHorizontal: 20 },
-
-  table_header: {
-    flexDirection: "row",
-    height: 50,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#d4d4d4",
-  },
-  table_header_item: {
-    width: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  },
-  table_header_item_text: { fontWeight: "700", fontSize: 16 },
-
-  column_wrap: { flexDirection: "row" },
-
-  side_column: { marginRight: 15 },
-  side_item: {
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  side_item_text: { fontWeight: "700", fontSize: 16 },
-
-  column: { flex: 1, alignItems: "center" },
-  item: {
-    height: 50,
-    width: 60,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  item_text: { fontSize: 12 },
-});

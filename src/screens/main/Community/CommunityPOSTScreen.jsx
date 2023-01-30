@@ -11,6 +11,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  useColorScheme,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
@@ -22,6 +23,8 @@ import badWordChecker from "../../../../utils/badWordChecker";
 import mime from "mime";
 
 export default function CommunityPOSTScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const [loading, setLoading] = useState(false);
 
   const [title, setTitle] = useState("");
@@ -147,6 +150,11 @@ export default function CommunityPOSTScreen({ navigation }) {
   };
 
   const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+    },
+
     wrap: { marginTop: 10, flex: 1, paddingHorizontal: 10 },
     title_input: {
       paddingHorizontal: 10,
@@ -155,15 +163,16 @@ export default function CommunityPOSTScreen({ navigation }) {
       borderColor: "#d4d4d4",
       fontSize: 16,
       fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
     },
     content_input: {
       paddingHorizontal: 10,
-      color: "#52525b",
+      color: NowColorState === "light" ? "#52525b" : "white",
       marginTop: 10,
       paddingBottom: 100,
     },
     image_skeleton: {
-      backgroundColor: "#f2f2f2",
+      backgroundColor: NowColorState === "light" ? "#f2f2f2" : "#2c2c36",
       width: 100,
       height: 100,
       borderRadius: 10,
@@ -187,10 +196,7 @@ export default function CommunityPOSTScreen({ navigation }) {
   });
 
   return (
-    <SafeAreaView
-      edges={["top", "bottom"]}
-      style={{ flex: 1, backgroundColor: "white" }}
-    >
+    <SafeAreaView edges={["top", "bottom"]} style={styles.container}>
       <FullScreenBlurLoader loading={loading} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -213,6 +219,7 @@ export default function CommunityPOSTScreen({ navigation }) {
                 setContent(_value);
               }}
               style={styles.content_input}
+              placeholderTextColor={NowColorState === "dark" ? "gray" : null}
               placeholder={"내용"}
               multiline
             />

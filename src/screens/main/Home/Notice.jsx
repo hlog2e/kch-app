@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import moment from "moment";
@@ -8,6 +8,8 @@ import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import { useState } from "react";
 
 export default function NoticeScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const { data, isSuccess, isLoading, refetch } = useQuery(
     "Notice",
     getNotices
@@ -20,6 +22,7 @@ export default function NoticeScreen({ navigation }) {
       marginVertical: 14,
       fontWeight: "700",
       marginLeft: 14,
+      color: NowColorState === "light" ? "black" : "white",
     },
   });
   return (
@@ -39,7 +42,9 @@ export default function NoticeScreen({ navigation }) {
               setRefreshing(false);
             });
           }}
-          renderItem={NoticeItem}
+          renderItem={({ item }) => {
+            return <NoticeItem item={item} />;
+          }}
         />
       ) : null}
     </SafeAreaView>
@@ -47,15 +52,24 @@ export default function NoticeScreen({ navigation }) {
 }
 
 function NoticeItem({ item }) {
+  const NowColorState = useColorScheme();
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: "white",
+      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
       padding: 18,
       marginBottom: 10,
     },
-    title: { fontSize: 16, fontWeight: "700" },
+    title: {
+      fontSize: 16,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
     writer: { marginTop: 2, fontSize: 11, color: "gray" },
-    content: { marginTop: 10, fontWeight: "300" },
+    content: {
+      marginTop: 10,
+      fontWeight: "300",
+      color: NowColorState === "light" ? "black" : "white",
+    },
     createdAt: {
       marginTop: 10,
       fontWeight: "300",
