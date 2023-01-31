@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  Alert,
+  useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -19,6 +19,8 @@ import AlertError from "../../../components/common/AlertError";
 import { postVerifyCode } from "../../../../apis/auth";
 
 export default function JoinVerfiyScreen({ navigation, route }) {
+  const NowColorState = useColorScheme();
+
   const [status, setStatus] = useState("success");
   const [msg, setMsg] = useState("인증번호를 발송했습니다!");
   const [verifyCode, setVerifyCode] = useState("");
@@ -57,6 +59,7 @@ export default function JoinVerfiyScreen({ navigation, route }) {
       fontWeight: "700",
       marginHorizontal: 25,
       marginVertical: 25,
+      color: NowColorState === "light" ? "black" : "white",
     },
 
     keyboard_view: {
@@ -88,15 +91,22 @@ export default function JoinVerfiyScreen({ navigation, route }) {
 }
 
 function Input({ verifyCode, setVerifyCode, status, msg }) {
+  const NowColorState = useColorScheme();
+
   const styles = StyleSheet.create({
     input_wrap: { flex: 1 },
-    input_title: { fontSize: 14, color: "gray", marginBottom: 5 },
+    input_title: {
+      fontSize: 14,
+      color: NowColorState === "light" ? "gray" : "white",
+      marginBottom: 5,
+    },
     input: {
       borderBottomColor: "#bdbdbd",
       borderBottomWidth: 2,
       padding: 5,
       fontSize: 20,
       fontWeight: "600",
+      color: NowColorState === "light" ? "black" : "white",
     },
     input_red: {
       borderBottomColor: "#fb7185",
@@ -114,6 +124,7 @@ function Input({ verifyCode, setVerifyCode, status, msg }) {
           }
         }}
         placeholder="인증번호 4자리"
+        placeholderTextColor={NowColorState === "dark" ? "gray" : null}
         keyboardType="phone-pad"
         style={[
           styles.input,

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -28,6 +29,8 @@ import studentSelectionDataJSON from "../../../../data/studentSeletionData.json"
 import * as Linking from "expo-linking";
 
 export default function JoinFormScreen({ navigation, route }) {
+  const NowColorState = useColorScheme();
+
   const [inputDone, setInputDone] = useState(false); //입력여부 체크
   const [codeVerified, setCodeVerified] = useState(false); //가입코드 유효성 체크
 
@@ -64,6 +67,7 @@ export default function JoinFormScreen({ navigation, route }) {
       fontWeight: "700",
       marginHorizontal: 25,
       marginTop: 20,
+      color: NowColorState === "light" ? "black" : "white",
     },
 
     wrap: { paddingHorizontal: 25, marginTop: 20 },
@@ -76,11 +80,20 @@ export default function JoinFormScreen({ navigation, route }) {
       marginTop: 8,
       fontSize: 18,
       fontWeight: "300",
+      color: NowColorState === "light" ? "black" : "white",
     },
 
-    picker_title: { fontSize: 14, fontWeight: "700" },
+    picker_title: {
+      fontSize: 14,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
     picker_wrap: { marginTop: 20 },
-    picker: { borderBottomWidth: 1, borderColor: "#b4b4b4", marginTop: 4 },
+    picker: {
+      borderBottomWidth: 1,
+      borderColor: "#b4b4b4",
+      marginTop: 4,
+    },
 
     divider: { marginTop: 20 },
   });
@@ -89,8 +102,14 @@ export default function JoinFormScreen({ navigation, route }) {
       fontSize: 16,
       fontWeight: "300",
       paddingVertical: 8,
+      color: NowColorState === "light" ? "black" : "white",
     },
-    inputAndroid: { fontSize: 16, fontWeight: "300", paddingVertical: 8 },
+    inputAndroid: {
+      fontSize: 16,
+      fontWeight: "300",
+      paddingVertical: 8,
+      color: NowColorState === "light" ? "black" : "white",
+    },
   });
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -160,6 +179,9 @@ export default function JoinFormScreen({ navigation, route }) {
               <Text style={styles.picker_title}>이름</Text>
               <TextInput
                 placeholder="이름"
+                placeholderTextColor={
+                  NowColorState === "dark" ? "#f4f4f4" : null
+                }
                 returnKeyType="done"
                 value={name}
                 onChangeText={(value) => {
@@ -202,6 +224,8 @@ function VerifyCode({
   registerCodeVerified,
   setRegisterCodeVerified,
 }) {
+  const NowColorState = useColorScheme();
+
   const [registerCodeAlertStatus, setRegisterCodeAlertStatus] = useState({});
 
   const handlePostValidateRegisterCode = async () => {
@@ -228,10 +252,24 @@ function VerifyCode({
       paddingHorizontal: 10,
       justifyContent: "center",
       borderRadius: 10,
+      backgroundColor: "#2563eb",
     },
+    verify_button_disable: {
+      alignItems: "center",
+      marginLeft: 15,
+      paddingHorizontal: 10,
+      justifyContent: "center",
+      borderRadius: 10,
+      backgroundColor: "#bfdbfe",
+    },
+
     verify_button_text: { color: "white", fontWeight: "700" },
 
-    picker_title: { fontSize: 14, fontWeight: "700" },
+    picker_title: {
+      fontSize: 14,
+      fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
+    },
 
     input_wrap: { marginTop: 20 },
     input: {
@@ -241,6 +279,7 @@ function VerifyCode({
       marginTop: 8,
       fontSize: 18,
       fontWeight: "300",
+      color: NowColorState === "light" ? "black" : "white",
     },
     input_red: {
       borderBottomColor: "#fb7185",
@@ -257,6 +296,7 @@ function VerifyCode({
             maxLength={5}
             autoCapitalize="characters"
             placeholder="가입코드(5자리)"
+            placeholderTextColor={NowColorState === "dark" ? "#f4f4f4" : null}
             returnKeyType="done"
             value={registerCode}
             onChangeText={(value) => {
@@ -276,12 +316,11 @@ function VerifyCode({
             onPress={
               registerCode.length === 5 ? handlePostValidateRegisterCode : null
             }
-            style={[
-              styles.verify_button,
+            style={
               registerCode.length === 5
-                ? { backgroundColor: "black" }
-                : { backgroundColor: "gray" },
-            ]}
+                ? styles.verify_button
+                : styles.verify_button_disable
+            }
           >
             <Text style={styles.verify_button_text}>인증하기</Text>
           </TouchableOpacity>
@@ -299,6 +338,8 @@ function VerifyCode({
 }
 
 function Privacy() {
+  const NowColorState = useColorScheme();
+
   const styles = StyleSheet.create({
     privacy_container: {
       marginTop: 30,
@@ -311,10 +352,12 @@ function Privacy() {
     privacy_text: {
       fontSize: 12,
       fontWeight: "300",
+      color: NowColorState === "light" ? "black" : "white",
     },
     privacy_link_text: {
       fontSize: 12,
       fontWeight: "700",
+      color: NowColorState === "light" ? "black" : "white",
     },
   });
 

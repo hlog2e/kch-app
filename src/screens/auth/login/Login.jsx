@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  useColorScheme,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -17,6 +18,8 @@ import { postRequestCode } from "../../../../apis/auth";
 import AlertError from "../../../components/common/AlertError";
 
 export default function LoginScreen({ navigation }) {
+  const NowColorState = useColorScheme();
+
   const [status, setStatus] = useState("");
   const [msg, setMsg] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -49,6 +52,7 @@ export default function LoginScreen({ navigation }) {
       marginHorizontal: 25,
       marginTop: 60,
       marginBottom: 25,
+      color: NowColorState === "light" ? "black" : "white",
     },
     keyboard_view: {
       flex: 1,
@@ -79,10 +83,17 @@ export default function LoginScreen({ navigation }) {
 }
 
 function Input({ phoneNumber, setPhoneNumber, status, msg }) {
+  const NowColorState = useColorScheme();
+
   const styles = StyleSheet.create({
     input_wrap: { flex: 1 },
-    input_title: { fontSize: 14, color: "gray", marginBottom: 5 },
+    input_title: {
+      fontSize: 14,
+      color: NowColorState === "light" ? "gray" : "white",
+      marginBottom: 5,
+    },
     input: {
+      color: NowColorState === "light" ? "black" : "white",
       borderBottomColor: "#bdbdbd",
       borderBottomWidth: 2,
       padding: 5,
@@ -104,6 +115,7 @@ function Input({ phoneNumber, setPhoneNumber, status, msg }) {
           }
         }}
         placeholder="01012345678"
+        placeholderTextColor={NowColorState === "dark" ? "gray" : null}
         keyboardType="phone-pad"
         maxLength={11}
         style={[
@@ -117,6 +129,8 @@ function Input({ phoneNumber, setPhoneNumber, status, msg }) {
 }
 
 function Footer({ navigation, handleRequestCode, done }) {
+  const NowColorState = useColorScheme();
+
   return (
     <View>
       <ButtonFullWidth
@@ -131,6 +145,7 @@ function Footer({ navigation, handleRequestCode, done }) {
             navigation.replace("Join");
           }}
           text="회원가입"
+          color={NowColorState === "light" ? "black" : "white"}
         />
       </View>
     </View>
