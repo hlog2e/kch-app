@@ -1,11 +1,12 @@
 import { apiAuthInstance } from "../api";
 
-export const getCommunities = async (offset) => {
+export const getCommunities = async (props) => {
   const limit = 5;
 
   const { data } = await apiAuthInstance.get("/community", {
-    params: { limit, offset },
+    params: { limit, offset: props.offset, sort: props.sort },
   });
+  console.log(props.sort);
 
   return data;
 };

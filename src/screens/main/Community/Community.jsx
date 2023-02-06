@@ -20,6 +20,18 @@ import { useState } from "react";
 import FABPlus from "../../../components/common/FABPlus";
 
 export default function CommunityScreen({ navigation }) {
+  const sortByIDArray = [
+    { id: 0, text: "최신순", sort: { createdAt: -1 } },
+    { id: 1, text: "인기순", sort: { views: -1 } },
+    { id: 2, text: "좋아요순", sort: { likeCount: -1 } },
+    { id: 3, text: "댓글 많은순", sort: { commentCount: -1 } },
+  ];
+  const [sortBy, setSortBy] = useState({
+    id: 0,
+    text: "최신순",
+    sort: { createdAt: -1 },
+  });
+
   const [refreshing, setRefreshing] = useState(false);
   const {
     isLoading,
@@ -29,8 +41,9 @@ export default function CommunityScreen({ navigation }) {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: "community",
-    queryFn: ({ pageParam = 0 }) => getCommunities(pageParam),
+    queryKey: ["community", sortBy], //정렬방법이 바뀌면 Refetch
+    queryFn: ({ pageParam = 0 }) =>
+      getCommunities({ offset: pageParam, sort: sortBy.sort }),
     getNextPageParam: (lastPage, allPages) => {
       if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
         return undefined;
@@ -43,10 +56,29 @@ export default function CommunityScreen({ navigation }) {
     container: {
       flex: 1,
     },
+    rightHeaderText: {
+      fontSize: 13,
+      color: "gray",
+    },
   });
   return (
     <View style={styles.container}>
-      <SafeTitleHeader title="커뮤니티" />
+      <SafeTitleHeader
+        title="커뮤니티"
+        rightComponent={
+          <TouchableOpacity
+            onPress={() => {
+              if (sortBy.id < sortByIDArray.length - 1) {
+                setSortBy(sortByIDArray[sortBy.id + 1]);
+              } else {
+                setSortBy(sortByIDArray[0]);
+              }
+            }}
+          >
+            <Text style={styles.rightHeaderText}>{sortBy.text}</Text>
+          </TouchableOpacity>
+        }
+      />
       {isLoading ? <FullScreenLoader /> : null}
       {isSuccess ? (
         <FABPlus
