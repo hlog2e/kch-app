@@ -6,7 +6,6 @@ export const getCommunities = async (props) => {
   const { data } = await apiAuthInstance.get("/community", {
     params: { limit, offset: props.offset, sort: props.sort },
   });
-  console.log(props.sort);
 
   return data;
 };

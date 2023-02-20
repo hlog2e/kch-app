@@ -37,6 +37,7 @@ import { UserContext } from "../../../../context/UserContext";
 import badWordChecker from "../../../../utils/badWordChecker";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
 
 export default function CommunityDetailScreen({ navigation, route }) {
   const NowColorState = useColorScheme();
@@ -73,7 +74,8 @@ export default function CommunityDetailScreen({ navigation, route }) {
   const [comment, setComment] = useState("");
 
   const queryClient = useQueryClient();
-  const { mutate: commentMutate } = useMutation(postComment);
+  const { mutate: commentMutate, isLoading: commentPOSTLoading } =
+    useMutation(postComment);
   const { data: blockedUsers } = useQuery("blocked_users", getBlockedUsers);
 
   const commentInputRef = useRef();
@@ -174,6 +176,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
         <OnlyLeftArrowHeader navigation={navigation} />
         {isLoading ? <FullScreenLoader /> : null}
+        {commentPOSTLoading ? <FullScreenBlurLoader loading={true} /> : null}
         {isSuccess ? (
           <KeyboardAvoidingView
             style={{ flex: 1 }}
