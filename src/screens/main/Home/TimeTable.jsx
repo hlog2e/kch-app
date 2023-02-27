@@ -184,53 +184,63 @@ export default function TimetableScreen({ navigation }) {
             </View>
             {/* 월요일 컬럼 */}
             <View style={styles.column}>
-              {timetable[dateArray[0]].map((e, i) => {
-                return (
-                  <View style={styles.item}>
-                    <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
-                  </View>
-                );
-              })}
+              {timetable[dateArray[0]]
+                ? timetable[dateArray[0]].map((e, i) => {
+                    return (
+                      <View style={styles.item}>
+                        <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
+                      </View>
+                    );
+                  })
+                : null}
             </View>
             {/* 화요일 컬럼 */}
             <View style={styles.column}>
-              {timetable[dateArray[1]].map((e, i) => {
-                return (
-                  <View style={styles.item}>
-                    <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
-                  </View>
-                );
-              })}
+              {timetable[dateArray[1]]
+                ? timetable[dateArray[1]].map((e, i) => {
+                    return (
+                      <View style={styles.item}>
+                        <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
+                      </View>
+                    );
+                  })
+                : null}
             </View>
             {/* 수요일 컬럼 */}
             <View style={styles.column}>
-              {timetable[dateArray[2]].map((e, i) => {
-                return (
-                  <View style={styles.item}>
-                    <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
-                  </View>
-                );
-              })}
+              {timetable[dateArray[2]]
+                ? timetable[dateArray[2]].map((e, i) => {
+                    return (
+                      <View style={styles.item}>
+                        <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
+                      </View>
+                    );
+                  })
+                : null}
             </View>
             {/* 목요일 컬럼 */}
             <View style={styles.column}>
-              {timetable[dateArray[3]].map((e, i) => {
-                return (
-                  <View style={styles.item}>
-                    <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
-                  </View>
-                );
-              })}
+              {timetable[dateArray[3]]
+                ? timetable[dateArray[3]].map((e, i) => {
+                    return (
+                      <View style={styles.item}>
+                        <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
+                      </View>
+                    );
+                  })
+                : null}
             </View>
             {/* 금요일 컬럼 */}
             <View style={styles.column}>
-              {timetable[dateArray[4]].map((e, i) => {
-                return (
-                  <View style={styles.item}>
-                    <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
-                  </View>
-                );
-              })}
+              {timetable[dateArray[4]]
+                ? timetable[dateArray[4]].map((e, i) => {
+                    return (
+                      <View style={styles.item}>
+                        <Text style={styles.item_text}>{e.ITRT_CNTNT}</Text>
+                      </View>
+                    );
+                  })
+                : null}
             </View>
           </View>
         </View>
