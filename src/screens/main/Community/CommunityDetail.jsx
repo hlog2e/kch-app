@@ -38,6 +38,7 @@ import badWordChecker from "../../../../utils/badWordChecker";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
+import Hyperlink from "react-native-hyperlink";
 
 export default function CommunityDetailScreen({ navigation, route }) {
   const NowColorState = useColorScheme();
@@ -189,7 +190,12 @@ export default function CommunityDetailScreen({ navigation, route }) {
                   <Text style={styles.date}>
                     {moment(data.createdAt).fromNow()}
                   </Text>
-                  <Text style={styles.content}>{data.content}</Text>
+                  <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
+                    <Text selectable style={styles.content}>
+                      {data.content}
+                    </Text>
+                  </Hyperlink>
+
                   <ScrollView horizontal>
                     {data.images.map((_item, _index) => (
                       <TouchableOpacity
@@ -647,8 +653,11 @@ function Comment({
           </TouchableOpacity>
         )}
       </View>
-
-      <Text style={styles.comment_text}>{comment}</Text>
+      <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
+        <Text selectable style={styles.comment_text}>
+          {comment}
+        </Text>
+      </Hyperlink>
       <Text style={styles.comment_date}>{moment(createdAt).fromNow()}</Text>
     </View>
   );

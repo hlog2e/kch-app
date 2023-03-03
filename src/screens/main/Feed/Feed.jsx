@@ -18,6 +18,8 @@ import { getFeeds } from "../../../../apis/feed/feed";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import ImageView from "react-native-image-viewing";
 
+import Hyperlink from "react-native-hyperlink";
+
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function FeedScreen({ navigation }) {
@@ -157,7 +159,11 @@ function FeedItem({ item }) {
       <View style={styles.footer}>
         <View>
           <Text style={styles.footer_title}>{item.publisher}</Text>
-          <Text style={styles.footer_desc}>{item.desc}</Text>
+          <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
+            <Text selectable style={styles.footer_desc}>
+              {item.desc}
+            </Text>
+          </Hyperlink>
         </View>
         <Text style={styles.date}>
           {moment(item.createdAt).format("M월 D일")}
