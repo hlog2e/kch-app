@@ -29,3 +29,9 @@ export const postUpdateNotificationSetting = async (props) => {
 
   return data;
 };
+
+export const postResetBlockedUsers = async () => {
+  const { data } = await apiAuthInstance.post("/user/reset-block-users");
+
+  return data;
+};

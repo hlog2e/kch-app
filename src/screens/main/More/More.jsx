@@ -20,6 +20,8 @@ import * as WebBrowser from "expo-web-browser";
 import Constants from "expo-constants";
 import { getExpoPushTokenAsync } from "expo-notifications";
 import { unRegisterPushTokenToDB } from "../../../../apis/push-noti";
+import { useMutation } from "react-query";
+import { postResetBlockedUsers } from "../../../../apis/more/more";
 
 export default function MoreScreen({ navigation }) {
   const NowColorState = useColorScheme();
@@ -182,6 +184,10 @@ export default function MoreScreen({ navigation }) {
 }
 
 function ListButtonSection({ navigation, user }) {
+  const { mutate: resetBlockedUsersMutate } = useMutation(
+    postResetBlockedUsers
+  );
+
   const NowColorState = useColorScheme();
   const buttons = [
     {
@@ -192,9 +198,36 @@ function ListButtonSection({ navigation, user }) {
       },
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
-    { id: 1, name: "margin" },
     {
-      id: 2,
+      id: 1,
+      name: "차단한 사용자 초기화",
+      onPress: () => {
+        Alert.alert(
+          "경고",
+          "초기화를 하게 되면 지금까지 차단한 사용자 모두가 차단 해제 처리됩니다.",
+          [
+            { text: "취소", style: "cancel" },
+            {
+              text: "확인",
+              onPress: () => {
+                resetBlockedUsersMutate(
+                  {},
+                  {
+                    onSuccess: (_data) => {
+                      Alert.alert("알림", _data.message);
+                    },
+                  }
+                );
+              },
+            },
+          ]
+        );
+      },
+      right: <Ionicons name="ios-refresh-outline" size={22} color="#d4d4d4" />,
+    },
+    { id: 2, name: "margin" },
+    {
+      id: 3,
       name: "개발자 정보",
       onPress: () => {
         navigation.push("DeveloperDetailScreen");
@@ -202,16 +235,16 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 3,
+      id: 4,
       name: "제 34기 학생회",
       onPress: () => {
         navigation.push("StudentCouncilScreen");
       },
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
-    { id: 4, name: "margin" },
+    { id: 5, name: "margin" },
     {
-      id: 5,
+      id: 6,
       name: "의견 제출",
       onPress: () => {
         handleSendSMS("idea");
@@ -219,7 +252,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 6,
+      id: 7,
       name: "버그·오류 신고",
       onPress: () => {
         handleSendSMS("bug");
@@ -227,9 +260,9 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
 
-    { id: 7, name: "margin" },
+    { id: 8, name: "margin" },
     {
-      id: 8,
+      id: 9,
       name: "개인정보 처리방침",
       onPress: async () => {
         await WebBrowser.openBrowserAsync(
@@ -239,7 +272,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 9,
+      id: 10,
       name: "이용약관",
       onPress: async () => {
         await WebBrowser.openBrowserAsync("https://terms.kch-app.me");
@@ -247,7 +280,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 10,
+      id: 11,
       name: "오픈소스",
       onPress: async () => {
         await WebBrowser.openBrowserAsync("https://github.com/hlog2e/kch-app");
@@ -255,7 +288,7 @@ function ListButtonSection({ navigation, user }) {
       right: <EvilIcons name="chevron-right" size={34} color="#d4d4d4" />,
     },
     {
-      id: 11,
+      id: 12,
       name: "앱 버전",
       onPress: () => {
         Alert.alert(
