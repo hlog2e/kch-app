@@ -65,19 +65,19 @@ export default function CommunityScreen({ navigation }) {
     <View style={styles.container}>
       <SafeTitleHeader
         title="커뮤니티"
-        rightComponent={
-          <TouchableOpacity
-            onPress={() => {
-              if (sortBy.id < sortByIDArray.length - 1) {
-                setSortBy(sortByIDArray[sortBy.id + 1]);
-              } else {
-                setSortBy(sortByIDArray[0]);
-              }
-            }}
-          >
-            <Text style={styles.rightHeaderText}>{sortBy.text}</Text>
-          </TouchableOpacity>
-        }
+        // rightComponent={
+        //   <TouchableOpacity
+        //     onPress={() => {
+        //       if (sortBy.id < sortByIDArray.length - 1) {
+        //         setSortBy(sortByIDArray[sortBy.id + 1]);
+        //       } else {
+        //         setSortBy(sortByIDArray[0]);
+        //       }
+        //     }}
+        //   >
+        //     <Text style={styles.rightHeaderText}>{sortBy.text}</Text>
+        //   </TouchableOpacity>
+        // }
       />
       {isLoading ? <FullScreenLoader /> : null}
       {isSuccess ? (
