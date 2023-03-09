@@ -136,10 +136,11 @@ export default function CommunityDetailScreen({ navigation, route }) {
       fontWeight: "600",
       color: NowColorState === "light" ? "black" : "white",
     },
+    publisher_name: { fontSize: 14, color: "gray", marginTop: 4 },
     date: {
-      marginTop: 6,
+      marginTop: 4,
       fontSize: 12,
-      color: "gray",
+      color: "#b4b4b4",
     },
     content: {
       marginTop: 24,
@@ -187,6 +188,14 @@ export default function CommunityDetailScreen({ navigation, route }) {
               <ScrollView style={styles.scroll_view}>
                 <View style={styles.wrap}>
                   <Text style={styles.title}>{data.title}</Text>
+                  <Text style={styles.publisher_name}>
+                    {data.publisherName}{" "}
+                    {data.publisherGrade === "1" ||
+                    data.publisherGrade === "2" ||
+                    data.publisherGrade === "3"
+                      ? data.publisherGrade + "학년"
+                      : data.publisherGrade}
+                  </Text>
                   <Text style={styles.date}>
                     {moment(data.createdAt).fromNow()}
                   </Text>
@@ -222,15 +231,12 @@ export default function CommunityDetailScreen({ navigation, route }) {
                     navigation={navigation}
                   />
                 </View>
-                {data.comments.map((_i) => {
+                {data.comments.map((_item) => {
                   return (
                     <Comment
-                      key={_i._id}
+                      key={_item._id}
                       communityId={itemId}
-                      commentId={_i._id}
-                      comment={_i.comment}
-                      createdAt={_i.createdAt}
-                      issuer={_i.issuer}
+                      data={_item}
                       currentUser={user}
                       blockedUsers={blockedUsers}
                     />
@@ -477,15 +483,7 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
   );
 }
 
-function Comment({
-  communityId,
-  commentId,
-  comment,
-  createdAt,
-  issuer,
-  currentUser,
-  blockedUsers,
-}) {
+function Comment({ communityId, currentUser, data, blockedUsers }) {
   const NowColorState = useColorScheme();
 
   //react-query
@@ -495,7 +493,7 @@ function Comment({
   const { mutate: reportComment } = useMutation(postReportComment);
 
   const blockedUsersComment = blockedUsers
-    ? blockedUsers.includes(issuer)
+    ? blockedUsers.includes(data.issuer)
     : false;
 
   const { showActionSheetWithOptions } = useActionSheet();
@@ -641,9 +639,16 @@ function Comment({
   return (
     <View style={styles.comment}>
       <View style={styles.header}>
-        <Text style={styles.comment_writer_text}>익명</Text>
+        <Text style={styles.comment_writer_text}>
+          {data.issuerName}{" "}
+          {data.issuerGrade === "1" ||
+          data.issuerGrade === "2" ||
+          data.issuerGrade === "3"
+            ? data.issuerGrade + "학년"
+            : data.issuerGrade}
+        </Text>
         {/*작성자 본인일 때 삭제버튼 보이기*/}
-        {issuer === currentUser._id ? (
+        {data.issuer === currentUser._id ? (
           <TouchableOpacity onPress={handleCommentDelete}>
             <Text style={styles.delete_text}>삭제</Text>
           </TouchableOpacity>
@@ -655,10 +660,12 @@ function Comment({
       </View>
       <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
         <Text selectable style={styles.comment_text}>
-          {comment}
+          {data.comment}
         </Text>
       </Hyperlink>
-      <Text style={styles.comment_date}>{moment(createdAt).fromNow()}</Text>
+      <Text style={styles.comment_date}>
+        {moment(data.createdAt).fromNow()}
+      </Text>
     </View>
   );
 }

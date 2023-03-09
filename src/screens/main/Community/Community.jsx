@@ -41,7 +41,7 @@ export default function CommunityScreen({ navigation }) {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["community", sortBy], //정렬방법이 바뀌면 Refetch
+    queryKey: ["community", sortBy.id], //정렬방법이 바뀌면 Refetch
     queryFn: ({ pageParam = 0 }) =>
       getCommunities({ offset: pageParam, sort: sortBy.sort }),
     getNextPageParam: (lastPage, allPages) => {
@@ -127,7 +127,8 @@ function CommunityItem({ item, navigation }) {
       fontWeight: "600",
       color: NowColorState === "light" ? "black" : "white",
     },
-    time: { fontSize: 12, color: "#b4b4b4", marginTop: 4 },
+    time: { fontSize: 11, color: "#b4b4b4", marginTop: 4 },
+    publisher_name: { fontSize: 13, color: "gray", marginTop: 4 },
     content: {
       fontSize: 14,
       color: NowColorState === "light" ? "gray" : "white",
@@ -168,6 +169,14 @@ function CommunityItem({ item, navigation }) {
       <View style={styles.header}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
           {item.title}
+        </Text>
+        <Text style={styles.publisher_name}>
+          {item.publisherName}{" "}
+          {item.publisherGrade === "1" ||
+          item.publisherGrade === "2" ||
+          item.publisherGrade === "3"
+            ? item.publisherGrade + "학년"
+            : item.publisherGrade}
         </Text>
         <Text style={styles.time}>{moment(item.createdAt).fromNow()}</Text>
       </View>

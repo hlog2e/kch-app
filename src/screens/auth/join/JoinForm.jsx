@@ -43,9 +43,9 @@ export default function JoinFormScreen({ navigation, route }) {
 
   // 선생님을 선택시 반, 번호 "선생님"으로 고정 및 선택 해제시 null 값으로 변경
   useEffect(() => {
-    if (gradeValue === "teacher") {
-      setClassValue("teacher");
-      setNumValue("teacher");
+    if (gradeValue === "선생님") {
+      setClassValue("선생님");
+      setNumValue("선생님");
     } else {
       setClassValue(null);
       setNumValue(null);
@@ -132,11 +132,11 @@ export default function JoinFormScreen({ navigation, route }) {
                 value={gradeValue}
                 items={[
                   ...studentSelectionDataJSON.grade,
-                  { label: "선생님", value: "teacher" },
+                  { label: "선생님", value: "선생님" },
                 ]}
               />
             </View>
-            {gradeValue !== "teacher" ? (
+            {gradeValue !== "선생님" ? (
               <>
                 <View style={styles.picker_wrap}>
                   <Text style={styles.picker_title}>학급</Text>
