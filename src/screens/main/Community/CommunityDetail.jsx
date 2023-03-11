@@ -540,7 +540,7 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
         text: "확인",
         onPress: () => {
           deleteCommentMutate(
-            { communityId: communityId, commentId: commentId },
+            { communityId: communityId, commentId: data._id },
             {
               onSuccess: () => {
                 queryClient.invalidateQueries("CommunityDetail");
@@ -563,7 +563,7 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
           style: "destructive",
           onPress: () => {
             blockUserMutate(
-              { blockUserId: issuer },
+              { blockUserId: data.issuer },
               {
                 onSuccess: () => {
                   queryClient.invalidateQueries("CommunityDetail");
@@ -585,7 +585,7 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
         style: "destructive",
         onPress: () => {
           reportComment(
-            { postId: communityId, commentId: commentId },
+            { postId: communityId, commentId: data._id },
             {
               onSuccess: () => {
                 Alert.alert("알림", "정상적으로 해당 댓글을 신고하였습니다.", [
