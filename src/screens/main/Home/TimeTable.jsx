@@ -47,7 +47,7 @@ export default function TimetableScreen({ navigation }) {
     if (!data.hisTimetable) {
       Alert.alert(
         "오류",
-        "교육청(NEIS) 서버에 문제가 발생하였습니다. 나중에 다시 시도하세요.",
+        "교육청(NEIS)서버에 시간표 정보가 없거나, 서버가 응답하지 않습니다.",
         [{ text: "확인" }]
       );
     }
