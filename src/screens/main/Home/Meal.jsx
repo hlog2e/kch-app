@@ -8,6 +8,8 @@ import {
   Dimensions,
   Alert,
   useColorScheme,
+  TouchableOpacity,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
@@ -16,6 +18,8 @@ import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader"
 import uuid from "react-native-uuid";
 import { getMeals } from "../../../../apis/home/meal";
 import moment from "moment";
+
+import * as Linking from "expo-linking";
 
 export default function MealScreen({ navigation }) {
   const NowColorState = useColorScheme();
@@ -30,11 +34,13 @@ export default function MealScreen({ navigation }) {
 
   const styles = StyleSheet.create({
     container: { flex: 1 },
+    row: { flexDirection: "row", alignItems: "center" },
     header_container: {
       paddingVertical: 28,
       paddingHorizontal: 20,
       flexDirection: "row",
       alignItems: "center",
+      justifyContent: "space-between",
     },
     header_title: {
       fontSize: 32,
@@ -50,14 +56,32 @@ export default function MealScreen({ navigation }) {
       <OnlyLeftArrowHeader navigation={navigation} />
       <ScrollView>
         <View style={styles.header_container}>
-          <Image
-            style={{
-              width: 64,
-              height: 64,
-            }}
-            source={require("../../../../assets/svgs/rice.png")}
-          />
-          <Text style={styles.header_title}>급식</Text>
+          <View style={styles.row}>
+            <Image
+              style={{
+                width: 64,
+                height: 64,
+              }}
+              source={require("../../../../assets/svgs/rice.png")}
+            />
+            <Text style={styles.header_title}>급식</Text>
+          </View>
+          {/*ios일때만 add to siri 버튼 추가*/}
+          {Platform.OS === "ios" ? (
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(
+                  "https://www.icloud.com/shortcuts/b26d2eaa565c407a95e67ff6bac5082b"
+                );
+              }}
+            >
+              <Image
+                style={{ height: 64, width: 120 }}
+                resizeMode={"contain"}
+                source={require("../../../../assets/images/add_to_siri.png")}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
 
         {status === "loading" ? (
