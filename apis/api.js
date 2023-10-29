@@ -4,11 +4,9 @@ import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { navigate } from "../src/navigations/RootNavigation";
 
-import Constants from "expo-constants";
-
 const baseUrl = __DEV__
-  ? Constants.expoConfig.extra.devApiUrl
-  : Constants.expoConfig.extra.apiUrl;
+  ? process.env.EXPO_PUBLIC_DEV_API_SERVER
+  : process.env.EXPO_PUBLIC_API_SERVER;
 
 export const apiInstance = axios.create({
   baseURL: baseUrl,

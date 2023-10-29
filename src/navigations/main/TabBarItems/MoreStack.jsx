@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MoreScreen from "../../../screens/main/More/More";
 import StudentCouncilScreen from "../../../screens/main/More/StudentCouncil";
 import DeveloperDetailScreen from "../../../screens/main/More/DeveloperDetail";
-import ModifyUserInfoScreen from "../../../screens/main/More/ModifyUserInfo";
+// import ModifyUserInfoScreen from "../../../screens/main/More/ModifyUserInfo";
 import CommunitiesWrittenByMeScreen from "../../../screens/main/More/CommunitiesWrittenByMe";
 import NotificationSettingScreen from "../../../screens/main/More/NotificationSetting";
 
@@ -22,10 +22,10 @@ export default function MoreStack() {
         name="DeveloperDetailScreen"
         component={DeveloperDetailScreen}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ModifyUserInfoScreen"
         component={ModifyUserInfoScreen}
-      />
+      /> */}
       <Stack.Screen
         name="CommunitiesWrittenByMeScreen"
         component={CommunitiesWrittenByMeScreen}

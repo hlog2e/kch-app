@@ -1,9 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import JoinScreen from "../../screens/auth/join/Join";
-import JoinFormScreen from "../../screens/auth/join/JoinForm";
-import JoinVerfiyScreen from "../../screens/auth/join/JoinVerify";
-import LoginScreen from "../../screens/auth/login/Login";
-import LoginVerfiyScreen from "../../screens/auth/login/LoginVerfiy";
+import LoginScreen from "../../screens/auth/Login";
+import JoinScreen from "../../screens/auth/Join";
 
 const Stack = createNativeStackNavigator();
 export default function AuthStack() {
@@ -12,17 +9,8 @@ export default function AuthStack() {
       initialRouteName="Login"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
-      <Stack.Screen
-        name="LoginVerify"
-        component={LoginVerfiyScreen}
-      ></Stack.Screen>
-      <Stack.Screen name="Join" component={JoinScreen}></Stack.Screen>
-      <Stack.Screen
-        name="JoinVerify"
-        component={JoinVerfiyScreen}
-      ></Stack.Screen>
-      <Stack.Screen name="JoinForm" component={JoinFormScreen}></Stack.Screen>
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Join" component={JoinScreen} />
     </Stack.Navigator>
   );
 }

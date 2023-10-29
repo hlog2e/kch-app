@@ -59,7 +59,7 @@ export default function RootStack() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: "#f5f5f5",
+      background: "#ffffff",
     },
   };
 
@@ -68,9 +68,9 @@ export default function RootStack() {
     dark: true,
     colors: {
       ...DarkTheme.colors,
-      background: "#18171c",
-      card: "#2c2c36",
-      border: "#2c2c36",
+      background: "#000000",
+      card: "#1b1b1b",
+      border: "#1b1b1b",
     },
   };
 

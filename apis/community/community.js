@@ -4,7 +4,7 @@ export const getCommunities = async (props) => {
   const limit = 5;
 
   const { data } = await apiAuthInstance.get("/community", {
-    params: { limit, offset: props.offset, sort: props.sort },
+    params: { limit, offset: props.offset },
   });
 
   return data;

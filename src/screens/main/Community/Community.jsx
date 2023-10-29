@@ -20,17 +20,17 @@ import { useState } from "react";
 import FABPlus from "../../../components/common/FABPlus";
 
 export default function CommunityScreen({ navigation }) {
-  const sortByIDArray = [
-    { id: 0, text: "최신순", sort: { createdAt: -1 } },
-    { id: 1, text: "인기순", sort: { views: -1 } },
-    { id: 2, text: "좋아요순", sort: { likeCount: -1 } },
-    { id: 3, text: "댓글 많은순", sort: { commentCount: -1 } },
-  ];
-  const [sortBy, setSortBy] = useState({
-    id: 0,
-    text: "최신순",
-    sort: { createdAt: -1 },
-  });
+  // const sortByIDArray = [
+  //   { id: 0, text: "최신순", sort: { createdAt: -1 } },
+  //   { id: 1, text: "인기순", sort: { views: -1 } },
+  //   { id: 2, text: "좋아요순", sort: { likeCount: -1 } },
+  //   { id: 3, text: "댓글 많은순", sort: { commentCount: -1 } },
+  // ];
+  // const [sortBy, setSortBy] = useState({
+  //   id: 0,
+  //   text: "최신순",
+  //   sort: { createdAt: -1 },
+  // });
 
   const [refreshing, setRefreshing] = useState(false);
   const {
@@ -41,7 +41,7 @@ export default function CommunityScreen({ navigation }) {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["community", sortBy.id], //정렬방법이 바뀌면 Refetch
+    queryKey: ["community"], //정렬방법이 바뀌면 Refetch
     queryFn: ({ pageParam = 0 }) =>
       getCommunities({ offset: pageParam, sort: sortBy.sort }),
     getNextPageParam: (lastPage, allPages) => {

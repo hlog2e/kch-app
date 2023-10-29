@@ -9,6 +9,7 @@ import * as Notifications from "expo-notifications";
 import Toast, { BaseToast } from "react-native-toast-message";
 import * as Haptics from "expo-haptics";
 import * as Linking from "expo-linking";
+import CustomAlert from "./src/components/common/CustomAlert";
 
 const queryClient = new QueryClient();
 
