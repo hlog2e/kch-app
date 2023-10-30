@@ -33,6 +33,7 @@ export default function SecondVerifyCode({ onNext, back, data }) {
           style={styles.inputWrap}
         >
           <TextInput
+            inputMode="numeric"
             value={code}
             onChangeText={(_text) => setCode(_text)}
             style={styles.input}

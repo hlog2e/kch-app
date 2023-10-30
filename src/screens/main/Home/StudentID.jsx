@@ -23,13 +23,12 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 
-import { BarCodeScanner } from "expo-barcode-scanner";
 import * as Haptics from "expo-haptics";
 
-import { Dimensions } from "react-native";
 import Barcode from "@kichiyaki/react-native-barcode-generator";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import WrapBarCodeScanner from "../../../components/common/WrapBarCodeScanner";
 
 export default function StudentIDScreen({ navigation }) {
   const { user } = useContext(UserContext);
@@ -53,11 +52,6 @@ export default function StudentIDScreen({ navigation }) {
     requestBarCodeScannerPermissions();
   });
 
-  const requestBarCodeScannerPermissions = async () => {
-    const { status } = await BarCodeScanner.requestPermissionsAsync();
-    setHasPermission(status === "granted");
-  };
-
   const openBarCodeScanner = () => {
     if (hasPermission) {
       setBarCodeScannerOpen(true);
@@ -68,6 +62,10 @@ export default function StudentIDScreen({ navigation }) {
         [{ text: "확인" }]
       );
     }
+  };
+  const requestBarCodeScannerPermissions = async () => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
   };
 
   const handleBarCodeScanned = async ({ type, data }) => {
@@ -367,77 +365,6 @@ function BarCodeSection({ userData, openBarCodeScanner }) {
           <Text style={styles.dummy_text}>바코드를 등록해주세요</Text>
         </TouchableOpacity>
       </View>
-    );
-  }
-}
-
-function WrapBarCodeScanner({
-  barCodeScannerOpen,
-  setBarCodeScannerOpen,
-  handleBarCodeScanned,
-}) {
-  const styles = StyleSheet.create({
-    toast: {
-      position: "absolute",
-      top: 100,
-      left: SCREEN_WIDTH / 2 - 130,
-      width: 260,
-      height: 40,
-      backgroundColor: "rgba(244,244,244,0.3)",
-      borderRadius: 8,
-      zIndex: 15,
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    toast_text: {
-      color: "white",
-      marginLeft: 8,
-      fontWeight: "700",
-    },
-    close_button: {
-      position: "absolute",
-      bottom: 150,
-      left: SCREEN_WIDTH / 2 - 30,
-      width: 60,
-      height: 60,
-      backgroundColor: "rgba(255,255,255,0.8)",
-      borderRadius: 30,
-      zIndex: 15,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  });
-
-  if (barCodeScannerOpen) {
-    return (
-      <>
-        <View style={styles.toast}>
-          <Ionicons name="alert-circle" size={24} color="white" />
-          <Text style={styles.toast_text}>
-            학생증 뒷면의 바코드를 스캔해주세요 !
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={styles.close_button}
-          onPress={() => {
-            setBarCodeScannerOpen(false);
-          }}
-        >
-          <Ionicons name="close" size={32} color="#a4a4a4" />
-        </TouchableOpacity>
-
-        <BarCodeScanner
-          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
-          onBarCodeScanned={handleBarCodeScanned}
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            zIndex: 10,
-            backgroundColor: "black",
-          }}
-        />
-      </>
     );
   }
 }

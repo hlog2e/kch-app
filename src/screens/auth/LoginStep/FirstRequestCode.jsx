@@ -27,6 +27,7 @@ export default function FirstRequestCode({ onNext }) {
         style={styles.inputWrap}
       >
         <TextInput
+          inputMode="numeric"
           value={phoneNumber}
           onChangeText={(_text) => setPhoneNumber(_text)}
           style={styles.input}
