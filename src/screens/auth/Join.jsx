@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import FirstType from "./JoinStep/FirstType";
 import { useEffect, useState, useContext } from "react";
 import SecondNameAndYearInput from "./JoinStep/SecondNameAndYearInput";
@@ -8,6 +8,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { registerForPushNotificationsAsync } from "../../../utils/expo_notification";
 import { registerPushTokenToDB } from "../../../apis/push-noti";
 import { UserContext } from "../../../context/UserContext";
+import ThirdVerifyUndergraduate from "./JoinStep/ThirdVerifyUndergraduate";
+import WrapBarCodeScanner from "../../components/common/WrapBarCodeScanner";
 
 export default function JoinScreen({ route, navigation }) {
   const { setUser } = useContext(UserContext);
@@ -20,12 +22,14 @@ export default function JoinScreen({ route, navigation }) {
     type: null,
     name: null,
     birthYear: null,
+    barcode: null,
   });
   const [alertData, setAlertData] = useState({
     show: false,
     status: null,
     message: "",
   });
+  const [scannerOpen, setScannerOpen] = useState(false);
 
   // userData에 phoneNumber, code 병합
   useEffect(() => {
@@ -40,10 +44,12 @@ export default function JoinScreen({ route, navigation }) {
 
       await AsyncStorage.setItem("token", JSON.stringify(response.token));
       await AsyncStorage.setItem("user", JSON.stringify(response.user));
+
       setUser(response.user);
 
       const pushToken = await registerForPushNotificationsAsync();
       if (pushToken) {
+        console.log(pushToken);
         await registerPushTokenToDB(pushToken);
       }
     } catch (error) {
@@ -69,6 +75,16 @@ export default function JoinScreen({ route, navigation }) {
             message: "",
           })
         }
+      />
+      <WrapBarCodeScanner
+        barCodeScannerOpen={scannerOpen}
+        setBarCodeScannerOpen={setScannerOpen}
+        handleBarCodeScanned={({ data }) => {
+          setUserData((_prev) => {
+            return { ..._prev, barcode: data };
+          });
+          setScannerOpen(false);
+        }}
       />
       <SafeAreaView style={styles.container}>
         {step === "TypeSelect" && (
@@ -96,9 +112,30 @@ export default function JoinScreen({ route, navigation }) {
               ) {
                 await handleJoin({ ...userData, name });
               }
+
+              if (userData.type === "undergraduate") {
+                setStep("VerifyUndergraduate");
+              }
+              if (userData.type === "teacher") {
+                setStep("VerifyTeacher");
+              }
             }}
             back={() => {
               setStep("TypeSelect");
+            }}
+          />
+        )}
+
+        {step === "VerifyUndergraduate" && (
+          <ThirdVerifyUndergraduate
+            openScanner={() => setScannerOpen(true)}
+            barcode={userData.barcode}
+            onNext={(hiddenCode) => {
+              if (hiddenCode) {
+                handleJoin({ ...userData, hiddenCode: hiddenCode });
+              } else {
+                handleJoin(userData);
+              }
             }}
           />
         )}

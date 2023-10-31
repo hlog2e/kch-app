@@ -27,7 +27,6 @@ export default function LoginScreen({ navigation }) {
     // ------ 인증번호 요청 POST ------
     try {
       await postRequestCode(_phoneNumber);
-      setStep("VerifyCode");
     } catch (error) {
       setAlertData({
         status: "error",
@@ -94,6 +93,7 @@ export default function LoginScreen({ navigation }) {
                   phoneNumber: _phoneNumber,
                 };
               });
+              setStep("VerifyCode");
               await handleRequestCode(_phoneNumber);
             }}
           />
@@ -107,6 +107,7 @@ export default function LoginScreen({ navigation }) {
               setData((_prev) => {
                 return { ..._prev, code: _code };
               });
+
               await handleVerifyCodeAndLogin(data.phoneNumber, _code);
             }}
           />

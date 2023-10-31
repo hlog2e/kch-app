@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 
@@ -16,7 +17,10 @@ export default function SecondVerifyCode({ onNext, back, data }) {
     }
   }, [code]);
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <View>
         <Animatable.View
           animation="fadeInUp"
@@ -45,7 +49,7 @@ export default function SecondVerifyCode({ onNext, back, data }) {
       <TouchableOpacity onPress={back} style={styles.button}>
         <Text style={styles.buttonText}>이전 단계</Text>
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

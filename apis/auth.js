@@ -23,6 +23,7 @@ export const postJoin = async ({
   birthYear,
   barcode,
   teacherCode,
+  hiddenCode,
 }) => {
   const { data } = await apiInstance.post("/auth/join", {
     phoneNumber: phoneNumber,
@@ -32,6 +33,7 @@ export const postJoin = async ({
     birthYear: birthYear,
     barcode: barcode,
     teacherCode: teacherCode,
+    hiddenCode: hiddenCode,
   });
   return data;
 };
