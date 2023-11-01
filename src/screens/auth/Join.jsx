@@ -10,6 +10,7 @@ import { registerPushTokenToDB } from "../../../apis/push-noti";
 import { UserContext } from "../../../context/UserContext";
 import ThirdVerifyUndergraduate from "./JoinStep/ThirdVerifyUndergraduate";
 import WrapBarCodeScanner from "../../components/common/WrapBarCodeScanner";
+import ThirdVerifyTeacher from "./JoinStep/ThridVerifyTeacher";
 
 export default function JoinScreen({ route, navigation }) {
   const { setUser } = useContext(UserContext);
@@ -49,7 +50,6 @@ export default function JoinScreen({ route, navigation }) {
 
       const pushToken = await registerForPushNotificationsAsync();
       if (pushToken) {
-        console.log(pushToken);
         await registerPushTokenToDB(pushToken);
       }
     } catch (error) {
@@ -136,6 +136,14 @@ export default function JoinScreen({ route, navigation }) {
               } else {
                 handleJoin(userData);
               }
+            }}
+          />
+        )}
+
+        {step === "VerifyTeacher" && (
+          <ThirdVerifyTeacher
+            onNext={(_teacherCode) => {
+              handleJoin({ ...userData, teacherCode: _teacherCode });
             }}
           />
         )}
