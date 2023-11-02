@@ -7,9 +7,9 @@ import {
   Text,
 } from "react-native";
 import { useQuery } from "react-query";
-import { getBanners } from "../../../apis/banner";
+import { getBanners } from "../../../../../apis/home/banner";
 import Carousel from "react-native-snap-carousel";
-import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
 import { useState } from "react";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -48,14 +48,15 @@ export default function Banner() {
 const Item = ({ item, dataLength, nowIndex }) => {
   const styles = StyleSheet.create({
     container: {
-      paddingVertical: 10,
-      paddingHorizontal: 25,
+      marginTop: 16,
+      paddingVertical: 6,
+      paddingHorizontal: 14,
     },
-    image: { height: 75, borderRadius: 8, backgroundColor: "#e9e9e9" },
+    image: { height: 150, borderRadius: 15 },
     pagination: {
       position: "absolute",
-      bottom: 17,
-      right: 35,
+      bottom: 12,
+      right: 22,
       backgroundColor: "white",
       paddingVertical: 1,
       paddingHorizontal: 5,
@@ -71,12 +72,12 @@ const Item = ({ item, dataLength, nowIndex }) => {
       style={styles.container}
       onPress={() => {
         if (item.link) {
-          WebBrowser.openBrowserAsync(item.link);
+          Linking.openURL(item.link);
         }
       }}
     >
       <Image
-        resizeMode={"contain"}
+        resizeMode={"cover"}
         style={styles.image}
         source={{
           uri: item.uri,

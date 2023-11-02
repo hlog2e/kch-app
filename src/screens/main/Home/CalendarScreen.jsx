@@ -15,7 +15,7 @@ import { getSchedule } from "../../../../apis/home/schedule";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import uuid from "react-native-uuid";
 
-export default function NewCalendarScreen({ navigation }) {
+export default function CalendarScreen({ navigation }) {
   const NowColorState = useColorScheme();
 
   const todayDate = moment().format("YYYY-MM-DD");

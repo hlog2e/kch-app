@@ -76,32 +76,32 @@ export default function CommunityPOSTScreen({ navigation }) {
 
   const checkBeforePOST = async () => {
     setLoading(true);
-    const { isBad: titleIsBad, word: titleBadWord } = await badWordChecker(
-      title
-    );
-    const { isBad: contentIsBad, word: contentBadWord } = await badWordChecker(
-      content
-    );
+    // const { isBad: titleIsBad, word: titleBadWord } = await badWordChecker(
+    //   title
+    // );
+    // const { isBad: contentIsBad, word: contentBadWord } = await badWordChecker(
+    //   content
+    // );
 
-    if (titleIsBad) {
-      Alert.alert(
-        "오류",
-        "제목에 비속어가 포함되어 있습니다. '" + titleBadWord + "'",
-        [{ text: "확인" }]
-      );
-      setLoading(false);
-      return { passed: false };
-    }
+    // if (titleIsBad) {
+    //   Alert.alert(
+    //     "오류",
+    //     "제목에 비속어가 포함되어 있습니다. '" + titleBadWord + "'",
+    //     [{ text: "확인" }]
+    //   );
+    //   setLoading(false);
+    //   return { passed: false };
+    // }
 
-    if (contentIsBad) {
-      Alert.alert(
-        "오류",
-        "내용에 비속어가 포함되어 있습니다. '" + contentBadWord + "'",
-        [{ text: "확인" }]
-      );
-      setLoading(false);
-      return { passed: false };
-    }
+    // if (contentIsBad) {
+    //   Alert.alert(
+    //     "오류",
+    //     "내용에 비속어가 포함되어 있습니다. '" + contentBadWord + "'",
+    //     [{ text: "확인" }]
+    //   );
+    //   setLoading(false);
+    //   return { passed: false };
+    // }
 
     if (title === "" || content === "") {
       Alert.alert("오류", "제목이랑 내용 모두 작성해주세요.", [

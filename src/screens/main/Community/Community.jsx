@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   useColorScheme,
+  Dimensions,
 } from "react-native";
 
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
@@ -19,19 +20,9 @@ import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import { useState } from "react";
 import FABPlus from "../../../components/common/FABPlus";
 
-export default function CommunityScreen({ navigation }) {
-  // const sortByIDArray = [
-  //   { id: 0, text: "최신순", sort: { createdAt: -1 } },
-  //   { id: 1, text: "인기순", sort: { views: -1 } },
-  //   { id: 2, text: "좋아요순", sort: { likeCount: -1 } },
-  //   { id: 3, text: "댓글 많은순", sort: { commentCount: -1 } },
-  // ];
-  // const [sortBy, setSortBy] = useState({
-  //   id: 0,
-  //   text: "최신순",
-  //   sort: { createdAt: -1 },
-  // });
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
+export default function CommunityScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const {
     isLoading,
@@ -41,9 +32,8 @@ export default function CommunityScreen({ navigation }) {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["community"], //정렬방법이 바뀌면 Refetch
-    queryFn: ({ pageParam = 0 }) =>
-      getCommunities({ offset: pageParam, sort: sortBy.sort }),
+    queryKey: ["community"],
+    queryFn: ({ pageParam = 0 }) => getCommunities({ offset: pageParam }),
     getNextPageParam: (lastPage, allPages) => {
       if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
         return undefined;
@@ -63,22 +53,7 @@ export default function CommunityScreen({ navigation }) {
   });
   return (
     <View style={styles.container}>
-      <SafeTitleHeader
-        title="커뮤니티"
-        // rightComponent={
-        //   <TouchableOpacity
-        //     onPress={() => {
-        //       if (sortBy.id < sortByIDArray.length - 1) {
-        //         setSortBy(sortByIDArray[sortBy.id + 1]);
-        //       } else {
-        //         setSortBy(sortByIDArray[0]);
-        //       }
-        //     }}
-        //   >
-        //     <Text style={styles.rightHeaderText}>{sortBy.text}</Text>
-        //   </TouchableOpacity>
-        // }
-      />
+      <SafeTitleHeader title="커뮤니티" rightComponent={null} />
       {isLoading ? <FullScreenLoader /> : null}
       {isSuccess ? (
         <FABPlus
@@ -120,8 +95,12 @@ function CommunityItem({ item, navigation }) {
     container: {
       backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
       marginBottom: 8,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: "#f4f4f4",
+      paddingHorizontal: 18,
     },
-    header: { marginTop: 30, paddingHorizontal: 18 },
+    header: { marginTop: 30 },
     title: {
       fontSize: 20,
       fontWeight: "600",
@@ -132,28 +111,24 @@ function CommunityItem({ item, navigation }) {
     content: {
       fontSize: 14,
       color: NowColorState === "light" ? "gray" : "white",
-      paddingHorizontal: 18,
+
       marginTop: 18,
       height: 40,
     },
     image_container: {
       flexDirection: "row",
-      height: 90,
-      marginTop: 18,
-      paddingHorizontal: 18,
+      paddingVertical: 4,
     },
     image: {
-      height: 80,
-      width: 80,
+      height: SCREEN_WIDTH / 2.2,
+      width: SCREEN_WIDTH / 2.2,
       borderRadius: 15,
       marginRight: 8,
       backgroundColor: "#f9f9f9",
     },
     footer: {
       flexDirection: "row",
-      height: 50,
-
-      paddingHorizontal: 18,
+      paddingVertical: 12,
     },
     icon_wrap: { flexDirection: "row", alignItems: "center" },
     icon_text: { fontSize: 12, marginLeft: 6, color: "#b4b4b4" },
