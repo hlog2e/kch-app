@@ -3,11 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
   useColorScheme,
   Dimensions,
 } from "react-native";
+
+import { Image } from "expo-image";
 
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { comma } from "../../../../utils/intl";
@@ -161,7 +162,13 @@ function CommunityItem({ item, navigation }) {
       {item.images.length > 0 ? (
         <View style={styles.image_container}>
           {item.images.map((_item) => (
-            <Image key={_item} style={styles.image} source={{ uri: _item }} />
+            <Image
+              key={_item}
+              style={styles.image}
+              placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
+              transition={500}
+              source={{ uri: _item }}
+            />
           ))}
         </View>
       ) : null}

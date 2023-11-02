@@ -2,12 +2,12 @@ import {
   View,
   StyleSheet,
   Text,
-  Image,
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { Image } from "expo-image";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
@@ -151,7 +151,8 @@ export default function StudentIDScreen({ navigation }) {
       <ScrollView style={styles.card_wrap}>
         <View style={styles.card}>
           <Image
-            resizeMode={"contain"}
+            contentFit={"contain"}
+            transition={500}
             style={styles.image}
             source={{ uri: "https://static.kch-app.me/student_id_banner.png" }}
           />
@@ -201,7 +202,8 @@ export default function StudentIDScreen({ navigation }) {
             />
             <View style={styles.logo_row}>
               <Image
-                resizeMode={"contain"}
+                contentFit={"contain"}
+                transition={500}
                 style={styles.logo}
                 source={require("../../../../assets/images/logo_title.jpeg")}
               />
@@ -301,7 +303,11 @@ function Photo({ userData }) {
     <View style={styles.container}>
       {userData.photo ? (
         <TouchableOpacity onPress={handleImagePicking}>
-          <Image style={styles.image} source={{ uri: userData.photo }} />
+          <Image
+            style={styles.image}
+            transition={500}
+            source={{ uri: userData.photo }}
+          />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity

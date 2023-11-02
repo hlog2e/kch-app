@@ -4,13 +4,13 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  Image,
   TextInput,
   KeyboardAvoidingView,
   Platform,
   Alert,
   useColorScheme,
 } from "react-native";
+import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import moment from "moment";
@@ -215,7 +215,9 @@ export default function CommunityDetailScreen({ navigation, route }) {
                       >
                         <Image
                           style={styles.image}
-                          resizeMode={"cover"}
+                          placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
+                          transition={500}
+                          contentFit={"cover"}
                           source={{
                             uri: _item,
                           }}

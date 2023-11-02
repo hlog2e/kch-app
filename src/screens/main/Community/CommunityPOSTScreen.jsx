@@ -7,12 +7,12 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Image,
   Alert,
   KeyboardAvoidingView,
   Platform,
   useColorScheme,
 } from "react-native";
+import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -231,7 +231,12 @@ export default function CommunityPOSTScreen({ navigation }) {
                     style={styles.image_wrap}
                     onPress={() => handleImageDelete(assetId)}
                   >
-                    <Image style={styles.image} source={{ uri: uri }} />
+                    <Image
+                      placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
+                      transition={500}
+                      style={styles.image}
+                      source={{ uri: uri }}
+                    />
                   </TouchableOpacity>
                 );
               })}

@@ -1,11 +1,11 @@
 import {
-  Image,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
   View,
   Text,
 } from "react-native";
+import { Image } from "expo-image";
 import { useQuery } from "react-query";
 import { getBanners } from "../../../../../apis/home/banner";
 import Carousel from "react-native-snap-carousel";
@@ -77,7 +77,8 @@ const Item = ({ item, dataLength, nowIndex }) => {
       }}
     >
       <Image
-        resizeMode={"cover"}
+        contentFit={"cover"}
+        transition={500}
         style={styles.image}
         source={{
           uri: item.uri,

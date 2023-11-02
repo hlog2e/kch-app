@@ -1,5 +1,4 @@
 import {
-  Image,
   StyleSheet,
   Text,
   View,
@@ -8,7 +7,7 @@ import {
   TouchableOpacity,
   useColorScheme,
 } from "react-native";
-
+import { Image } from "expo-image";
 import { useState } from "react";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
@@ -123,6 +122,8 @@ function FeedItem({ item }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
+          placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
+          transition={500}
           style={styles.header_icon}
           source={require("../../../../assets/images/kch-icon.png")}
         />
@@ -135,7 +136,9 @@ function FeedItem({ item }) {
           return (
             <TouchableOpacity onPress={handleImageOpen}>
               <Image
-                resizeMode={"contain"}
+                contentFit={"contain"}
+                placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
+                transition={500}
                 style={styles.image}
                 source={{ uri: image }}
               />
