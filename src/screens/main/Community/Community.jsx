@@ -58,7 +58,6 @@ export default function CommunityScreen({ navigation }) {
       {isLoading ? <FullScreenLoader /> : null}
       {isSuccess ? (
         <FABPlus
-          color={"#2563eb"}
           onPress={() => {
             navigation.push("CommunityPOSTScreen");
           }}

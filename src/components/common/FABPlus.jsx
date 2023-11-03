@@ -11,7 +11,7 @@ export default function FABPlus({ color, onPress }) {
       width: 50,
       height: 50,
       borderRadius: 100,
-      backgroundColor: color,
+      backgroundColor: "#60a5fa",
       justifyContent: "center",
       alignItems: "center",
     },

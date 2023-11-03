@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { getMeals } from "../../../../../apis/home/meal";
 import { useState } from "react";
 import moment from "moment";
+import { Image } from "expo-image";
 
 export default function MealSection() {
   const { data } = useQuery("meals", getMeals, {
@@ -25,25 +26,33 @@ export default function MealSection() {
   ];
 
   const styles = StyleSheet.create({
+    flexRow: { flexDirection: "row", alignItems: "center" },
     mealWrap: {
-      marginTop: 24,
+      marginTop: 12,
     },
     mealTitle: {
       fontSize: 18,
       fontWeight: "600",
       marginLeft: 14,
     },
+    mealImage: { marginLeft: 6, width: 40, height: 40 },
     scrollView: { marginTop: 16 },
   });
   if (data)
     return (
       <View style={styles.mealWrap}>
-        <Text style={styles.mealTitle}>
-          {moment(data.meals[focus]._id).isSame(new Date(), "day")
-            ? "오늘의 급식"
-            : moment(data.meals[focus]._id).format("M월 D일") +
-              ` ${days[moment(data.meals[focus]._id).days()]} 급식`}
-        </Text>
+        <View style={styles.flexRow}>
+          <Text style={styles.mealTitle}>
+            {moment(data.meals[focus]._id).isSame(new Date(), "day")
+              ? "오늘의 급식"
+              : moment(data.meals[focus]._id).format("M월 D일") +
+                ` ${days[moment(data.meals[focus]._id).days()]}`}
+          </Text>
+          <Image
+            style={styles.mealImage}
+            source={require("../../../../../assets/svgs/rice.png")}
+          />
+        </View>
         <ScrollView
           scrollEventThrottle={1}
           onScroll={(e) => {
