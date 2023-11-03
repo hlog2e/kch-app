@@ -60,6 +60,13 @@ export default function RootStack() {
     colors: {
       ...DefaultTheme.colors,
       background: "#ffffff",
+      text: "black",
+      subText: "gray",
+      icon: "black",
+      border: "#e2e8f0",
+
+      cardBg: "white",
+      cardBg2: "#f4f4f4",
     },
   };
 
@@ -69,8 +76,13 @@ export default function RootStack() {
     colors: {
       ...DarkTheme.colors,
       background: "#000000",
-      card: "#1b1b1b",
-      border: "#1b1b1b",
+      text: "#ffffff",
+      subText: "gray",
+      icon: "#ffffff",
+      border: "gray",
+
+      cardBg: "black",
+      cardBg2: "#212121",
     },
   };
 

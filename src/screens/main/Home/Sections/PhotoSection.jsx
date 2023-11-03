@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useInfiniteQuery } from "react-query";
 import { getPhotos } from "../../../../../apis/home/photo";
+import { useTheme } from "@react-navigation/native";
 
 export default function PhotoSection({ navigation }) {
   const { data, fetchNextPage } = useInfiniteQuery({
@@ -18,6 +19,32 @@ export default function PhotoSection({ navigation }) {
         return false;
       }
       return lastPage.nextCursor;
+    },
+  });
+
+  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      marginTop: 40,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: "600",
+      marginLeft: 14,
+      color: colors.text,
+    },
+    scroll: { marginTop: 14 },
+    imageWrap: {
+      maxWidth: 150,
+      marginLeft: 14,
+    },
+    image: { width: 150, height: 150, borderRadius: 20 },
+    imageTitle: {
+      marginTop: 6,
+      fontSize: 12,
+      fontWeight: "600",
+      color: colors.subText,
     },
   });
 
@@ -53,21 +80,3 @@ export default function PhotoSection({ navigation }) {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginLeft: 14,
-  },
-  scroll: { marginTop: 14 },
-  imageWrap: {
-    maxWidth: 150,
-    marginLeft: 14,
-  },
-  image: { width: 150, height: 150, borderRadius: 20 },
-  imageTitle: { marginTop: 6, fontSize: 12, fontWeight: "600", color: "gray" },
-});

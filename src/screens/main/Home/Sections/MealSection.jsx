@@ -4,8 +4,10 @@ import { getMeals } from "../../../../../apis/home/meal";
 import { useState } from "react";
 import moment from "moment";
 import { Image } from "expo-image";
+import { useTheme } from "@react-navigation/native";
 
 export default function MealSection() {
+  const { colors } = useTheme();
   const { data } = useQuery("meals", getMeals, {
     onError: () => {
       Alert.alert("오류", "급식 데이터를 가져오는데 오류가 발생하였습니다.", [
@@ -34,6 +36,7 @@ export default function MealSection() {
       fontSize: 18,
       fontWeight: "600",
       marginLeft: 14,
+      color: colors.text,
     },
     mealImage: { marginLeft: 6, width: 40, height: 40 },
     scrollView: { marginTop: 16 },
@@ -85,27 +88,33 @@ export default function MealSection() {
 }
 
 function MealItem({ title, kcal, menu }) {
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     container: {
       borderWidth: title === "중식" ? 0 : 1,
-      borderColor: "#e2e8f0",
+      borderColor: colors.border,
       borderRadius: 30,
       minHeight: 180,
       width: 180,
       padding: 18,
       marginLeft: 12,
-      backgroundColor: title === "중식" ? "#f4f4f4" : "white",
+      backgroundColor: title === "중식" ? colors.cardBg2 : colors.cardBg,
     },
     header: {
       alignItems: "flex-end",
       justifyContent: "center",
       flexDirection: "row",
     },
-    headerTitle: { fontSize: 18, fontWeight: "700" },
-    kcal: { fontWeight: "200", fontSize: 11, marginLeft: 4 },
+    headerTitle: { fontSize: 18, fontWeight: "700", color: colors.text },
+    kcal: {
+      fontWeight: "200",
+      fontSize: 11,
+      marginLeft: 4,
+      color: colors.subText,
+    },
 
     menuWrap: { marginTop: 10 },
-    menuText: { color: "gray", fontSize: 13, marginBottom: 3 },
+    menuText: { color: colors.subText, fontSize: 13, marginBottom: 3 },
   });
   return (
     <View style={styles.container}>

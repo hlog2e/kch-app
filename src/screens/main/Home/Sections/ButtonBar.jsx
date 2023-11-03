@@ -1,7 +1,45 @@
 import { Image } from "expo-image";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 export default function ButtonBar({ navigation }) {
+  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      marginTop: 16,
+      paddingHorizontal: 14,
+      flexDirection: "row",
+    },
+    margin: { marginLeft: 10 },
+
+    button: {
+      flex: 1,
+      height: 60,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 20,
+      paddingVertical: 5,
+      paddingHorizontal: 25,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonImg: {
+      width: 30,
+      height: 30,
+      marginRight: 16,
+    },
+
+    buttonText: { fontSize: 16, fontWeight: "700", color: colors.text },
+    buttonDesc: {
+      fontSize: 12,
+      marginTop: 2,
+      fontWeight: "400",
+      color: colors.subText,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -40,33 +78,3 @@ export default function ButtonBar({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 16,
-    paddingHorizontal: 14,
-    flexDirection: "row",
-  },
-  margin: { marginLeft: 10 },
-
-  button: {
-    flex: 1,
-    height: 60,
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 25,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonImg: {
-    width: 30,
-    height: 30,
-    marginRight: 16,
-  },
-
-  buttonText: { fontSize: 16, fontWeight: "700" },
-  buttonDesc: { fontSize: 12, marginTop: 2, fontWeight: "400", color: "gray" },
-});
