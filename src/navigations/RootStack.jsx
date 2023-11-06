@@ -67,6 +67,7 @@ export default function RootStack() {
 
       cardBg: "white",
       cardBg2: "#f4f4f4",
+      blue: "#3b82f6",
     },
   };
 
@@ -75,14 +76,23 @@ export default function RootStack() {
     dark: true,
     colors: {
       ...DarkTheme.colors,
-      background: "#000000",
-      text: "#ffffff",
+      background: "#ffffff",
+      text: "black",
       subText: "gray",
-      icon: "#ffffff",
-      border: "gray",
+      icon: "black",
+      border: "#e2e8f0",
 
-      cardBg: "black",
-      cardBg2: "#212121",
+      cardBg: "white",
+      cardBg2: "#f4f4f4",
+      blue: "#3b82f6",
+      // background: "#000000",
+      // text: "#ffffff",
+      // subText: "gray",
+      // icon: "#ffffff",
+      // border: "gray",
+
+      // cardBg: "black",
+      // cardBg2: "#212121",
     },
   };
 

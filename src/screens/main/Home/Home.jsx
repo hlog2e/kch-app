@@ -5,6 +5,7 @@ import Header from "./Sections/Header";
 import Banner from "./Sections/Banner";
 import ButtonBar from "./Sections/ButtonBar";
 import PhotoSection from "./Sections/PhotoSection";
+import NoticeSection from "./Sections/NoticeSection";
 
 export default function Home({ navigation }) {
   const styles = StyleSheet.create({
@@ -20,6 +21,7 @@ export default function Home({ navigation }) {
         <ButtonBar navigation={navigation} />
 
         <PhotoSection navigation={navigation} />
+        <NoticeSection navigation={navigation} />
       </ScrollView>
     </SafeAreaView>
   );

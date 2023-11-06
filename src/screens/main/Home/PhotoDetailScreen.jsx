@@ -22,7 +22,6 @@ export default function PhotoDetailScreen({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <OnlyLeftArrowHeader navigation={navigation} />
       <View style={styles.header}>
-        <Text style={styles.fixedTitle}>활동사진</Text>
         <Text style={styles.imageTitle}>{data.title}</Text>
         <Text style={styles.createdAt}>
           작성일 : {moment(data.createdAt).format("YYYY-MM-DD")}
@@ -68,9 +67,9 @@ export default function PhotoDetailScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   header: { paddingHorizontal: 14 },
-  fixedTitle: { fontSize: 28, marginTop: 16, fontWeight: "700" },
-  imageTitle: { marginTop: 24, fontSize: 18, fontWeight: "700" },
-  createdAt: { fontSize: 14, color: "gray", fontWeight: "300" },
+
+  imageTitle: { marginTop: 20, fontSize: 24, fontWeight: "700" },
+  createdAt: { fontSize: 12, color: "gray", fontWeight: "300", marginTop: 2 },
   copyright: { fontSize: 12, marginTop: 6, fontWeight: "300", color: "gray" },
 
   scroll: { paddingHorizontal: 14, marginTop: 12 },

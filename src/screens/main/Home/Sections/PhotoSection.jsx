@@ -11,6 +11,8 @@ import { getPhotos } from "../../../../../apis/home/photo";
 import { useTheme } from "@react-navigation/native";
 
 export default function PhotoSection({ navigation }) {
+  const { colors } = useTheme();
+
   const { data, fetchNextPage } = useInfiniteQuery({
     queryKey: "SchoolPhoto",
     queryFn: ({ pageParam = 0 }) => getPhotos({ skip: pageParam }),
@@ -21,8 +23,6 @@ export default function PhotoSection({ navigation }) {
       return lastPage.nextCursor;
     },
   });
-
-  const { colors } = useTheme();
 
   const styles = StyleSheet.create({
     container: {
