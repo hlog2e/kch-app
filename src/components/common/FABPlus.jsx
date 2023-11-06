@@ -1,7 +1,9 @@
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 
-export default function FABPlus({ color, onPress }) {
+export default function FABPlus({ onPress }) {
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     button: {
       zIndex: 100,
@@ -11,7 +13,7 @@ export default function FABPlus({ color, onPress }) {
       width: 50,
       height: 50,
       borderRadius: 100,
-      backgroundColor: "#60a5fa",
+      backgroundColor: colors.blue,
       justifyContent: "center",
       alignItems: "center",
     },
