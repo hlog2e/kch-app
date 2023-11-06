@@ -5,8 +5,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  useColorScheme,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { Ionicons, Entypo } from "@expo/vector-icons";
@@ -14,7 +14,7 @@ import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 
 export default function DeveloperDetailScreen({ navigation }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
 
   const stacks = [
     {
@@ -178,7 +178,7 @@ export default function DeveloperDetailScreen({ navigation }) {
     stack_title: {
       fontSize: 14,
       fontWeight: "600",
-      color: NowColorState === "light" ? "gray" : "white",
+      color: colors.text,
     },
     stack_item_row: {
       marginTop: 12,
@@ -189,19 +189,19 @@ export default function DeveloperDetailScreen({ navigation }) {
     title: {
       fontSize: 12,
       fontWeight: "300",
-      color: NowColorState === "light" ? "gray" : "white",
+      color: colors.subText,
       paddingVertical: 4,
     },
     name: {
       fontSize: 20,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
     desc: {
       fontSize: 13,
       fontWeight: "300",
       paddingVertical: 4,
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
   });
   return (
@@ -240,7 +240,6 @@ export default function DeveloperDetailScreen({ navigation }) {
             />
             <DeveloperItem
               icon={<Ionicons name="logo-github" size={32} color="black" />}
-              icon={<Ionicons name="logo-github" size={32} color="black" />}
               title={"GitHub"}
               onPress={() => {
                 Linking.openURL("https://github.com/hlog2e");
@@ -263,7 +262,7 @@ export default function DeveloperDetailScreen({ navigation }) {
 }
 
 function StackItem({ icon, title, onPress }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     stack_item: {
       marginRight: 15,
@@ -272,7 +271,8 @@ function StackItem({ icon, title, onPress }) {
       height: 85,
       justifyContent: "space-between",
       width: 90,
-      backgroundColor: "white",
+      borderWidth: 1,
+      borderColor: colors.border,
       alignItems: "center",
     },
     stack_name: { fontSize: 10, fontWeight: "700" },
@@ -286,15 +286,17 @@ function StackItem({ icon, title, onPress }) {
 }
 
 function DeveloperItem({ icon, title, onPress }) {
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     item: {
+      borderWidth: 1,
+      borderColor: colors.border,
       marginRight: 15,
       paddingVertical: 17,
       borderRadius: 15,
       height: 85,
       justifyContent: "space-between",
       width: 90,
-      backgroundColor: "white",
       alignItems: "center",
     },
     name: { fontSize: 12, fontWeight: "700" },

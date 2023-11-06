@@ -1,10 +1,5 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  useColorScheme,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { Calendar, LocaleConfig } from "react-native-calendars";
@@ -16,8 +11,7 @@ import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import uuid from "react-native-uuid";
 
 export default function CalendarScreen({ navigation }) {
-  const NowColorState = useColorScheme();
-
+  const { colors } = useTheme();
   const todayDate = moment().format("YYYY-MM-DD");
 
   const [selDate, setSelDate] = useState(todayDate);
@@ -123,7 +117,7 @@ export default function CalendarScreen({ navigation }) {
 
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      backgroundColor: colors.background,
       flex: 1,
     },
 
@@ -143,12 +137,11 @@ export default function CalendarScreen({ navigation }) {
             initialDate={selDate}
             style={styles.calendar}
             theme={{
-              arrowColor: NowColorState === "light" ? "black" : "white",
-              calendarBackground:
-                NowColorState === "light" ? "white" : "#18171c",
-              dayTextColor: NowColorState === "dark" ? "white" : null,
-              textDisabledColor: NowColorState === "dark" ? "gray" : null,
-              monthTextColor: NowColorState === "dark" ? "white" : null,
+              arrowColor: colors.text,
+              calendarBackground: colors.background,
+              dayTextColor: colors.text,
+              textDisabledColor: colors.subText,
+              monthTextColor: colors.text,
             }}
             enableSwipeMonths={true}
             onDayPress={(day) => {
@@ -177,10 +170,11 @@ export default function CalendarScreen({ navigation }) {
 }
 
 function Item({ data }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: NowColorState === "light" ? "#f1f5f9" : "#2c2c36",
+      borderWidth: 1,
+      borderColor: colors.border,
       marginHorizontal: 20,
       padding: 14,
       borderRadius: 15,
@@ -192,7 +186,7 @@ function Item({ data }) {
     event_name: {
       fontSize: 16,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
     desc: {
       fontSize: 12,

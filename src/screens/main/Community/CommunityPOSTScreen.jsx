@@ -10,8 +10,8 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
@@ -23,7 +23,7 @@ import badWordChecker from "../../../../utils/badWordChecker";
 import mime from "mime";
 
 export default function CommunityPOSTScreen({ navigation }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
 
   const [loading, setLoading] = useState(false);
 
@@ -152,7 +152,7 @@ export default function CommunityPOSTScreen({ navigation }) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      backgroundColor: colors.background,
     },
 
     wrap: { marginTop: 10, flex: 1, paddingHorizontal: 10 },
@@ -163,16 +163,16 @@ export default function CommunityPOSTScreen({ navigation }) {
       borderColor: "#d4d4d4",
       fontSize: 16,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
     content_input: {
       paddingHorizontal: 10,
-      color: NowColorState === "light" ? "#52525b" : "white",
+      color: colors.subText,
       marginTop: 10,
       paddingBottom: 100,
     },
     image_skeleton: {
-      backgroundColor: NowColorState === "light" ? "#f2f2f2" : "#2c2c36",
+      backgroundColor: colors.cardBg2,
       width: 100,
       height: 100,
       borderRadius: 10,
@@ -219,7 +219,6 @@ export default function CommunityPOSTScreen({ navigation }) {
                 setContent(_value);
               }}
               style={styles.content_input}
-              placeholderTextColor={NowColorState === "dark" ? "gray" : null}
               placeholder={"내용"}
               multiline
             />

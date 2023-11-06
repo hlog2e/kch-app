@@ -1,15 +1,16 @@
-import { View, Text, StyleSheet, useColorScheme } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "@react-navigation/native";
 
 export default function SafeTitleHeader({ title, rightComponent }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const { top: topInsets } = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     header: {
       paddingHorizontal: 14,
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
-      borderColor: NowColorState === "light" ? "#d9d9d9" : "black",
+      backgroundColor: colors.background,
+      borderColor: colors.border,
       borderBottomWidth: 0.3,
       justifyContent: "space-between",
       alignItems: "center",
@@ -20,7 +21,7 @@ export default function SafeTitleHeader({ title, rightComponent }) {
 
       fontSize: 20,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
   });
 

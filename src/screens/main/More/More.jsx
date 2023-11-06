@@ -8,6 +8,7 @@ import {
   Image,
   useColorScheme,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,7 +25,7 @@ import { useMutation } from "react-query";
 import { postResetBlockedUsers } from "../../../../apis/more/more";
 
 export default function MoreScreen({ navigation }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const { user, setUser } = useContext(UserContext);
 
   const handleLogout = async () => {
@@ -65,7 +66,8 @@ export default function MoreScreen({ navigation }) {
       flex: 1,
     },
     card: {
-      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
+      borderWidth: 1,
+      borderColor: colors.border,
       marginHorizontal: 25,
       marginTop: 50,
       borderRadius: 15,
@@ -81,7 +83,7 @@ export default function MoreScreen({ navigation }) {
     name: {
       fontSize: 18,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
     personal_info: {
       fontSize: 12,
@@ -97,17 +99,19 @@ export default function MoreScreen({ navigation }) {
       paddingHorizontal: 10,
     },
     button: {
+      borderWidth: 1,
+      borderColor: colors.border,
       height: 65,
       width: 80,
       borderRadius: 13,
       paddingVertical: 10,
-      backgroundColor: NowColorState === "light" ? "#f2f2f2" : "#18171c",
+
       alignItems: "center",
       justifyContent: "space-between",
     },
     button_text: {
       fontSize: 11,
-      color: NowColorState === "light" ? "#334155" : "white",
+      color: colors.subText,
     },
   });
   return (
@@ -143,7 +147,7 @@ export default function MoreScreen({ navigation }) {
               <Ionicons
                 name="md-notifications-outline"
                 size={24}
-                color={NowColorState === "light" ? "#334155" : "white"}
+                color={colors.text}
               />
               <Text style={[styles.button_text]}>알림 설정</Text>
             </TouchableOpacity>
@@ -164,7 +168,7 @@ export default function MoreScreen({ navigation }) {
               <Ionicons
                 name="person-circle-outline"
                 size={24}
-                color={NowColorState === "light" ? "#334155" : "white"}
+                color={colors.text}
               />
               <Text style={[styles.button_text]}>내 정보 수정</Text>
             </TouchableOpacity>
@@ -188,10 +192,11 @@ function ListButtonSection({ navigation, user }) {
     postResetBlockedUsers
   );
 
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const buttons = [
+    { id: 0, name: "margin" },
     {
-      id: 0,
+      id: 1,
       name: "내가 작성한 글",
       onPress: () => {
         navigation.push("CommunitiesWrittenByMeScreen");
@@ -344,7 +349,8 @@ iOS Model ID: ${Device.modelId}
   const styles = StyleSheet.create({
     container: { marginTop: 40 },
     button: {
-      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
+      borderBottomWidth: 0.5,
+      borderColor: colors.border,
       height: 45,
       flexDirection: "row",
       justifyContent: "space-between",
@@ -353,9 +359,9 @@ iOS Model ID: ${Device.modelId}
     },
     button_text: {
       fontWeight: "600",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
-    margin: { height: 8 },
+    margin: { height: 8, borderBottomWidth: 0.5, borderColor: colors.border },
   });
   return (
     <View style={styles.container}>

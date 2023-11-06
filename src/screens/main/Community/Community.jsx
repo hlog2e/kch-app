@@ -4,9 +4,9 @@ import {
   Text,
   View,
   TouchableOpacity,
-  useColorScheme,
   Dimensions,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 import { Image } from "expo-image";
 
@@ -54,7 +54,7 @@ export default function CommunityScreen({ navigation }) {
   });
   return (
     <View style={styles.container}>
-      <SafeTitleHeader title="커뮤니티" rightComponent={null} />
+      <SafeTitleHeader title="커뮤니티" />
       {isLoading ? <FullScreenLoader /> : null}
       {isSuccess ? (
         <FABPlus
@@ -90,27 +90,27 @@ export default function CommunityScreen({ navigation }) {
 }
 
 function CommunityItem({ item, navigation }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
+      backgroundColor: colors.background,
       marginBottom: 8,
       borderTopWidth: 1,
       borderBottomWidth: 1,
-      borderColor: "#f4f4f4",
+      borderColor: colors.border,
       paddingHorizontal: 18,
     },
     header: { marginTop: 30 },
     title: {
       fontSize: 20,
       fontWeight: "600",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
     time: { fontSize: 11, color: "#b4b4b4", marginTop: 4 },
     publisher_name: { fontSize: 13, color: "gray", marginTop: 4 },
     content: {
       fontSize: 14,
-      color: NowColorState === "light" ? "gray" : "white",
+      color: colors.subText,
 
       marginTop: 18,
       height: 40,
@@ -174,27 +174,15 @@ function CommunityItem({ item, navigation }) {
 
       <View style={styles.footer}>
         <View style={styles.icon_wrap}>
-          <FontAwesome
-            name={"heart-o"}
-            size={20}
-            color={NowColorState === "light" ? "black" : "white"}
-          />
+          <FontAwesome name={"heart-o"} size={20} color={colors.text} />
           <Text style={styles.icon_text}>{comma(item.likeCount)}</Text>
         </View>
         <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
-          <Ionicons
-            name={"chatbubble-outline"}
-            size={20}
-            color={NowColorState === "light" ? "black" : "white"}
-          />
+          <Ionicons name={"chatbubble-outline"} size={20} color={colors.text} />
           <Text style={styles.icon_text}>{comma(item.commentCount)}</Text>
         </View>
         <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
-          <Ionicons
-            name={"eye-outline"}
-            size={24}
-            color={NowColorState === "light" ? "black" : "white"}
-          />
+          <Ionicons name={"eye-outline"} size={24} color={colors.text} />
           <Text style={styles.icon_text}>
             {item.views ? comma(item.views) : 0}
           </Text>
