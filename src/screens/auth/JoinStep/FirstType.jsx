@@ -2,10 +2,60 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import * as Animatable from "react-native-animatable";
 import RNPickerSelect from "react-native-picker-select";
 import { useState } from "react";
+import { useTheme } from "@react-navigation/native";
 
 export default function FirstType({ onNext }) {
+  const { colors } = useTheme();
   const [type, setType] = useState(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+
+  const styles = StyleSheet.create({
+    flexWrap: { flex: 1, justifyContent: "space-between" },
+    wrap: { marginBottom: 40 },
+
+    textWrap: { marginTop: 32 },
+    subTitle: { fontSize: 14, color: colors.subText },
+    title: { fontSize: 28, fontWeight: "700", color: colors.text },
+
+    pickerWrap: {
+      marginTop: 24,
+    },
+    picker: {
+      inputAndroid: {
+        width: "100%",
+        height: 50,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: colors.border,
+        paddingHorizontal: 16,
+        fontSize: 18,
+        fontWeight: "600",
+        color: colors.text,
+      },
+      inputIOS: {
+        width: "100%",
+        height: 50,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: colors.border,
+        paddingHorizontal: 16,
+        fontSize: 18,
+        fontWeight: "600",
+        color: colors.text,
+      },
+    },
+
+    goButton: {
+      backgroundColor: colors.blue,
+      width: "100%",
+      height: 50,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 15,
+      marginBottom: 20,
+    },
+    buttonText: { color: "white", fontSize: 16, fontWeight: "700" },
+  });
 
   return (
     <View style={!pickerOpen && styles.flexWrap}>
@@ -46,49 +96,3 @@ export default function FirstType({ onNext }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  flexWrap: { flex: 1, justifyContent: "space-between" },
-  wrap: { marginBottom: 40 },
-
-  textWrap: { marginTop: 32 },
-  subTitle: { fontSize: 14, color: "gray" },
-  title: { fontSize: 28, fontWeight: "700" },
-
-  pickerWrap: {
-    marginTop: 24,
-  },
-  picker: {
-    inputAndroid: {
-      width: "100%",
-      height: 50,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: "#e2e8f0",
-      paddingHorizontal: 16,
-      fontSize: 18,
-      fontWeight: "600",
-    },
-    inputIOS: {
-      width: "100%",
-      height: 50,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: "#e2e8f0",
-      paddingHorizontal: 16,
-      fontSize: 18,
-      fontWeight: "600",
-    },
-  },
-
-  goButton: {
-    backgroundColor: "#3b82f6",
-    width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
-    marginBottom: 20,
-  },
-  buttonText: { color: "white", fontSize: 16, fontWeight: "700" },
-});

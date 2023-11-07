@@ -4,14 +4,62 @@ import { Ionicons } from "@expo/vector-icons";
 import * as SMS from "expo-sms";
 import Dialog from "react-native-dialog";
 import { useState } from "react";
+import { useTheme } from "@react-navigation/native";
 
 export default function ThirdVerifyUndergraduate({
   openScanner,
   barcode,
   onNext,
 }) {
+  const { colors } = useTheme();
+
   const [hiddenCount, setHiddenCount] = useState(0);
   const [hiddenCode, setHiddenCode] = useState(null);
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, justifyContent: "space-between" },
+    header: { marginTop: 32 },
+    subTitle: { fontSize: 14, color: colors.subText },
+    title: { fontSize: 28, fontWeight: "700", color: colors.text },
+
+    scanButton: {
+      marginTop: 30,
+      borderWidth: 1,
+      borderColor: colors.border,
+      width: 130,
+      paddingVertical: 10,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 15,
+    },
+    scanButtonText: {
+      fontSize: 14,
+      color: colors.subText,
+      fontWeight: "700",
+      marginVertical: 4,
+    },
+
+    infoWrap: { marginTop: 12 },
+    barcodeText: { fontSize: 16, fontWeight: "200", color: colors.text },
+
+    helpButton: { alignItems: "center", paddingVertical: 18 },
+    helpButtonText: { fontSize: 14, fontWeight: "600", color: colors.subText },
+
+    nextButton: {
+      width: "100%",
+      height: 50,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.blue,
+      borderRadius: 15,
+      marginBottom: 20,
+    },
+    nextButtonText: {
+      color: "white",
+      fontSize: 16,
+      fontWeight: "700",
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -95,48 +143,3 @@ export default function ThirdVerifyUndergraduate({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "space-between" },
-  header: { marginTop: 32 },
-  subTitle: { fontSize: 14, color: "gray" },
-  title: { fontSize: 28, fontWeight: "700" },
-
-  scanButton: {
-    marginTop: 30,
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    width: 130,
-    paddingVertical: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
-  },
-  scanButtonText: {
-    fontSize: 14,
-    color: "gray",
-    fontWeight: "700",
-    marginVertical: 4,
-  },
-
-  infoWrap: { marginTop: 12 },
-  barcodeText: { fontSize: 16, fontWeight: "200" },
-
-  helpButton: { alignItems: "center", paddingVertical: 18 },
-  helpButtonText: { fontSize: 14, fontWeight: "600", color: "gray" },
-
-  nextButton: {
-    width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#3b82f6",
-    borderRadius: 15,
-    marginBottom: 20,
-  },
-  nextButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-});

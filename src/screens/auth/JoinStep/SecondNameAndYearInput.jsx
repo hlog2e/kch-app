@@ -1,3 +1,4 @@
+import { useTheme } from "@react-navigation/native";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import {
@@ -18,6 +19,8 @@ export default function SecondNameAndYearInput({
   onNext,
   back,
 }) {
+  const { colors } = useTheme();
+
   const [name, setName] = useState("");
   const [birthYear, setBirthYear] = useState();
   const thisYear = moment().format("YYYY");
@@ -31,6 +34,78 @@ export default function SecondNameAndYearInput({
     }
     setYearArray(tempYearArray);
   }, []);
+
+  const styles = StyleSheet.create({
+    flexWrap: { flex: 1, justifyContent: "space-between" },
+    textWrap: { marginTop: 32 },
+
+    topItemsWrap: { marginBottom: 20 },
+    subTitle: { fontSize: 14, color: colors.subText },
+    title: { fontSize: 28, fontWeight: "700", color: colors.text },
+
+    inputWrap: {
+      marginTop: 24,
+    },
+    input: {
+      width: "100%",
+      height: 50,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      paddingHorizontal: 16,
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.text,
+    },
+
+    picker: {
+      inputAndroid: {
+        width: "100%",
+        height: 50,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: colors.border,
+        paddingHorizontal: 16,
+        fontSize: 18,
+        fontWeight: "600",
+        color: colors.text,
+      },
+      inputIOS: {
+        width: "100%",
+        height: 50,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: colors.border,
+        paddingHorizontal: 16,
+        fontSize: 18,
+        fontWeight: "600",
+        color: colors.text,
+      },
+    },
+
+    backButton: {
+      width: "100%",
+      height: 50,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    backButtonText: { fontSize: 16, fontWeight: "700", color: colors.subText },
+
+    nextButton: {
+      width: "100%",
+      height: 50,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.blue,
+      borderRadius: 15,
+      marginBottom: 20,
+    },
+    nextButtonText: {
+      color: "white",
+      fontSize: 16,
+      fontWeight: "700",
+    },
+  });
 
   return (
     <KeyboardAvoidingView
@@ -106,72 +181,3 @@ export default function SecondNameAndYearInput({
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  flexWrap: { flex: 1, justifyContent: "space-between" },
-  textWrap: { marginTop: 32 },
-
-  topItemsWrap: { marginBottom: 20 },
-  subTitle: { fontSize: 14, color: "gray" },
-  title: { fontSize: 28, fontWeight: "700" },
-
-  inputWrap: {
-    marginTop: 24,
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    paddingHorizontal: 16,
-    fontSize: 18,
-    fontWeight: "600",
-  },
-
-  picker: {
-    inputAndroid: {
-      width: "100%",
-      height: 50,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: "#e2e8f0",
-      paddingHorizontal: 16,
-      fontSize: 18,
-      fontWeight: "600",
-    },
-    inputIOS: {
-      width: "100%",
-      height: 50,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: "#e2e8f0",
-      paddingHorizontal: 16,
-      fontSize: 18,
-      fontWeight: "600",
-    },
-  },
-
-  backButton: {
-    width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  backButtonText: { fontSize: 16, fontWeight: "700" },
-
-  nextButton: {
-    width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#3b82f6",
-    borderRadius: 15,
-    marginBottom: 20,
-  },
-  nextButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-});

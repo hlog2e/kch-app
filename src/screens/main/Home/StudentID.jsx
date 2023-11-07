@@ -29,8 +29,10 @@ import Barcode from "@kichiyaki/react-native-barcode-generator";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
 import WrapBarCodeScanner from "../../../components/common/WrapBarCodeScanner";
+import { useTheme } from "@react-navigation/native";
 
 export default function StudentIDScreen({ navigation }) {
+  const { colors } = useTheme();
   const { user } = useContext(UserContext);
   const queryClient = useQueryClient();
   const { data: userData } = useQuery("userData", getUserInfo);
@@ -81,6 +83,8 @@ export default function StudentIDScreen({ navigation }) {
     });
   };
 
+  const age = moment().format("YYYY") - user.birthYear + 1;
+
   const styles = StyleSheet.create({
     container: { flex: 1 },
     card_wrap: {
@@ -88,7 +92,7 @@ export default function StudentIDScreen({ navigation }) {
       paddingHorizontal: 45,
     },
     title: { fontSize: 16, fontWeight: "700", paddingVertical: 7 },
-    card: { backgroundColor: "white", borderRadius: 10 },
+    card: { borderRadius: 10, borderWidth: 1, borderColor: colors.border },
     image: {
       height: 150,
       backgroundColor: "#001396",
@@ -165,24 +169,9 @@ export default function StudentIDScreen({ navigation }) {
           <View style={styles.info_section}>
             <View style={styles.info_row}>
               <Text style={styles.info_title}>나이</Text>
-              <Text style={styles.info_text}>
-                {user.grade === "1" ? "17" : null}
-                {user.grade === "2" ? "18" : null}
-                {user.grade === "3" ? "19" : null}세
-              </Text>
+              <Text style={styles.info_text}>{age}세</Text>
             </View>
-            <View style={styles.info_row}>
-              <Text style={styles.info_title}>학년</Text>
-              <Text style={styles.info_text}>{user.grade}학년</Text>
-            </View>
-            <View style={styles.info_row}>
-              <Text style={styles.info_title}>반</Text>
-              <Text style={styles.info_text}>{user.class}반</Text>
-            </View>
-            <View style={styles.info_row}>
-              <Text style={styles.info_title}>번호</Text>
-              <Text style={styles.info_text}>{user.number}번</Text>
-            </View>
+
             <View style={styles.info_row}>
               <Text
                 style={styles.info_title}
@@ -193,7 +182,9 @@ export default function StudentIDScreen({ navigation }) {
                 유효기간
               </Text>
               <Text style={styles.info_text}>
-                {moment().add("1", "y").format("YYYY") + "-03-01"}
+                {moment()
+                  .add(Math.abs(age - 20), "y")
+                  .format("YYYY") + "-03-01"}
               </Text>
             </View>
             <BarCodeSection
@@ -235,8 +226,6 @@ function Photo({ userData }) {
       if (!result.canceled) {
         const image = result.assets[0];
         await handlePOSTRegisterPhoto(image);
-      } else {
-        console.log("이미지 선택 취소");
       }
     } catch (_err) {
       Alert.alert("오류", "이미지를 로드하는 중 오류가 발생하였습니다.", [
