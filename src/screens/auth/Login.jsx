@@ -47,6 +47,8 @@ export default function LoginScreen({ navigation }) {
         await AsyncStorage.setItem("user", JSON.stringify(response.user));
         setUser(response.user);
 
+        navigation.replace("Main");
+
         const pushToken = await registerForPushNotificationsAsync();
         if (pushToken) {
           await registerPushTokenToDB(pushToken);

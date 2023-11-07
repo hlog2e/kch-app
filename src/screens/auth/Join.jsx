@@ -48,6 +48,8 @@ export default function JoinScreen({ route, navigation }) {
 
       setUser(response.user);
 
+      navigation.replace("Main");
+
       const pushToken = await registerForPushNotificationsAsync();
       if (pushToken) {
         await registerPushTokenToDB(pushToken);

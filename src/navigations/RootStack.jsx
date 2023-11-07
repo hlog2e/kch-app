@@ -115,6 +115,7 @@ export default function RootStack() {
               name="CommunityPOSTScreen"
               component={CommunityPOSTScreen}
             />
+            <Stack.Screen name="Auth" component={AuthStack} />
           </>
         ) : (
           <Stack.Screen name="Auth" component={AuthStack} />
