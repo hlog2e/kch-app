@@ -1,13 +1,7 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function CustomAlert({
-  show,
-  status,
-  message,
-  children,
-  onClose,
-}) {
+export default function CustomAlert({ show, status, message, onClose }) {
   if (show) {
     return (
       <View style={styles.container}>

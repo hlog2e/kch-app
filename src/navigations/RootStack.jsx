@@ -76,23 +76,15 @@ export default function RootStack() {
     dark: true,
     colors: {
       ...DarkTheme.colors,
-      background: "#ffffff",
-      text: "black",
+      background: "#000000",
+      text: "#ffffff",
       subText: "gray",
-      icon: "black",
-      border: "#e2e8f0",
+      icon: "#ffffff",
+      border: "#27272a",
 
-      cardBg: "white",
-      cardBg2: "#f4f4f4",
+      cardBg: "black",
+      cardBg2: "#212121",
       blue: "#3b82f6",
-      // background: "#000000",
-      // text: "#ffffff",
-      // subText: "gray",
-      // icon: "#ffffff",
-      // border: "gray",
-
-      // cardBg: "black",
-      // cardBg2: "#212121",
     },
   };
 
@@ -115,7 +107,6 @@ export default function RootStack() {
               name="CommunityPOSTScreen"
               component={CommunityPOSTScreen}
             />
-            <Stack.Screen name="Auth" component={AuthStack} />
           </>
         ) : (
           <Stack.Screen name="Auth" component={AuthStack} />

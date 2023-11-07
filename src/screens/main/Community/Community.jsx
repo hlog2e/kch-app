@@ -95,8 +95,8 @@ function CommunityItem({ item, navigation }) {
     container: {
       backgroundColor: colors.background,
       marginBottom: 8,
-      borderTopWidth: 1,
-      borderBottomWidth: 1,
+      borderTopWidth: 0.5,
+      borderBottomWidth: 0.5,
       borderColor: colors.border,
       paddingHorizontal: 18,
     },
@@ -107,7 +107,6 @@ function CommunityItem({ item, navigation }) {
       color: colors.text,
     },
     time: { fontSize: 11, color: "#b4b4b4", marginTop: 4 },
-    publisher_name: { fontSize: 13, color: "gray", marginTop: 4 },
     content: {
       fontSize: 14,
       color: colors.subText,
@@ -145,14 +144,6 @@ function CommunityItem({ item, navigation }) {
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
           {item.title}
         </Text>
-        <Text style={styles.publisher_name}>
-          {item.publisherName}{" "}
-          {item.publisherGrade === "1" ||
-          item.publisherGrade === "2" ||
-          item.publisherGrade === "3"
-            ? item.publisherGrade + "학년"
-            : item.publisherGrade}
-        </Text>
         <Text style={styles.time}>{moment(item.createdAt).fromNow()}</Text>
       </View>
       <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
@@ -184,7 +175,7 @@ function CommunityItem({ item, navigation }) {
         <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
           <Ionicons name={"eye-outline"} size={24} color={colors.text} />
           <Text style={styles.icon_text}>
-            {item.views ? comma(item.views) : 0}
+            {item.views ? comma(item.views.length) : 0}
           </Text>
         </View>
       </View>

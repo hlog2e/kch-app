@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-  useColorScheme,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
@@ -94,17 +93,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
   const handlePostComment = async () => {
     if (comment !== "") {
-      //비속어 체크 로직
-      const { isBad, word } = await badWordChecker(comment);
-      if (isBad) {
-        Alert.alert(
-          "알림",
-          "작성중인 내용에 비속어가 포함 되어있습니다. '" + word + "'",
-          ["확인"]
-        );
-        return;
-      }
-      //서버로 댓글 전송
       await commentMutate(
         { comment: comment, communityId: itemId },
         {
@@ -137,7 +125,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
       fontWeight: "600",
       color: colors.text,
     },
-    publisher_name: { fontSize: 14, color: "gray", marginTop: 4 },
     date: {
       marginTop: 4,
       fontSize: 12,
@@ -189,17 +176,15 @@ export default function CommunityDetailScreen({ navigation, route }) {
               <ScrollView style={styles.scroll_view}>
                 <View style={styles.wrap}>
                   <Text style={styles.title}>{data.title}</Text>
-                  <Text style={styles.publisher_name}>
-                    {data.publisherName}{" "}
-                    {data.publisherGrade === "1" ||
-                    data.publisherGrade === "2" ||
-                    data.publisherGrade === "3"
-                      ? data.publisherGrade + "학년"
-                      : data.publisherGrade}
-                  </Text>
                   <Text style={styles.date}>
                     {moment(data.createdAt).fromNow()}
                   </Text>
+                  {user.isAdmin && (
+                    <Text style={styles.date}>
+                      신고 수 : {data.reports.length}
+                    </Text>
+                  )}
+
                   <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
                     <Text selectable style={styles.content}>
                       {data.content}
@@ -252,12 +237,12 @@ export default function CommunityDetailScreen({ navigation, route }) {
               <TextInput
                 ref={commentInputRef}
                 style={styles.comment_input}
-                placeholderTextColor={colors.subText}
+                // placeholderTextColor={colors.subText}
                 value={comment}
                 onChangeText={(_text) => {
                   setComment(_text);
                 }}
-                placeholder="댓글을 입력해주세요."
+                placeholder={"댓글을 입력해주세요."}
                 multiline
               />
               {comment !== "" ? (
@@ -342,7 +327,7 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
   const handleBlockUser = async () => {
     Alert.alert(
       "경고",
-      "해당 사용자를 차단하면 작성한 게시물과 댓글 모두 볼 수 없습니다. (차단하면 되돌릴 수 없습니다.)",
+      "해당 사용자를 차단하면 작성한 게시물과 댓글 모두 볼 수 없습니다.",
       [
         { text: "취소", style: "cancel" },
         {
@@ -474,6 +459,12 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
           <Text style={styles.button_text}>더보기</Text>
         </TouchableOpacity>
       )}
+      {user.isAdmin && (
+        <TouchableOpacity style={styles.button} onPress={handleDeleteCommunity}>
+          <Ionicons color={"#CF5858"} name={"close"} size={24} />
+          <Text style={{ fontSize: 12, color: "#CF5858" }}>관리자 삭제</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -509,11 +500,12 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
 
     comment_writer_text: { fontSize: 12, color: "gray" },
     delete_text: { fontSize: 13, color: "gray" },
+    delete_admin_text: { fontSize: 13, color: "#CF5858", marginTop: 10 },
     comment_text: {
       marginTop: 8,
       color: colors.text,
     },
-    comment_date: { fontSize: 12, color: "#94a3b8", marginTop: 8 },
+    comment_date: { fontSize: 12, color: colors.subText, marginTop: 8 },
 
     blocked_users_comment: {
       backgroundColor: "white",
@@ -634,14 +626,8 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
   return (
     <View style={styles.comment}>
       <View style={styles.header}>
-        <Text style={styles.comment_writer_text}>
-          {data.issuerName}{" "}
-          {data.issuerGrade === "1" ||
-          data.issuerGrade === "2" ||
-          data.issuerGrade === "3"
-            ? data.issuerGrade + "학년"
-            : data.issuerGrade}
-        </Text>
+        <Text style={styles.comment_writer_text}>익명</Text>
+
         {/*작성자 본인일 때 삭제버튼 보이기*/}
         {data.issuer === currentUser._id ? (
           <TouchableOpacity onPress={handleCommentDelete}>
@@ -661,6 +647,19 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
       <Text style={styles.comment_date}>
         {moment(data.createdAt).fromNow()}
       </Text>
+
+      {currentUser.isAdmin && (
+        <>
+          {data.reports && (
+            <Text style={styles.comment_date}>
+              신고수 : {data.reports.length}
+            </Text>
+          )}
+          <TouchableOpacity onPress={handleCommentDelete}>
+            <Text style={styles.delete_admin_text}>관리자 삭제</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 }

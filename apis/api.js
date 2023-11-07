@@ -53,12 +53,12 @@ apiAuthInstance.interceptors.response.use(
     return response;
   },
   async function (error) {
-    if (error.response.data.status === 403) {
+    if (error.response.data.status === 401) {
       await AsyncStorage.removeItem("user");
       await AsyncStorage.removeItem("token");
       Alert.alert(
         "인증 오류",
-        "인증이 만료되었습니다. 다시 로그인 해주세요! (403)",
+        "인증이 만료되었습니다. 다시 로그인 해주세요! (401)",
         [{ text: "확인" }]
       );
       navigate("Auth");
