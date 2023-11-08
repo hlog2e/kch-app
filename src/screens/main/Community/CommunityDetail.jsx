@@ -34,7 +34,6 @@ import {
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import { UserContext } from "../../../../context/UserContext";
 
-import badWordChecker from "../../../../utils/badWordChecker";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
@@ -77,7 +76,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
   const queryClient = useQueryClient();
   const { mutate: commentMutate, isLoading: commentPOSTLoading } =
     useMutation(postComment);
-  const { data: blockedUsers } = useQuery("blocked_users", getBlockedUsers);
+  const { data: blockedUsers } = useQuery("BlockedUsers", getBlockedUsers);
 
   const commentInputRef = useRef();
 
@@ -237,7 +236,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
               <TextInput
                 ref={commentInputRef}
                 style={styles.comment_input}
-                // placeholderTextColor={colors.subText}
                 value={comment}
                 onChangeText={(_text) => {
                   setComment(_text);
@@ -423,8 +421,8 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
         {/*만약 data.likes 배열에 유저ID 가 존재 한다면*/}
         {data.likes.includes(user._id) ? (
           <>
-            <FontAwesome color={"#CF5858"} name={"heart"} size={20} />
-            <Text style={[styles.button_text, { color: "#CF5858" }]}>
+            <FontAwesome color={colors.red} name={"heart"} size={20} />
+            <Text style={[styles.button_text, { color: colors.red }]}>
               {data.likeCount}
             </Text>
           </>
@@ -446,8 +444,8 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
       </TouchableOpacity>
       {data.publisher === user._id ? (
         <TouchableOpacity style={styles.button} onPress={handleDeleteCommunity}>
-          <Ionicons color={"#CF5858"} name={"close"} size={24} />
-          <Text style={{ fontSize: 12, color: "#CF5858" }}>삭제하기</Text>
+          <Ionicons color={colors.red} name={"close"} size={24} />
+          <Text style={{ fontSize: 12, color: colors.red }}>삭제하기</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity style={styles.button} onPress={handleOpenActionSheet}>
@@ -461,8 +459,8 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
       )}
       {user.isAdmin && (
         <TouchableOpacity style={styles.button} onPress={handleDeleteCommunity}>
-          <Ionicons color={"#CF5858"} name={"close"} size={24} />
-          <Text style={{ fontSize: 12, color: "#CF5858" }}>관리자 삭제</Text>
+          <Ionicons color={colors.red} name={"close"} size={24} />
+          <Text style={{ fontSize: 12, color: colors.red }}>관리자 삭제</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -500,7 +498,7 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
 
     comment_writer_text: { fontSize: 12, color: "gray" },
     delete_text: { fontSize: 13, color: "gray" },
-    delete_admin_text: { fontSize: 13, color: "#CF5858", marginTop: 10 },
+    delete_admin_text: { fontSize: 13, color: colors.red, marginTop: 10 },
     comment_text: {
       marginTop: 8,
       color: colors.text,
@@ -554,7 +552,7 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
               {
                 onSuccess: () => {
                   queryClient.invalidateQueries("CommunityDetail");
-                  queryClient.invalidateQueries("blocked_users");
+                  queryClient.invalidateQueries("BlockedUsers");
                 },
               }
             );
