@@ -9,12 +9,14 @@ import { useQuery } from "react-query";
 import { getSchedule } from "../../../../apis/home/schedule";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import uuid from "react-native-uuid";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function CalendarScreen({ navigation }) {
   const { colors } = useTheme();
   const todayDate = moment().format("YYYY-MM-DD");
 
   const [selDate, setSelDate] = useState(todayDate);
+  const [selDataCount, setSelDataCount] = useState(0);
   const [firstDate, setFistDate] = useState(
     moment().startOf("M").format("YYYYMMDD")
   );
@@ -124,14 +126,36 @@ export default function CalendarScreen({ navigation }) {
     calendar: { marginTop: 18 },
     month_title: { padding: 18, fontSize: 20, fontWeight: "700" },
     scroll_wrap: { flex: 1, paddingTop: 20 },
+
+    nullWrap: {
+      marginTop: 24,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    nullText: {
+      marginTop: 6,
+      fontWeight: "700",
+      color: colors.subText,
+    },
   });
+
+  useEffect(() => {
+    if (schedules) {
+      const filteredArray = schedules.filter(
+        (data) => data.AA_YMD === moment(selDate).format("YYYYMMDD")
+      );
+      const count = filteredArray.length;
+
+      setSelDataCount(count);
+    }
+  }, [selDate]);
 
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <OnlyLeftArrowHeader navigation={navigation} />
 
-      {isLoading ? <FullScreenLoader /> : null}
-      {isSuccess ? (
+      {isLoading && <FullScreenLoader />}
+      {isSuccess && (
         <>
           <Calendar
             initialDate={selDate}
@@ -152,8 +176,16 @@ export default function CalendarScreen({ navigation }) {
               setSelDate(month.dateString);
             }}
           />
-          {schedules ? (
-            <View style={styles.scroll_wrap}>
+          {selDataCount === 0 ? (
+            <View style={styles.nullWrap}>
+              <Ionicons name="alert-circle" size={24} color={colors.subText} />
+              <Text style={styles.nullText}>
+                선택한 날짜에 데이터가 없습니다.
+              </Text>
+            </View>
+          ) : null}
+          <View style={styles.scroll_wrap}>
+            {schedules && (
               <ScrollView>
                 {schedules.map((_data) => {
                   if (_data.AA_YMD === moment(selDate).format("YYYYMMDD")) {
@@ -161,10 +193,10 @@ export default function CalendarScreen({ navigation }) {
                   }
                 })}
               </ScrollView>
-            </View>
-          ) : null}
+            )}
+          </View>
         </>
-      ) : null}
+      )}
     </SafeAreaView>
   );
 }
