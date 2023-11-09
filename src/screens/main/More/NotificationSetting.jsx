@@ -60,15 +60,34 @@ export default function NotificationSettingScreen({ navigation }) {
       },
     },
     {
-      id: "newPost",
-      title: "커뮤니티 알림",
-      desc: "커뮤니티에 새로운 글이 올라오면 알려드려요!",
-      value: currentSettings ? currentSettings.includes("newPost") : false,
+      id: "feed",
+      title: "피드 알림",
+      desc: "피드에 새로운 글이 올라오면 알려드려요!",
+      value: currentSettings ? currentSettings.includes("feed") : false,
       onPress: () => {
         updateSettingMutate(
           {
-            category: "newPost",
-            isRegister: !currentSettings.includes("newPost"),
+            category: "feed",
+            isRegister: !currentSettings.includes("feed"),
+          },
+          {
+            onSuccess: () => {
+              queryClient.invalidateQueries("NotificationSetting");
+            },
+          }
+        );
+      },
+    },
+    {
+      id: "community",
+      title: "커뮤니티 알림",
+      desc: "커뮤니티에 새로운 글이 올라오면 알려드려요!",
+      value: currentSettings ? currentSettings.includes("community") : false,
+      onPress: () => {
+        updateSettingMutate(
+          {
+            category: "community",
+            isRegister: !currentSettings.includes("community"),
           },
           {
             onSuccess: () => {

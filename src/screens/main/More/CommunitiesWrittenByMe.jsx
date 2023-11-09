@@ -106,7 +106,7 @@ function TouchableCommunityItem({ item, navigation }) {
           작성일시 : {moment(item.createdAt).format("YYYY년 M월 D일 hh시 mm분")}
         </Text>
         <Text style={styles.datetime}>
-          조회수 : {item.views ? comma(item.views) : 0}
+          조회수 : {item.views ? comma(item.views.length) : 0}
         </Text>
       </View>
     </TouchableOpacity>

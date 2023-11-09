@@ -46,7 +46,7 @@ export default function FeedScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <SafeTitleHeader title="학교 소식" />
+      <SafeTitleHeader title="피드" />
 
       {isLoading && <FullScreenLoader />}
 
@@ -152,7 +152,11 @@ function FeedItem({ item }) {
 
     date: { fontSize: 12, color: colors.subText },
 
-    deleteButtonWrap: { flexDirection: "row", justifyContent: "flex-end" },
+    deleteButtonWrap: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      marginTop: 4,
+    },
     deleteButton: {},
     deleteButtonText: { fontSize: 12, fontWeight: "300", color: colors.red },
 

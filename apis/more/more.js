@@ -1,5 +1,10 @@
 import { apiAuthInstance } from "../api";
 
+export const getUserInfo = async () => {
+  const { data } = await apiAuthInstance.get("/user/info");
+  return data;
+};
+
 export const postModifyUserInfo = async (props) => {
   const { data } = await apiAuthInstance.post("/user/modify/userInfo", {
     grade: props.grade,
