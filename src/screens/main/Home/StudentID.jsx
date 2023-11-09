@@ -105,18 +105,19 @@ export default function StudentIDScreen({ navigation }) {
     name: {
       fontSize: 20,
       fontWeight: "700",
+      color: colors.text,
     },
     school_name: {
       fontSize: 12,
       fontWeight: "200",
-      color: "gray",
+      color: colors.subText,
       marginTop: 4,
     },
     divider: {
       marginHorizontal: 20,
       marginVertical: 15,
       height: 0.4,
-      backgroundColor: "#c4c4c4",
+      backgroundColor: colors.subText,
     },
     info_section: {
       paddingHorizontal: 25,
@@ -130,18 +131,25 @@ export default function StudentIDScreen({ navigation }) {
     info_title: {
       fontSize: 12,
       fontWeight: "600",
-      color: "gray",
+      color: colors.subText,
     },
     info_text: {
       fontSize: 14,
       fontWeight: "600",
+      color: colors.text,
     },
 
     logo_row: {
       alignItems: "center",
       paddingVertical: 10,
     },
-    logo: { height: 45, width: 200, marginVertical: 10 },
+    logo: {
+      height: 45,
+      width: 180,
+      marginVertical: 10,
+      borderRadius: 10,
+      backgroundColor: colors.cardBg2,
+    },
   });
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
@@ -196,7 +204,7 @@ export default function StudentIDScreen({ navigation }) {
                 contentFit={"contain"}
                 transition={500}
                 style={styles.logo}
-                source={require("../../../../assets/images/logo_title.jpeg")}
+                source={require("../../../../assets/images/logo_title.png")}
               />
             </View>
           </View>
@@ -290,12 +298,12 @@ function Photo({ userData }) {
 
   return (
     <View style={styles.container}>
-      {userData.photo ? (
+      {userData.idPhoto ? (
         <TouchableOpacity onPress={handleImagePicking}>
           <Image
             style={styles.image}
             transition={500}
-            source={{ uri: userData.photo }}
+            source={{ uri: userData.idPhoto }}
           />
         </TouchableOpacity>
       ) : (
@@ -312,16 +320,18 @@ function Photo({ userData }) {
 }
 
 function BarCodeSection({ userData, openBarCodeScanner }) {
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     barcode: { marginTop: 20 },
     text: { fontSize: 10 },
 
     dummy_barcode_container: { alignItems: "center" },
     dummy_barcode: {
+      borderWidth: 1,
+      borderColor: colors.border,
       height: 55,
       width: 150,
       borderRadius: 5,
-      backgroundColor: "#f4f4f4",
       marginTop: 10,
       justifyContent: "space-between",
       alignItems: "center",

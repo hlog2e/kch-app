@@ -12,11 +12,40 @@ import moment from "moment";
 import { useState } from "react";
 
 import ImageView from "react-native-image-viewing";
+import { useTheme } from "@react-navigation/native";
 
 export default function PhotoDetailScreen({ route, navigation }) {
+  const { colors } = useTheme();
   const data = route.params;
   const [viewerOpen, setViewerOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+
+  const styles = StyleSheet.create({
+    container: { flex: 1 },
+    header: { paddingHorizontal: 14 },
+
+    imageTitle: {
+      marginTop: 20,
+      fontSize: 24,
+      fontWeight: "700",
+      color: colors.text,
+    },
+    createdAt: {
+      fontSize: 12,
+      color: colors.subText,
+      fontWeight: "300",
+      marginTop: 2,
+    },
+    copyright: {
+      fontSize: 12,
+      marginTop: 6,
+      fontWeight: "300",
+      color: colors.subText,
+    },
+
+    scroll: { paddingHorizontal: 14, marginTop: 12 },
+    image: { width: "100%", height: 230, borderRadius: 15, marginBottom: 12 },
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -63,15 +92,3 @@ export default function PhotoDetailScreen({ route, navigation }) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: { paddingHorizontal: 14 },
-
-  imageTitle: { marginTop: 20, fontSize: 24, fontWeight: "700" },
-  createdAt: { fontSize: 12, color: "gray", fontWeight: "300", marginTop: 2 },
-  copyright: { fontSize: 12, marginTop: 6, fontWeight: "300", color: "gray" },
-
-  scroll: { paddingHorizontal: 14, marginTop: 12 },
-  image: { width: "100%", height: 230, borderRadius: 15, marginBottom: 12 },
-});

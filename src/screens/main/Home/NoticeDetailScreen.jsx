@@ -62,7 +62,7 @@ export default function NoticeDetailScreen({ route, navigation }) {
       borderRadius: 14,
       borderColor: colors.border,
     },
-    webview: { flex: 1 },
+    webview: { flex: 1, borderRadius: 10 },
   });
   if (data) {
     return (
