@@ -35,21 +35,13 @@ export default function StudentIDScreen({ navigation }) {
   const { colors } = useTheme();
   const { user } = useContext(UserContext);
   const queryClient = useQueryClient();
-  const { data: userData } = useQuery("userData", getUserInfo);
+  const { data: userData } = useQuery("IdCardUserData", getUserInfo);
   const { mutate: registerBarcodeMutate } = useMutation(postRegisterBarCode);
 
   const [hasPermission, setHasPermission] = useState(null);
   const [barCodeScannerOpen, setBarCodeScannerOpen] = useState(false);
 
   useEffect(() => {
-    if (user.grade === "teacher") {
-      Alert.alert(
-        "알림",
-        "선생님께서는 학생증 서비스를 이용하실 수 없습니다.",
-        [{ text: "확인" }]
-      );
-      navigation.goBack();
-    }
     // 마운트시 바코드 스캐너 카메라 권한 요청
     requestBarCodeScannerPermissions();
   });
@@ -75,7 +67,7 @@ export default function StudentIDScreen({ navigation }) {
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     registerBarcodeMutate(data, {
       onSuccess: () => {
-        queryClient.invalidateQueries("userData");
+        queryClient.invalidateQueries("IdCardUserData");
         Alert.alert("알림", "바코드 등록을 성공하였습니다!", [
           { text: "확인" },
         ]);
@@ -252,7 +244,7 @@ function Photo({ userData }) {
 
     mutate(formData, {
       onSuccess: () => {
-        queryClient.invalidateQueries("userData");
+        queryClient.invalidateQueries("IdCardUserData");
         setLoading(false);
       },
     });

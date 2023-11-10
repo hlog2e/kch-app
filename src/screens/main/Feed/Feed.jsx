@@ -18,9 +18,10 @@ import { deleteFeed, getFeeds } from "../../../../apis/feed/feed";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import ImageView from "react-native-image-viewing";
 import { UserContext } from "../../../../context/UserContext";
-
+import { Ionicons } from "@expo/vector-icons";
 import Hyperlink from "react-native-hyperlink";
 import FABPlus from "../../../components/common/FABPlus";
+
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function FeedScreen({ navigation }) {
@@ -138,7 +139,7 @@ function FeedItem({ item }) {
       alignItems: "center",
     },
 
-    publisherWrap: { marginLeft: 12 },
+    publisherWrap: { marginLeft: 8 },
     publisherText: {
       fontSize: 15,
       fontWeight: "700",
@@ -180,12 +181,18 @@ function FeedItem({ item }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerLeftWrap}>
-          <Image
-            placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
-            transition={500}
-            style={styles.publisherPhoto}
-            source={{ uri: item.publisherPhoto }}
-          />
+          {item.publisherPhoto ? (
+            <Image
+              placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
+              contentFit={"contain"}
+              transition={500}
+              style={styles.publisherPhoto}
+              source={{ uri: item.publisherPhoto }}
+            />
+          ) : (
+            <Ionicons name="person-circle" size={45} color={"#d9d9d9"} />
+          )}
+
           <View style={styles.publisherWrap}>
             <Text style={styles.publisherText}>{item.publisherName}</Text>
             <Text style={styles.publisherDesc}>{item.publisherDesc}</Text>

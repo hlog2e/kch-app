@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
-export default function HeaderSection() {
+export default function HeaderSection({ navigation }) {
   const { data } = useQuery("UserData", getUserInfo);
   const { user, setUser } = useContext(UserContext);
 
@@ -30,10 +30,15 @@ export default function HeaderSection() {
     rightWrap: {
       marginLeft: 12,
       justifyContent: "space-between",
-      paddingVertical: 2,
+      paddingTop: 4,
     },
     nameText: { fontSize: 18, fontWeight: "700", color: colors.text },
-    descText: { fontSize: 12, fontWeight: "300", color: colors.subText },
+    descText: {
+      fontSize: 12,
+      fontWeight: "300",
+      color: colors.subText,
+      marginTop: 2,
+    },
     editProfileButton: {
       flexDirection: "row",
       alignItems: "center",
@@ -48,11 +53,24 @@ export default function HeaderSection() {
 
   return (
     <View style={styles.header}>
-      <Image style={styles.photo} source={user.profilePhoto} transition={500} />
+      {user.profilePhoto ? (
+        <Image
+          style={styles.photo}
+          source={user.profilePhoto}
+          transition={500}
+          contentFit={"contain"}
+        />
+      ) : (
+        <Ionicons name="person-circle" size={60} color={"#d9d9d9"} />
+      )}
+
       <View style={styles.rightWrap}>
         <Text style={styles.nameText}>{user.name}</Text>
         <Text style={styles.descText}>{user.desc}</Text>
-        <TouchableOpacity style={styles.editProfileButton}>
+        <TouchableOpacity
+          onPress={() => navigation.push("EditUserProfileScreen")}
+          style={styles.editProfileButton}
+        >
           <Text style={styles.editProfileButtonText}>프로필 수정</Text>
           <Ionicons name="chevron-forward" size={18} color={colors.subText} />
         </TouchableOpacity>

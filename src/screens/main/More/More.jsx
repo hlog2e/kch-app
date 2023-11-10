@@ -16,7 +16,7 @@ export default function MoreScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll}>
-        <HeaderSection />
+        <HeaderSection navigation={navigation} />
         <SettingSection navigation={navigation} />
         <CommunitySection navigation={navigation} />
         <EtcSection navigation={navigation} />
