@@ -17,6 +17,12 @@ export const postRegisterProfilePhoto = async (formData) => {
   return data;
 };
 
+export const deleteProfilePhoto = async () => {
+  const { data } = await apiAuthInstance.post("/user/delete/profilePhoto");
+
+  return data;
+};
+
 export const postEditUserProfile = async ({ name, desc }) => {
   const { data } = await apiAuthInstance.post("/user/editProfile", {
     name: name,

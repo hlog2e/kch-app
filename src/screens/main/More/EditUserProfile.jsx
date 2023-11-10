@@ -19,9 +19,11 @@ import CustomLoader from "../../../components/common/CustomLoader";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 import {
+  deleteProfilePhoto,
   postEditUserProfile,
   postRegisterProfilePhoto,
 } from "../../../../apis/more/more";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function EditUserProfileScreen({ navigation }) {
   const { user } = useContext(UserContext);
@@ -37,8 +39,11 @@ export default function EditUserProfileScreen({ navigation }) {
   const { mutate: photoMutate, isLoading: photoLoading } = useMutation(
     postRegisterProfilePhoto
   );
+  const { mutate: deletePhotoMutate, isLoading: deletePhotoLoading } =
+    useMutation(deleteProfilePhoto);
   const { mutate: profileMutate, isLoading: profileLoading } =
     useMutation(postEditUserProfile);
+
   const formData = new FormData();
   const queryClient = useQueryClient();
 
@@ -98,6 +103,32 @@ export default function EditUserProfileScreen({ navigation }) {
     });
   };
 
+  const handleDeleteProfilePhoto = async () => {
+    deletePhotoMutate(
+      {},
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries("UserData");
+          setAlert({
+            show: true,
+            status: "success",
+            message:
+              "기본 프로필 이미지로 변경하였습니다.\n화면 상에서 변경되기까지는 약 30초 정도 걸려요:)",
+          });
+        },
+        onError: (error) => {
+          setAlert({
+            show: true,
+            status: "error",
+            message:
+              "기본 프로필 이미지로 변경하던 중 오류가 발생하였습니다." +
+              error?.response?.data?.message,
+          });
+        },
+      }
+    );
+  };
+
   const handlePOSTUserData = async () => {
     profileMutate(inputData, {
       onSuccess: () => {
@@ -109,7 +140,7 @@ export default function EditUserProfileScreen({ navigation }) {
           show: true,
           status: "error",
           message:
-            "프로필을 수정하던 중 오류가 발상하였습니다." +
+            "프로필을 수정하던 중 오류가 발생하였습니다." +
             error?.response?.data?.message,
         });
       },
@@ -127,6 +158,19 @@ export default function EditUserProfileScreen({ navigation }) {
     photoWrap: { alignItems: "center", marginTop: 10 },
     photo: { width: 100, height: 100, borderRadius: 50 },
     photoInfo: { fontSize: 12, marginTop: 6, color: colors.subText },
+
+    defaultButton: {
+      marginTop: 10,
+      padding: 5,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 10,
+    },
+    defaultButtonText: {
+      fontSize: 12,
+      color: colors.subText,
+      fontWeight: "200",
+    },
 
     inputWrap: { marginTop: 24 },
     inputLeftText: { fontSize: 16, fontWeight: "600" },
@@ -172,13 +216,25 @@ export default function EditUserProfileScreen({ navigation }) {
         <View>
           <View style={styles.photoWrap}>
             <TouchableOpacity onPress={handleImagePicking}>
-              <Image
-                contentFit={"contain"}
-                style={styles.photo}
-                source={user.profilePhoto}
-              />
+              {user.profilePhoto ? (
+                <Image
+                  contentFit={"contain"}
+                  style={styles.photo}
+                  source={user.profilePhoto}
+                />
+              ) : (
+                <Ionicons name="person-circle" size={100} color={"#d9d9d9"} />
+              )}
             </TouchableOpacity>
             <Text style={styles.photoInfo}>사진을 탭하여 업로드</Text>
+            {user.profilePhoto ? (
+              <TouchableOpacity
+                onPress={handleDeleteProfilePhoto}
+                style={styles.defaultButton}
+              >
+                <Text style={styles.defaultButtonText}>기본 프로필로 변경</Text>
+              </TouchableOpacity>
+            ) : null}
           </View>
           <View style={styles.inputWrap}>
             <Text style={styles.inputLeftText}>이름</Text>
