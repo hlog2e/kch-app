@@ -4,6 +4,7 @@ import CommunityStack from "./TabBarItems/CommunityStack";
 import FeedStack from "./TabBarItems/FeedStack";
 import HomeStack from "./TabBarItems/HomeStack";
 import MoreStack from "./TabBarItems/MoreStack";
+import * as Haptics from "expo-haptics";
 
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
@@ -23,6 +24,11 @@ export default function MainTabNavigator() {
         tabBarActiveTintColor: colors.text,
         tabBarInactiveTintColor: colors.text,
         headerShown: false,
+      }}
+      screenListeners={{
+        tabPress: () => {
+          Haptics.impactAsync("light");
+        },
       }}
       initialRouteName="HomeStack"
     >
