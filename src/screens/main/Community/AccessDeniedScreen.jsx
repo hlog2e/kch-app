@@ -1,6 +1,7 @@
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
-import { SafeAreaView, Text, StyleSheet } from "react-native";
+import { Text, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AccessDeniedScreen() {
   const { colors } = useTheme();
@@ -20,7 +21,7 @@ export default function AccessDeniedScreen() {
     },
   });
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <Image
         style={styles.img}
         contentFit="contain"

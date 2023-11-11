@@ -27,7 +27,7 @@ export default function NoticeSection({ navigation }) {
 
   const styles = StyleSheet.create({
     container: {
-      marginTop: 24,
+      marginVertical: 24,
       paddingHorizontal: 14,
     },
     title: {
@@ -51,6 +51,7 @@ export default function NoticeSection({ navigation }) {
         <Text style={styles.title}>홈페이지 공지사항</Text>
 
         <FlatList
+          horizontal
           style={styles.flatList}
           onEndReached={fetchNextPage}
           data={data.pages.flatMap((item) => item.notices)}
@@ -76,14 +77,14 @@ function Item({ navigation, _id, title, teacher, createdAt }) {
   const styles = StyleSheet.create({
     item: {
       padding: 14,
-      height: 50,
-      marginBottom: 10,
+      height: 150,
+      width: 250,
+      marginRight: 10,
       borderWidth: 1,
       borderColor: colors.border,
       borderRadius: 15,
-      flexDirection: "row",
+
       justifyContent: "space-between",
-      alignItems: "center",
     },
     itemTitle: {
       fontSize: 14,
@@ -105,9 +106,7 @@ function Item({ navigation, _id, title, teacher, createdAt }) {
       style={styles.item}
     >
       <View>
-        <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode="tail">
-          {title}
-        </Text>
+        <Text style={styles.itemTitle}>{title}</Text>
         <Text style={styles.itemTeacher}>{teacher}</Text>
       </View>
       <View>

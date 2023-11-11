@@ -1,10 +1,5 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import WebView from "react-native-webview";
 import * as Linking from "expo-linking";
@@ -66,7 +61,7 @@ export default function NoticeDetailScreen({ route, navigation }) {
   });
   if (data) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={["top"]} style={styles.container}>
         <OnlyLeftArrowHeader navigation={navigation} />
         <View style={styles.header}>
           <Text style={styles.title}>{data.title}</Text>

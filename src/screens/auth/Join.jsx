@@ -1,4 +1,5 @@
-import { SafeAreaView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import FirstType from "./JoinStep/FirstType";
 import { useEffect, useState, useContext } from "react";
 import SecondNameAndYearInput from "./JoinStep/SecondNameAndYearInput";
@@ -88,7 +89,7 @@ export default function JoinScreen({ route, navigation }) {
           setScannerOpen(false);
         }}
       />
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={["top"]} style={styles.container}>
         {step === "TypeSelect" && (
           <FirstType
             onNext={(_type) => {

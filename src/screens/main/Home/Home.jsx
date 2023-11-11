@@ -1,4 +1,5 @@
-import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import MealSection from "./Sections/MealSection";
 import Header from "./Sections/Header";
@@ -12,7 +13,7 @@ export default function Home({ navigation }) {
     container: { flex: 1 },
   });
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <ScrollView>
         <Header navigation={navigation} />
         <Banner />

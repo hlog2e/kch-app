@@ -163,6 +163,7 @@ export default function CommunityPOSTScreen({ navigation }) {
       color: colors.subText,
       marginTop: 10,
       paddingBottom: 100,
+      textAlignVertical: "top",
     },
     image_skeleton: {
       backgroundColor: colors.cardBg2,

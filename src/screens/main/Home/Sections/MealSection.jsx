@@ -114,7 +114,7 @@ function MealItem({ title, kcal, menu }) {
     },
 
     menuWrap: { marginTop: 10 },
-    menuText: { color: colors.subText, fontSize: 13, marginBottom: 3 },
+    menuText: { color: colors.subText, fontSize: 13, lineHeight: 16 },
   });
   return (
     <View style={styles.container}>

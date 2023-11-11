@@ -1,11 +1,11 @@
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { Image } from "expo-image";
 import moment from "moment";
@@ -48,7 +48,7 @@ export default function PhotoDetailScreen({ route, navigation }) {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <OnlyLeftArrowHeader navigation={navigation} />
       <View style={styles.header}>
         <Text style={styles.imageTitle}>{data.title}</Text>

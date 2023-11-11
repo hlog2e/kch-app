@@ -1,4 +1,5 @@
-import { ScrollView, StyleSheet, SafeAreaView } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import HeaderSection from "./Sections/HeaderSection";
 import SettingSection from "./Sections/SettingSection";
@@ -14,7 +15,7 @@ export default function MoreScreen({ navigation }) {
     scroll: { paddingHorizontal: 20 },
   });
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <ScrollView style={styles.scroll}>
         <HeaderSection navigation={navigation} />
         <SettingSection navigation={navigation} />

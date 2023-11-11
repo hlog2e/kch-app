@@ -31,6 +31,7 @@ export default function FirstType({ onNext }) {
         fontSize: 18,
         fontWeight: "600",
         color: colors.text,
+        backgroundColor: "red",
       },
       inputIOS: {
         width: "100%",

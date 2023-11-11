@@ -1,4 +1,5 @@
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useState } from "react";
 import FirstRequestCode from "./\bLoginStep/FirstRequestCode";
 import SecondVerifyCode from "./\bLoginStep/SecondVerifyCode";
@@ -85,7 +86,7 @@ export default function LoginScreen({ navigation }) {
           })
         }
       />
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={["top"]} style={styles.container}>
         {step === "RequestCode" && (
           <FirstRequestCode
             onNext={async (_phoneNumber) => {

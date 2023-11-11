@@ -16,19 +16,19 @@ export default function Header({ navigation }) {
   const [greetText, setGreetText] = useState("");
   const grettings = [
     "별이 빛나는 밤입니다:)",
-    "왜 아직도 안 주무시나요?:)",
-    "남들보다 일찍 일어나셨네요?:)",
+    "안 주무시나요?:)",
+    "일찍 일어나셨네요?:)",
     "좋은 아침입니다:)",
     "배고픈 시간이네요..",
     "점심 식사는 하셨나요?",
     "즐거운 오후입니다:)",
     "즐거운 저녁 되세요:)",
-    "오늘 하루도 수고하셨습니다:)",
+    "오늘 하루 수고했어요:)",
     "안녕히 주무세요:)",
   ];
 
   useEffect(() => {
-    if (nowTime > 0 && nowTime < 3) {
+    if (nowTime >= 0 && nowTime < 3) {
       setGreetText(grettings[0]);
     } else if (nowTime >= 3 && nowTime < 6) {
       setGreetText(grettings[1]);

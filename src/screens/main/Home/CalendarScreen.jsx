@@ -148,7 +148,7 @@ export default function CalendarScreen({ navigation }) {
 
       setSelDataCount(count);
     }
-  }, [selDate]);
+  }, [schedules, selDate]);
 
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>

@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -8,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { Image } from "expo-image";
 import { useContext, useEffect, useState } from "react";
@@ -193,7 +193,7 @@ export default function EditUserProfileScreen({ navigation }) {
     doneButtonText: { fontWeight: "700", color: "white" },
   });
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <CustomAlert
         show={alert.show}
         status={alert.status}
