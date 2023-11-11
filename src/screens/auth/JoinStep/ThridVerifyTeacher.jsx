@@ -58,7 +58,7 @@ export default function ThirdVerifyTeacher({ onNext }) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : null}
       style={styles.container}
     >
       <View>

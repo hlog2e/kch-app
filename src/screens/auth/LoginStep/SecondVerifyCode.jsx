@@ -54,7 +54,7 @@ export default function SecondVerifyCode({ onNext, back }) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : null}
       style={styles.container}
     >
       <View>

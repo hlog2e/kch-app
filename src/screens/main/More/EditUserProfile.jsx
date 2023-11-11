@@ -211,7 +211,7 @@ export default function EditUserProfileScreen({ navigation }) {
 
       <KeyboardAvoidingView
         style={styles.flexWrap}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : null}
       >
         <View>
           <View style={styles.photoWrap}>

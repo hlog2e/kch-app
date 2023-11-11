@@ -109,7 +109,7 @@ export default function SecondNameAndYearInput({
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : null}
       style={!pickerOpen && styles.flexWrap}
     >
       <View style={styles.topItemsWrap}>
