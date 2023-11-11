@@ -1,11 +1,5 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  useColorScheme,
-} from "react-native";
+import { View, Text, ScrollView, StyleSheet, Switch } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -66,15 +60,34 @@ export default function NotificationSettingScreen({ navigation }) {
       },
     },
     {
-      id: "newPost",
-      title: "커뮤니티 알림",
-      desc: "커뮤니티에 새로운 글이 올라오면 알려드려요!",
-      value: currentSettings ? currentSettings.includes("newPost") : false,
+      id: "feed",
+      title: "피드 알림",
+      desc: "피드에 새로운 글이 올라오면 알려드려요!",
+      value: currentSettings ? currentSettings.includes("feed") : false,
       onPress: () => {
         updateSettingMutate(
           {
-            category: "newPost",
-            isRegister: !currentSettings.includes("newPost"),
+            category: "feed",
+            isRegister: !currentSettings.includes("feed"),
+          },
+          {
+            onSuccess: () => {
+              queryClient.invalidateQueries("NotificationSetting");
+            },
+          }
+        );
+      },
+    },
+    {
+      id: "community",
+      title: "커뮤니티 알림",
+      desc: "커뮤니티에 새로운 글이 올라오면 알려드려요!",
+      value: currentSettings ? currentSettings.includes("community") : false,
+      onPress: () => {
+        updateSettingMutate(
+          {
+            category: "community",
+            isRegister: !currentSettings.includes("community"),
           },
           {
             onSuccess: () => {
@@ -113,7 +126,7 @@ export default function NotificationSettingScreen({ navigation }) {
 }
 
 function Item({ title, desc, value, onPress }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     item: {
       flexDirection: "row",
@@ -124,9 +137,9 @@ function Item({ title, desc, value, onPress }) {
     title: {
       fontSize: 16,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
-    desc: { fontSize: 12, color: "gray" },
+    desc: { fontSize: 12, color: colors.subText },
   });
   return (
     <View style={styles.item}>

@@ -1,10 +1,5 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  useColorScheme,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { Calendar, LocaleConfig } from "react-native-calendars";
@@ -14,13 +9,14 @@ import { useQuery } from "react-query";
 import { getSchedule } from "../../../../apis/home/schedule";
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import uuid from "react-native-uuid";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function NewCalendarScreen({ navigation }) {
-  const NowColorState = useColorScheme();
-
+export default function CalendarScreen({ navigation }) {
+  const { colors } = useTheme();
   const todayDate = moment().format("YYYY-MM-DD");
 
   const [selDate, setSelDate] = useState(todayDate);
+  const [selDataCount, setSelDataCount] = useState(0);
   const [firstDate, setFistDate] = useState(
     moment().startOf("M").format("YYYYMMDD")
   );
@@ -123,32 +119,53 @@ export default function NewCalendarScreen({ navigation }) {
 
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      backgroundColor: colors.background,
       flex: 1,
     },
 
     calendar: { marginTop: 18 },
     month_title: { padding: 18, fontSize: 20, fontWeight: "700" },
     scroll_wrap: { flex: 1, paddingTop: 20 },
+
+    nullWrap: {
+      marginTop: 24,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    nullText: {
+      marginTop: 6,
+      fontWeight: "700",
+      color: colors.subText,
+    },
   });
+
+  useEffect(() => {
+    if (schedules) {
+      const filteredArray = schedules.filter(
+        (data) => data.AA_YMD === moment(selDate).format("YYYYMMDD")
+      );
+      const count = filteredArray.length;
+
+      setSelDataCount(count);
+    }
+  }, [schedules, selDate]);
 
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <OnlyLeftArrowHeader navigation={navigation} />
 
-      {isLoading ? <FullScreenLoader /> : null}
-      {isSuccess ? (
+      {isLoading && <FullScreenLoader />}
+      {isSuccess && (
         <>
           <Calendar
             initialDate={selDate}
             style={styles.calendar}
             theme={{
-              arrowColor: NowColorState === "light" ? "black" : "white",
-              calendarBackground:
-                NowColorState === "light" ? "white" : "#18171c",
-              dayTextColor: NowColorState === "dark" ? "white" : null,
-              textDisabledColor: NowColorState === "dark" ? "gray" : null,
-              monthTextColor: NowColorState === "dark" ? "white" : null,
+              arrowColor: colors.text,
+              calendarBackground: colors.background,
+              dayTextColor: colors.text,
+              textDisabledColor: colors.subText,
+              monthTextColor: colors.text,
             }}
             enableSwipeMonths={true}
             onDayPress={(day) => {
@@ -159,8 +176,16 @@ export default function NewCalendarScreen({ navigation }) {
               setSelDate(month.dateString);
             }}
           />
-          {schedules ? (
-            <View style={styles.scroll_wrap}>
+          {selDataCount === 0 ? (
+            <View style={styles.nullWrap}>
+              <Ionicons name="alert-circle" size={24} color={colors.subText} />
+              <Text style={styles.nullText}>
+                선택한 날짜에 데이터가 없습니다.
+              </Text>
+            </View>
+          ) : null}
+          <View style={styles.scroll_wrap}>
+            {schedules && (
               <ScrollView>
                 {schedules.map((_data) => {
                   if (_data.AA_YMD === moment(selDate).format("YYYYMMDD")) {
@@ -168,19 +193,20 @@ export default function NewCalendarScreen({ navigation }) {
                   }
                 })}
               </ScrollView>
-            </View>
-          ) : null}
+            )}
+          </View>
         </>
-      ) : null}
+      )}
     </SafeAreaView>
   );
 }
 
 function Item({ data }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: NowColorState === "light" ? "#f1f5f9" : "#2c2c36",
+      borderWidth: 1,
+      borderColor: colors.border,
       marginHorizontal: 20,
       padding: 14,
       borderRadius: 15,
@@ -192,7 +218,7 @@ function Item({ data }) {
     event_name: {
       fontSize: 16,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
     desc: {
       fontSize: 12,

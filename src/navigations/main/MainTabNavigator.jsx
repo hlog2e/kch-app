@@ -4,14 +4,16 @@ import CommunityStack from "./TabBarItems/CommunityStack";
 import FeedStack from "./TabBarItems/FeedStack";
 import HomeStack from "./TabBarItems/HomeStack";
 import MoreStack from "./TabBarItems/MoreStack";
+import * as Haptics from "expo-haptics";
 
 import { Ionicons } from "@expo/vector-icons";
-import { useColorScheme } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
+
   const { bottom: bottomInsets } = useSafeAreaInsets();
 
   return (
@@ -19,9 +21,14 @@ export default function MainTabNavigator() {
       screenOptions={{
         tabBarStyle: { height: bottomInsets + 50 },
         tabBarShowLabel: false,
-        tabBarActiveTintColor: NowColorState === "light" ? "black" : "white",
-        tabBarInactiveTintColor: NowColorState === "light" ? "black" : "gray",
+        tabBarActiveTintColor: colors.text,
+        tabBarInactiveTintColor: colors.text,
         headerShown: false,
+      }}
+      screenListeners={{
+        tabPress: () => {
+          Haptics.impactAsync("light");
+        },
       }}
       initialRouteName="HomeStack"
     >

@@ -11,7 +11,7 @@ export const getCommunities = async (props) => {
 };
 
 export const getBlockedUsers = async () => {
-  const { data } = await apiAuthInstance.get("/community/blocked_users");
+  const { data } = await apiAuthInstance.get("/community/blockedUsers");
 
   return data;
 };

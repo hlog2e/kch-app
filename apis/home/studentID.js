@@ -6,9 +6,13 @@ export const getUserInfo = async (props) => {
 };
 
 export const postRegisterPhoto = async (formData) => {
-  const { data } = await apiAuthInstance.post("/user/upload/photo", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await apiAuthInstance.post(
+    "/user/upload/idPhoto",
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
 
   return data;
 };

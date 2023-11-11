@@ -8,11 +8,13 @@ import {
 import AuthStack from "./auth/AuthStack";
 import CommunityDetailScreen from "../screens/main/Community/CommunityDetail";
 import CommunityPOSTScreen from "../screens/main/Community/CommunityPOSTScreen";
+import FeedPOSTScreen from "../screens/main/Feed/FeedPOSTScreen";
 import { useColorScheme } from "react-native";
 import { navigationRef } from "./RootNavigation";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import FullScreenLoader from "../components/common/FullScreenLoader";
+
 import * as Linking from "expo-linking";
 
 const Stack = createNativeStackNavigator();
@@ -60,6 +62,16 @@ export default function RootStack() {
     colors: {
       ...DefaultTheme.colors,
       background: "#ffffff",
+      text: "black",
+      subText: "gray",
+      icon: "black",
+      border: "#e2e8f0",
+
+      cardBg: "white",
+      cardBg2: "#f4f4f4",
+      blue: "#3b82f6",
+      red: "#CF5858",
+      bgBlue: "#eff6ff",
     },
   };
 
@@ -69,8 +81,16 @@ export default function RootStack() {
     colors: {
       ...DarkTheme.colors,
       background: "#000000",
-      card: "#1b1b1b",
-      border: "#1b1b1b",
+      text: "#ffffff",
+      subText: "gray",
+      icon: "#ffffff",
+      border: "#27272a",
+
+      cardBg: "black",
+      cardBg2: "#212121",
+      blue: "#3b82f6",
+      red: "#CF5858",
+      bgBlue: "#eff6ff",
     },
   };
 
@@ -93,6 +113,7 @@ export default function RootStack() {
               name="CommunityPOSTScreen"
               component={CommunityPOSTScreen}
             />
+            <Stack.Screen name="FeedPOSTScreen" component={FeedPOSTScreen} />
           </>
         ) : (
           <Stack.Screen name="Auth" component={AuthStack} />

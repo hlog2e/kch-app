@@ -2,12 +2,12 @@ import {
   View,
   StyleSheet,
   Text,
-  Image,
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { Image } from "expo-image";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
@@ -23,40 +23,28 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 
-import { BarCodeScanner } from "expo-barcode-scanner";
 import * as Haptics from "expo-haptics";
 
-import { Dimensions } from "react-native";
 import Barcode from "@kichiyaki/react-native-barcode-generator";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import WrapBarCodeScanner from "../../../components/common/WrapBarCodeScanner";
+import { useTheme } from "@react-navigation/native";
 
 export default function StudentIDScreen({ navigation }) {
+  const { colors } = useTheme();
   const { user } = useContext(UserContext);
   const queryClient = useQueryClient();
-  const { data: userData } = useQuery("userData", getUserInfo);
+  const { data: userData } = useQuery("IdCardUserData", getUserInfo);
   const { mutate: registerBarcodeMutate } = useMutation(postRegisterBarCode);
 
   const [hasPermission, setHasPermission] = useState(null);
   const [barCodeScannerOpen, setBarCodeScannerOpen] = useState(false);
 
   useEffect(() => {
-    if (user.grade === "teacher") {
-      Alert.alert(
-        "알림",
-        "선생님께서는 학생증 서비스를 이용하실 수 없습니다.",
-        [{ text: "확인" }]
-      );
-      navigation.goBack();
-    }
     // 마운트시 바코드 스캐너 카메라 권한 요청
     requestBarCodeScannerPermissions();
   });
-
-  const requestBarCodeScannerPermissions = async () => {
-    const { status } = await BarCodeScanner.requestPermissionsAsync();
-    setHasPermission(status === "granted");
-  };
 
   const openBarCodeScanner = () => {
     if (hasPermission) {
@@ -69,19 +57,25 @@ export default function StudentIDScreen({ navigation }) {
       );
     }
   };
+  const requestBarCodeScannerPermissions = async () => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setBarCodeScannerOpen(false);
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     registerBarcodeMutate(data, {
       onSuccess: () => {
-        queryClient.invalidateQueries("userData");
+        queryClient.invalidateQueries("IdCardUserData");
         Alert.alert("알림", "바코드 등록을 성공하였습니다!", [
           { text: "확인" },
         ]);
       },
     });
   };
+
+  const age = moment().format("YYYY") - user.birthYear + 1;
 
   const styles = StyleSheet.create({
     container: { flex: 1 },
@@ -90,7 +84,7 @@ export default function StudentIDScreen({ navigation }) {
       paddingHorizontal: 45,
     },
     title: { fontSize: 16, fontWeight: "700", paddingVertical: 7 },
-    card: { backgroundColor: "white", borderRadius: 10 },
+    card: { borderRadius: 10, borderWidth: 1, borderColor: colors.border },
     image: {
       height: 150,
       backgroundColor: "#001396",
@@ -103,18 +97,19 @@ export default function StudentIDScreen({ navigation }) {
     name: {
       fontSize: 20,
       fontWeight: "700",
+      color: colors.text,
     },
     school_name: {
       fontSize: 12,
       fontWeight: "200",
-      color: "gray",
+      color: colors.subText,
       marginTop: 4,
     },
     divider: {
       marginHorizontal: 20,
       marginVertical: 15,
       height: 0.4,
-      backgroundColor: "#c4c4c4",
+      backgroundColor: colors.subText,
     },
     info_section: {
       paddingHorizontal: 25,
@@ -128,18 +123,25 @@ export default function StudentIDScreen({ navigation }) {
     info_title: {
       fontSize: 12,
       fontWeight: "600",
-      color: "gray",
+      color: colors.subText,
     },
     info_text: {
       fontSize: 14,
       fontWeight: "600",
+      color: colors.text,
     },
 
     logo_row: {
       alignItems: "center",
       paddingVertical: 10,
     },
-    logo: { height: 45, width: 200, marginVertical: 10 },
+    logo: {
+      height: 45,
+      width: 180,
+      marginVertical: 10,
+      borderRadius: 10,
+      backgroundColor: colors.cardBg2,
+    },
   });
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
@@ -153,7 +155,8 @@ export default function StudentIDScreen({ navigation }) {
       <ScrollView style={styles.card_wrap}>
         <View style={styles.card}>
           <Image
-            resizeMode={"contain"}
+            contentFit={"contain"}
+            transition={500}
             style={styles.image}
             source={{ uri: "https://static.kch-app.me/student_id_banner.png" }}
           />
@@ -166,24 +169,9 @@ export default function StudentIDScreen({ navigation }) {
           <View style={styles.info_section}>
             <View style={styles.info_row}>
               <Text style={styles.info_title}>나이</Text>
-              <Text style={styles.info_text}>
-                {user.grade === "1" ? "17" : null}
-                {user.grade === "2" ? "18" : null}
-                {user.grade === "3" ? "19" : null}세
-              </Text>
+              <Text style={styles.info_text}>{age}세</Text>
             </View>
-            <View style={styles.info_row}>
-              <Text style={styles.info_title}>학년</Text>
-              <Text style={styles.info_text}>{user.grade}학년</Text>
-            </View>
-            <View style={styles.info_row}>
-              <Text style={styles.info_title}>반</Text>
-              <Text style={styles.info_text}>{user.class}반</Text>
-            </View>
-            <View style={styles.info_row}>
-              <Text style={styles.info_title}>번호</Text>
-              <Text style={styles.info_text}>{user.number}번</Text>
-            </View>
+
             <View style={styles.info_row}>
               <Text
                 style={styles.info_title}
@@ -194,7 +182,9 @@ export default function StudentIDScreen({ navigation }) {
                 유효기간
               </Text>
               <Text style={styles.info_text}>
-                {moment().add("1", "y").format("YYYY") + "-03-01"}
+                {moment()
+                  .add(Math.abs(age - 20), "y")
+                  .format("YYYY") + "-03-01"}
               </Text>
             </View>
             <BarCodeSection
@@ -203,9 +193,10 @@ export default function StudentIDScreen({ navigation }) {
             />
             <View style={styles.logo_row}>
               <Image
-                resizeMode={"contain"}
+                contentFit={"contain"}
+                transition={500}
                 style={styles.logo}
-                source={require("../../../../assets/images/logo_title.jpeg")}
+                source={require("../../../../assets/images/logo_title.png")}
               />
             </View>
           </View>
@@ -229,14 +220,12 @@ function Photo({ userData }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
         allowsMultipleSelection: false,
-        quality: 0.3,
+        quality: 0.5,
       });
 
       if (!result.canceled) {
         const image = result.assets[0];
         await handlePOSTRegisterPhoto(image);
-      } else {
-        console.log("이미지 선택 취소");
       }
     } catch (_err) {
       Alert.alert("오류", "이미지를 로드하는 중 오류가 발생하였습니다.", [
@@ -255,7 +244,7 @@ function Photo({ userData }) {
 
     mutate(formData, {
       onSuccess: () => {
-        queryClient.invalidateQueries("userData");
+        queryClient.invalidateQueries("IdCardUserData");
         setLoading(false);
       },
     });
@@ -301,9 +290,13 @@ function Photo({ userData }) {
 
   return (
     <View style={styles.container}>
-      {userData.photo ? (
+      {userData.idPhoto ? (
         <TouchableOpacity onPress={handleImagePicking}>
-          <Image style={styles.image} source={{ uri: userData.photo }} />
+          <Image
+            style={styles.image}
+            transition={500}
+            source={{ uri: userData.idPhoto }}
+          />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -319,16 +312,18 @@ function Photo({ userData }) {
 }
 
 function BarCodeSection({ userData, openBarCodeScanner }) {
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     barcode: { marginTop: 20 },
     text: { fontSize: 10 },
 
     dummy_barcode_container: { alignItems: "center" },
     dummy_barcode: {
+      borderWidth: 1,
+      borderColor: colors.border,
       height: 55,
       width: 150,
       borderRadius: 5,
-      backgroundColor: "#f4f4f4",
       marginTop: 10,
       justifyContent: "space-between",
       alignItems: "center",
@@ -367,77 +362,6 @@ function BarCodeSection({ userData, openBarCodeScanner }) {
           <Text style={styles.dummy_text}>바코드를 등록해주세요</Text>
         </TouchableOpacity>
       </View>
-    );
-  }
-}
-
-function WrapBarCodeScanner({
-  barCodeScannerOpen,
-  setBarCodeScannerOpen,
-  handleBarCodeScanned,
-}) {
-  const styles = StyleSheet.create({
-    toast: {
-      position: "absolute",
-      top: 100,
-      left: SCREEN_WIDTH / 2 - 130,
-      width: 260,
-      height: 40,
-      backgroundColor: "rgba(244,244,244,0.3)",
-      borderRadius: 8,
-      zIndex: 15,
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    toast_text: {
-      color: "white",
-      marginLeft: 8,
-      fontWeight: "700",
-    },
-    close_button: {
-      position: "absolute",
-      bottom: 150,
-      left: SCREEN_WIDTH / 2 - 30,
-      width: 60,
-      height: 60,
-      backgroundColor: "rgba(255,255,255,0.8)",
-      borderRadius: 30,
-      zIndex: 15,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  });
-
-  if (barCodeScannerOpen) {
-    return (
-      <>
-        <View style={styles.toast}>
-          <Ionicons name="alert-circle" size={24} color="white" />
-          <Text style={styles.toast_text}>
-            학생증 뒷면의 바코드를 스캔해주세요 !
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={styles.close_button}
-          onPress={() => {
-            setBarCodeScannerOpen(false);
-          }}
-        >
-          <Ionicons name="close" size={32} color="#a4a4a4" />
-        </TouchableOpacity>
-
-        <BarCodeScanner
-          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
-          onBarCodeScanned={handleBarCodeScanned}
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            zIndex: 10,
-            backgroundColor: "black",
-          }}
-        />
-      </>
     );
   }
 }

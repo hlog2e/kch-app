@@ -7,25 +7,30 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Image,
   Alert,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "react-query";
 import { postCommunity } from "../../../../apis/community/community";
-import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
-import badWordChecker from "../../../../utils/badWordChecker";
 import mime from "mime";
+import CustomLoader from "../../../components/common/CustomLoader";
+import CustomAlert from "../../../components/common/CustomAlert";
 
 export default function CommunityPOSTScreen({ navigation }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
 
   const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState({
+    show: false,
+    status: null,
+    message: null,
+  });
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -41,7 +46,7 @@ export default function CommunityPOSTScreen({ navigation }) {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
-        quality: 0.1,
+        quality: 0.5,
         allowsMultipleSelection: true,
       });
 
@@ -76,37 +81,12 @@ export default function CommunityPOSTScreen({ navigation }) {
 
   const checkBeforePOST = async () => {
     setLoading(true);
-    const { isBad: titleIsBad, word: titleBadWord } = await badWordChecker(
-      title
-    );
-    const { isBad: contentIsBad, word: contentBadWord } = await badWordChecker(
-      content
-    );
-
-    if (titleIsBad) {
-      Alert.alert(
-        "오류",
-        "제목에 비속어가 포함되어 있습니다. '" + titleBadWord + "'",
-        [{ text: "확인" }]
-      );
-      setLoading(false);
-      return { passed: false };
-    }
-
-    if (contentIsBad) {
-      Alert.alert(
-        "오류",
-        "내용에 비속어가 포함되어 있습니다. '" + contentBadWord + "'",
-        [{ text: "확인" }]
-      );
-      setLoading(false);
-      return { passed: false };
-    }
-
     if (title === "" || content === "") {
-      Alert.alert("오류", "제목이랑 내용 모두 작성해주세요.", [
-        { text: "확인" },
-      ]);
+      setAlert({
+        show: true,
+        status: "info",
+        message: "제목이랑 내용 모두 작성해 주세요 :)",
+      });
       setLoading(false);
       return { passed: false };
     }
@@ -138,12 +118,25 @@ export default function CommunityPOSTScreen({ navigation }) {
             queryClient.invalidateQueries("community");
             navigation.goBack();
           },
+          onError: (error) => {
+            setLoading(false);
+            if (error.response.data.message) {
+              setAlert({
+                show: true,
+                status: "error",
+                message: error.response.data.message,
+              });
+            }
+          },
         });
       } catch (err) {
         console.log(err);
-        Alert.alert("오류", "게시물 작성 도중 오류가 발생하였습니다.", [
-          { text: "확인" },
-        ]);
+        setAlert({
+          show: true,
+          status: "error",
+          message:
+            "커뮤니티 글 작성 중 알 수 없는 오류가 발생하였습니다. 잠시 후 다시 시도해주세요!",
+        });
         setLoading(false);
       }
     }
@@ -152,7 +145,7 @@ export default function CommunityPOSTScreen({ navigation }) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      backgroundColor: colors.background,
     },
 
     wrap: { marginTop: 10, flex: 1, paddingHorizontal: 10 },
@@ -163,16 +156,17 @@ export default function CommunityPOSTScreen({ navigation }) {
       borderColor: "#d4d4d4",
       fontSize: 16,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
     content_input: {
       paddingHorizontal: 10,
-      color: NowColorState === "light" ? "#52525b" : "white",
+      color: colors.subText,
       marginTop: 10,
       paddingBottom: 100,
+      textAlignVertical: "top",
     },
     image_skeleton: {
-      backgroundColor: NowColorState === "light" ? "#f2f2f2" : "#2c2c36",
+      backgroundColor: colors.cardBg2,
       width: 100,
       height: 100,
       borderRadius: 10,
@@ -197,7 +191,13 @@ export default function CommunityPOSTScreen({ navigation }) {
 
   return (
     <SafeAreaView edges={["top", "bottom"]} style={styles.container}>
-      <FullScreenBlurLoader loading={loading} />
+      <CustomAlert
+        show={alert.show}
+        status={alert.status}
+        message={alert.message}
+        onClose={() => setAlert({ show: false, status: null, message: null })}
+      />
+      <CustomLoader text={"업로드 중 입니다..."} loading={loading} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
@@ -219,8 +219,9 @@ export default function CommunityPOSTScreen({ navigation }) {
                 setContent(_value);
               }}
               style={styles.content_input}
-              placeholderTextColor={NowColorState === "dark" ? "gray" : null}
-              placeholder={"내용"}
+              placeholder={
+                "내용\n\n※경고※\n공공질서 또는 미풍양속에 반하는 표현행위, 제3자를 모욕, 폄하하는 행위 등 커뮤니티에 적합하지 않은 내용을 게시할 시 금천고 앱 영구 이용 정지 처리될 수 있습니다."
+              }
               multiline
             />
             <ScrollView horizontal style={styles.image_container}>
@@ -231,7 +232,12 @@ export default function CommunityPOSTScreen({ navigation }) {
                     style={styles.image_wrap}
                     onPress={() => handleImageDelete(assetId)}
                   >
-                    <Image style={styles.image} source={{ uri: uri }} />
+                    <Image
+                      placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
+                      transition={500}
+                      style={styles.image}
+                      source={{ uri: uri }}
+                    />
                   </TouchableOpacity>
                 );
               })}

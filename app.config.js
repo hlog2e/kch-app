@@ -7,13 +7,11 @@ module.exports = {
       eas: {
         projectId: "5b77743f-dfb8-4df6-942e-446f6e72ed63",
       },
-      apiUrl: process.env.API_SERVER,
-      devApiUrl: process.env.DEV_API_SERVER,
     },
     name: "금천고등학교",
     scheme: "kch",
     slug: "kch-app",
-    version: "1.0.9",
+    version: "2.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
@@ -37,7 +35,7 @@ module.exports = {
       },
     },
     android: {
-      versionCode: 8,
+      versionCode: 9,
       googleServicesFile: "./google-services.json",
       package: "me.kch_app.kch",
       adaptiveIcon: {

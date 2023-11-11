@@ -4,8 +4,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-  useColorScheme,
 } from "react-native";
+
+import { useTheme } from "@react-navigation/native";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
@@ -17,7 +18,7 @@ import { comma } from "../../../../utils/intl";
 import { useState } from "react";
 
 export default function CommunitiesWrittenByMeScreen({ navigation }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
 
   const { data, isLoading, isSuccess, refetch } = useQuery(
     "CommunitiesWrittenByMe",
@@ -32,7 +33,7 @@ export default function CommunitiesWrittenByMeScreen({ navigation }) {
       paddingVertical: 18,
       marginLeft: 20,
       fontWeight: "700",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
   });
   return (
@@ -64,17 +65,19 @@ export default function CommunitiesWrittenByMeScreen({ navigation }) {
 }
 
 function TouchableCommunityItem({ item, navigation }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     item: {
-      backgroundColor: NowColorState === "light" ? "white" : "#2c2c36",
+      borderTopWidth: 0.5,
+      borderBottomWidth: 0.5,
+      borderColor: colors.border,
       marginBottom: 6,
       padding: 14,
     },
     title: {
       fontSize: 18,
       fontWeight: "600",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
     row: {
       flexDirection: "row",
@@ -84,7 +87,7 @@ function TouchableCommunityItem({ item, navigation }) {
     content: {
       fontSize: 14,
       marginTop: 14,
-      color: NowColorState === "light" ? "gray" : "white",
+      color: colors.subText,
     },
     datetime: { fontSize: 11, color: "gray", marginTop: 14 },
   });
@@ -103,7 +106,7 @@ function TouchableCommunityItem({ item, navigation }) {
           작성일시 : {moment(item.createdAt).format("YYYY년 M월 D일 hh시 mm분")}
         </Text>
         <Text style={styles.datetime}>
-          조회수 : {item.views ? comma(item.views) : 0}
+          조회수 : {item.views ? comma(item.views.length) : 0}
         </Text>
       </View>
     </TouchableOpacity>

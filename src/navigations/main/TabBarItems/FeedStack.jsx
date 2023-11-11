@@ -8,7 +8,7 @@ export default function FeedStack() {
       initialRouteName="FeedScreen"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="FeedScreen" component={FeedScreen}></Stack.Screen>
+      <Stack.Screen name="FeedScreen" component={FeedScreen} />
     </Stack.Navigator>
   );
 }

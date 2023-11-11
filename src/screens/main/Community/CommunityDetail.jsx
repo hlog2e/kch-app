@@ -4,13 +4,13 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  Image,
   TextInput,
   KeyboardAvoidingView,
   Platform,
   Alert,
-  useColorScheme,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
 import moment from "moment";
@@ -34,14 +34,13 @@ import {
 import FullScreenLoader from "../../../components/common/FullScreenLoader";
 import { UserContext } from "../../../../context/UserContext";
 
-import badWordChecker from "../../../../utils/badWordChecker";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
 import Hyperlink from "react-native-hyperlink";
 
 export default function CommunityDetailScreen({ navigation, route }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
 
   const itemId = route.params.id;
 
@@ -77,7 +76,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
   const queryClient = useQueryClient();
   const { mutate: commentMutate, isLoading: commentPOSTLoading } =
     useMutation(postComment);
-  const { data: blockedUsers } = useQuery("blocked_users", getBlockedUsers);
+  const { data: blockedUsers } = useQuery("BlockedUsers", getBlockedUsers);
 
   const commentInputRef = useRef();
 
@@ -93,17 +92,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
   const handlePostComment = async () => {
     if (comment !== "") {
-      //비속어 체크 로직
-      const { isBad, word } = await badWordChecker(comment);
-      if (isBad) {
-        Alert.alert(
-          "알림",
-          "작성중인 내용에 비속어가 포함 되어있습니다. '" + word + "'",
-          ["확인"]
-        );
-        return;
-      }
-      //서버로 댓글 전송
       await commentMutate(
         { comment: comment, communityId: itemId },
         {
@@ -118,34 +106,33 @@ export default function CommunityDetailScreen({ navigation, route }) {
 
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      backgroundColor: colors.background,
       flex: 1,
     },
 
     scroll_view_wrap: { flex: 1 },
     scroll_view: {
-      backgroundColor: NowColorState === "light" ? "#f4f4f4" : "#2c2c36",
+      backgroundColor: colors.background,
       height: 100,
     },
     wrap: {
       padding: 20,
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      backgroundColor: colors.background,
     },
     title: {
       fontSize: 24,
       fontWeight: "600",
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
-    publisher_name: { fontSize: 14, color: "gray", marginTop: 4 },
     date: {
       marginTop: 4,
       fontSize: 12,
-      color: "#b4b4b4",
+      color: colors.subText,
     },
     content: {
       marginTop: 24,
       fontSize: 14,
-      color: NowColorState === "light" ? "#52525b" : "white",
+      color: colors.subText,
     },
     image: {
       width: 200,
@@ -153,7 +140,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       marginRight: 20,
       borderRadius: 20,
       marginTop: 32,
-      backgroundColor: NowColorState === "light" ? "#f9f9f9" : "#2c2c36",
+      backgroundColor: colors.cardBg2,
     },
 
     input_container: {
@@ -162,14 +149,14 @@ export default function CommunityDetailScreen({ navigation, route }) {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      borderColor: NowColorState === "light" ? "#b8b8b8" : "black",
+      borderColor: colors.border,
       borderTopWidth: 0.2,
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      backgroundColor: colors.background,
     },
-    comment_input: { color: NowColorState === "light" ? "black" : "white" },
+    comment_input: { color: colors.text },
     comment_send_button: {
       fontSize: 16,
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
   });
 
@@ -188,17 +175,15 @@ export default function CommunityDetailScreen({ navigation, route }) {
               <ScrollView style={styles.scroll_view}>
                 <View style={styles.wrap}>
                   <Text style={styles.title}>{data.title}</Text>
-                  <Text style={styles.publisher_name}>
-                    {data.publisherName}{" "}
-                    {data.publisherGrade === "1" ||
-                    data.publisherGrade === "2" ||
-                    data.publisherGrade === "3"
-                      ? data.publisherGrade + "학년"
-                      : data.publisherGrade}
-                  </Text>
                   <Text style={styles.date}>
                     {moment(data.createdAt).fromNow()}
                   </Text>
+                  {user.isAdmin && (
+                    <Text style={styles.date}>
+                      신고 수 : {data.reports.length}
+                    </Text>
+                  )}
+
                   <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
                     <Text selectable style={styles.content}>
                       {data.content}
@@ -215,7 +200,9 @@ export default function CommunityDetailScreen({ navigation, route }) {
                       >
                         <Image
                           style={styles.image}
-                          resizeMode={"cover"}
+                          placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
+                          transition={500}
+                          contentFit={"cover"}
                           source={{
                             uri: _item,
                           }}
@@ -249,12 +236,11 @@ export default function CommunityDetailScreen({ navigation, route }) {
               <TextInput
                 ref={commentInputRef}
                 style={styles.comment_input}
-                placeholderTextColor={NowColorState === "dark" ? "gray" : null}
                 value={comment}
                 onChangeText={(_text) => {
                   setComment(_text);
                 }}
-                placeholder="댓글을 입력해주세요."
+                placeholder={"댓글을 입력해주세요."}
                 multiline
               />
               {comment !== "" ? (
@@ -280,7 +266,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
 }
 
 function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
 
   const queryClient = useQueryClient();
   const { mutate: likeAddMutate } = useMutation(addLike);
@@ -339,7 +325,7 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
   const handleBlockUser = async () => {
     Alert.alert(
       "경고",
-      "해당 사용자를 차단하면 작성한 게시물과 댓글 모두 볼 수 없습니다. (차단하면 되돌릴 수 없습니다.)",
+      "해당 사용자를 차단하면 작성한 게시물과 댓글 모두 볼 수 없습니다.",
       [
         { text: "취소", style: "cancel" },
         {
@@ -426,7 +412,7 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
     button_text: {
       fontSize: 12,
       paddingHorizontal: 10,
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
   });
   return (
@@ -435,18 +421,14 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
         {/*만약 data.likes 배열에 유저ID 가 존재 한다면*/}
         {data.likes.includes(user._id) ? (
           <>
-            <FontAwesome color={"#CF5858"} name={"heart"} size={20} />
-            <Text style={[styles.button_text, { color: "#CF5858" }]}>
+            <FontAwesome color={colors.red} name={"heart"} size={20} />
+            <Text style={[styles.button_text, { color: colors.red }]}>
               {data.likeCount}
             </Text>
           </>
         ) : (
           <>
-            <FontAwesome
-              name={"heart-o"}
-              size={20}
-              color={NowColorState === "light" ? "black" : "white"}
-            />
+            <FontAwesome name={"heart-o"} size={20} color={colors.text} />
             <Text style={styles.button_text}>{data.likeCount}</Text>
           </>
         )}
@@ -457,26 +439,28 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
           commentInputRef.current.focus();
         }}
       >
-        <Ionicons
-          name={"chatbubble-outline"}
-          size={20}
-          color={NowColorState === "light" ? "black" : "white"}
-        />
+        <Ionicons name={"chatbubble-outline"} size={20} color={colors.text} />
         <Text style={styles.button_text}>{data.commentCount}</Text>
       </TouchableOpacity>
       {data.publisher === user._id ? (
         <TouchableOpacity style={styles.button} onPress={handleDeleteCommunity}>
-          <Ionicons color={"#CF5858"} name={"close"} size={24} />
-          <Text style={{ fontSize: 12, color: "#CF5858" }}>삭제하기</Text>
+          <Ionicons color={colors.red} name={"close"} size={24} />
+          <Text style={{ fontSize: 12, color: colors.red }}>삭제하기</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity style={styles.button} onPress={handleOpenActionSheet}>
           <Ionicons
             name={"ellipsis-horizontal-outline"}
             size={24}
-            color={NowColorState === "light" ? "black" : "white"}
+            color={colors.text}
           />
           <Text style={styles.button_text}>더보기</Text>
+        </TouchableOpacity>
+      )}
+      {user.isAdmin && (
+        <TouchableOpacity style={styles.button} onPress={handleDeleteCommunity}>
+          <Ionicons color={colors.red} name={"close"} size={24} />
+          <Text style={{ fontSize: 12, color: colors.red }}>관리자 삭제</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -484,7 +468,7 @@ function ButtonBar({ data, user, communityId, commentInputRef, navigation }) {
 }
 
 function Comment({ communityId, currentUser, data, blockedUsers }) {
-  const NowColorState = useColorScheme();
+  const { colors } = useTheme();
 
   //react-query
   const queryClient = useQueryClient();
@@ -500,10 +484,10 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
 
   const styles = StyleSheet.create({
     comment: {
-      backgroundColor: NowColorState === "light" ? "white" : "#18171c",
+      backgroundColor: colors.background,
       borderTopWidth: 0.2,
       borderBottomWidth: 0.2,
-      borderColor: NowColorState === "light" ? "#d4d4d4" : "#3f3f46",
+      borderColor: colors.border,
       padding: 17,
     },
     header: {
@@ -514,11 +498,12 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
 
     comment_writer_text: { fontSize: 12, color: "gray" },
     delete_text: { fontSize: 13, color: "gray" },
+    delete_admin_text: { fontSize: 13, color: colors.red, marginTop: 10 },
     comment_text: {
       marginTop: 8,
-      color: NowColorState === "light" ? "black" : "white",
+      color: colors.text,
     },
-    comment_date: { fontSize: 12, color: "#94a3b8", marginTop: 8 },
+    comment_date: { fontSize: 12, color: colors.subText, marginTop: 8 },
 
     blocked_users_comment: {
       backgroundColor: "white",
@@ -567,7 +552,7 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
               {
                 onSuccess: () => {
                   queryClient.invalidateQueries("CommunityDetail");
-                  queryClient.invalidateQueries("blocked_users");
+                  queryClient.invalidateQueries("BlockedUsers");
                 },
               }
             );
@@ -639,14 +624,8 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
   return (
     <View style={styles.comment}>
       <View style={styles.header}>
-        <Text style={styles.comment_writer_text}>
-          {data.issuerName}{" "}
-          {data.issuerGrade === "1" ||
-          data.issuerGrade === "2" ||
-          data.issuerGrade === "3"
-            ? data.issuerGrade + "학년"
-            : data.issuerGrade}
-        </Text>
+        <Text style={styles.comment_writer_text}>익명</Text>
+
         {/*작성자 본인일 때 삭제버튼 보이기*/}
         {data.issuer === currentUser._id ? (
           <TouchableOpacity onPress={handleCommentDelete}>
@@ -666,6 +645,19 @@ function Comment({ communityId, currentUser, data, blockedUsers }) {
       <Text style={styles.comment_date}>
         {moment(data.createdAt).fromNow()}
       </Text>
+
+      {currentUser.isAdmin && (
+        <>
+          {data.reports && (
+            <Text style={styles.comment_date}>
+              신고수 : {data.reports.length}
+            </Text>
+          )}
+          <TouchableOpacity onPress={handleCommentDelete}>
+            <Text style={styles.delete_admin_text}>관리자 삭제</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 }

@@ -1,4 +1,5 @@
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useState } from "react";
 import FirstRequestCode from "./\bLoginStep/FirstRequestCode";
 import SecondVerifyCode from "./\bLoginStep/SecondVerifyCode";
@@ -22,6 +23,55 @@ export default function LoginScreen({ navigation }) {
   });
 
   const { setUser } = useContext(UserContext);
+
+  const handleRequestCode = async (_phoneNumber) => {
+    // ------ 인증번호 요청 POST ------
+    try {
+      await postRequestCode(_phoneNumber);
+    } catch (error) {
+      setAlertData({
+        status: "error",
+        message: error.response.data.message
+          ? error.response.data.message
+          : "인증번호 발송중 오류가 발생하였습니다!",
+      });
+    }
+  };
+  const handleVerifyCodeAndLogin = async (_phoneNumber, _code) => {
+    // ------ 인증번호 검증 POST -------
+    try {
+      const response = await postVerifyCode(_phoneNumber, _code);
+
+      if (response.user) {
+        // 이미 가입되어있는 경우
+        await AsyncStorage.setItem("token", JSON.stringify(response.token));
+        await AsyncStorage.setItem("user", JSON.stringify(response.user));
+        setUser(response.user);
+
+        navigation.replace("Main");
+
+        const pushToken = await registerForPushNotificationsAsync();
+        if (pushToken) {
+          await registerPushTokenToDB(pushToken);
+        }
+      } else {
+        //가입되지 않은 경우
+        navigation.replace("Join", {
+          phoneNumber: _phoneNumber,
+          code: _code,
+        });
+      }
+    } catch (error) {
+      setAlertData({
+        show: true,
+        status: "error",
+        message: error.response.data.message
+          ? error.response.data.message
+          : "인증번호 검증중 오류가 발생하였습니다!",
+      });
+    }
+  };
+
   return (
     <>
       <CustomAlert
@@ -36,7 +86,7 @@ export default function LoginScreen({ navigation }) {
           })
         }
       />
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={["top"]} style={styles.container}>
         {step === "RequestCode" && (
           <FirstRequestCode
             onNext={async (_phoneNumber) => {
@@ -46,19 +96,8 @@ export default function LoginScreen({ navigation }) {
                   phoneNumber: _phoneNumber,
                 };
               });
-
-              // ------ 인증번호 요청 POST ------
-              try {
-                await postRequestCode(_phoneNumber);
-                setStep("VerifyCode");
-              } catch (err) {
-                setAlertData({
-                  status: "error",
-                  message: err.response.data.message
-                    ? err.response.data.message
-                    : "인증번호 발송중 오류가 발생하였습니다!",
-                });
-              }
+              setStep("VerifyCode");
+              await handleRequestCode(_phoneNumber);
             }}
           />
         )}
@@ -72,39 +111,7 @@ export default function LoginScreen({ navigation }) {
                 return { ..._prev, code: _code };
               });
 
-              // ------ 인증번호 검증 POST -------
-              try {
-                const response = await postVerifyCode(data.phoneNumber, _code);
-
-                if (response.user) {
-                  // 이미 가입되어있는 경우
-                  await AsyncStorage.setItem(
-                    "token",
-                    JSON.stringify(response.token)
-                  );
-                  await AsyncStorage.setItem(
-                    "user",
-                    JSON.stringify(response.user)
-                  );
-                  setUser(response.user);
-
-                  const pushToken = await registerForPushNotificationsAsync();
-                  if (pushToken) {
-                    await registerPushTokenToDB(pushToken);
-                  }
-                } else {
-                  //가입되지 않은 경우
-                  navigation.replace("Join");
-                }
-              } catch (err) {
-                setAlertData({
-                  show: true,
-                  status: "error",
-                  message: err.response.data.message
-                    ? err.response.data.message
-                    : "인증번호 검증중 오류가 발생하였습니다!",
-                });
-              }
+              await handleVerifyCodeAndLogin(data.phoneNumber, _code);
             }}
           />
         )}
