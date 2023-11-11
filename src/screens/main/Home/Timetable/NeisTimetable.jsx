@@ -79,7 +79,13 @@ export default function NeisTimetable() {
   };
 
   useEffect(() => {
-    getNeisTimetable();
+    if (gradeClass.grade && gradeClass.class) {
+      getNeisTimetable();
+    }
+
+    if (!gradeClass.grade || !gradeClass.class) {
+      setData(null);
+    }
   }, [gradeClass]);
 
   useEffect(() => {
@@ -190,182 +196,192 @@ export default function NeisTimetable() {
     },
     dataText: {
       textAlign: "center",
-      fontSize: 13,
+      fontSize: 12,
       color: colors.text,
       fontWeight: "300",
     },
   });
 
-  if (!data) {
-    return <FullScreenLoader />;
-  }
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>이번주 시간표</Text>
+        <View style={styles.headerButtonWrap}>
+          <RNPickerSelect
+            fixAndroidTouchableBug
+            style={styles.picker}
+            items={[
+              { label: "1학년", value: 1 },
+              { label: "2학년", value: 2 },
+              { label: "3학년", value: 3 },
+            ]}
+            value={gradeClass.grade}
+            onValueChange={(_value) => {
+              AsyncStorage.setItem(
+                "gradeClass",
+                JSON.stringify({ grade: _value, class: gradeClass.class })
+              );
+              setGradeClass((_prev) => {
+                return { ..._prev, grade: _value };
+              });
+            }}
+          >
+            <TouchableOpacity style={styles.headerButton}>
+              <Text style={styles.headerButtonText}>
+                {gradeClass.grade}학년
+              </Text>
+              <Ionicons
+                name="caret-down-outline"
+                size={12}
+                color={colors.subText}
+              />
+            </TouchableOpacity>
+          </RNPickerSelect>
 
-  if (data) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>이번주 시간표</Text>
-          <View style={styles.headerButtonWrap}>
-            <RNPickerSelect
-              style={styles.picker}
-              items={[
-                { label: "1학년", value: 1 },
-                { label: "2학년", value: 2 },
-                { label: "3학년", value: 3 },
-              ]}
-              value={gradeClass.grade}
-              onValueChange={(_value) => {
-                AsyncStorage.setItem(
-                  "gradeClass",
-                  JSON.stringify({ grade: _value, class: gradeClass.class })
-                );
-                setGradeClass((_prev) => {
-                  return { ..._prev, grade: _value };
-                });
-              }}
-            >
-              <TouchableOpacity style={styles.headerButton}>
-                <Text style={styles.headerButtonText}>
-                  {gradeClass.grade}학년
-                </Text>
-                <Ionicons
-                  name="caret-down-outline"
-                  size={12}
-                  color={colors.subText}
-                />
-              </TouchableOpacity>
-            </RNPickerSelect>
-
-            <RNPickerSelect
-              style={styles.picker}
-              items={[
-                { label: "1반", value: 1 },
-                { label: "2반", value: 2 },
-                { label: "3반", value: 3 },
-                { label: "4반", value: 4 },
-                { label: "5반", value: 5 },
-                { label: "6반", value: 6 },
-                { label: "7반", value: 7 },
-                { label: "8반", value: 8 },
-                { label: "9반", value: 9 },
-              ]}
-              value={gradeClass.class}
-              onValueChange={(_value) => {
-                AsyncStorage.setItem(
-                  "gradeClass",
-                  JSON.stringify({ grade: gradeClass.grade, class: _value })
-                );
-                setGradeClass((_prev) => {
-                  return { ..._prev, class: _value };
-                });
-              }}
-            >
-              <TouchableOpacity style={styles.headerButton}>
-                <Text style={styles.headerButtonText}>
-                  {gradeClass.class}반
-                </Text>
-                <Ionicons
-                  name="caret-down-outline"
-                  size={12}
-                  color={colors.subText}
-                />
-              </TouchableOpacity>
-            </RNPickerSelect>
-          </View>
+          <RNPickerSelect
+            fixAndroidTouchableBug
+            style={styles.picker}
+            items={[
+              { label: "1반", value: 1 },
+              { label: "2반", value: 2 },
+              { label: "3반", value: 3 },
+              { label: "4반", value: 4 },
+              { label: "5반", value: 5 },
+              { label: "6반", value: 6 },
+              { label: "7반", value: 7 },
+              { label: "8반", value: 8 },
+              { label: "9반", value: 9 },
+            ]}
+            value={gradeClass.class}
+            onValueChange={(_value) => {
+              AsyncStorage.setItem(
+                "gradeClass",
+                JSON.stringify({ grade: gradeClass.grade, class: _value })
+              );
+              setGradeClass((_prev) => {
+                return { ..._prev, class: _value };
+              });
+            }}
+          >
+            <TouchableOpacity style={styles.headerButton}>
+              <Text style={styles.headerButtonText}>{gradeClass.class}반</Text>
+              <Ionicons
+                name="caret-down-outline"
+                size={12}
+                color={colors.subText}
+              />
+            </TouchableOpacity>
+          </RNPickerSelect>
         </View>
+      </View>
 
-        <View style={styles.dayHeader}>
-          <View style={styles.dayHeaderDummy} />
-          {dayNames.map((e, i) => {
-            return (
-              <View
-                key={e}
-                style={
-                  i + 1 === todayDay
-                    ? styles.dayHeaderItemToday
-                    : styles.dayHeaderItem
-                }
-              >
-                <Text style={styles.dayHeaderItemText}>{e}</Text>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.tableWrap}>
-          <View style={styles.leftSideCol}>
-            {/* 1교시 ~ 7교시 까지 숫자 렌더링 */}
-            {times.map((e) => {
+      {data ? (
+        <>
+          <View style={styles.dayHeader}>
+            <View style={styles.dayHeaderDummy} />
+            {dayNames.map((e, i) => {
               return (
-                <View key={e} style={styles.leftSideColItem}>
-                  <Text style={styles.leftSideColText}>{e}</Text>
+                <View
+                  key={e}
+                  style={
+                    i + 1 === todayDay
+                      ? styles.dayHeaderItemToday
+                      : styles.dayHeaderItem
+                  }
+                >
+                  <Text style={styles.dayHeaderItemText}>{e}</Text>
                 </View>
               );
             })}
           </View>
-          <View style={styles.dataWrap}>
-            {/* 월요일 컬럼 */}
-            <View style={todayDay === 1 ? styles.dataColToday : styles.dataCol}>
-              {data[0]
-                ? data[0].map((e) => {
-                    return (
-                      <View key={JSON.stringify(e)} style={styles.dataItem}>
-                        <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                      </View>
-                    );
-                  })
-                : null}
+          <View style={styles.tableWrap}>
+            <View style={styles.leftSideCol}>
+              {/* 1교시 ~ 7교시 까지 숫자 렌더링 */}
+              {times.map((e) => {
+                return (
+                  <View key={e} style={styles.leftSideColItem}>
+                    <Text style={styles.leftSideColText}>{e}</Text>
+                  </View>
+                );
+              })}
             </View>
-            {/* 화요일 컬럼 */}
-            <View style={todayDay === 2 ? styles.dataColToday : styles.dataCol}>
-              {data[1]
-                ? data[1].map((e) => {
-                    return (
-                      <View key={JSON.stringify(e)} style={styles.dataItem}>
-                        <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                      </View>
-                    );
-                  })
-                : null}
-            </View>
-            {/* 수요일 컬럼 */}
-            <View style={todayDay === 3 ? styles.dataColToday : styles.dataCol}>
-              {data[2]
-                ? data[2].map((e) => {
-                    return (
-                      <View key={JSON.stringify(e)} style={styles.dataItem}>
-                        <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                      </View>
-                    );
-                  })
-                : null}
-            </View>
-            {/* 목요일 컬럼 */}
-            <View style={todayDay === 4 ? styles.dataColToday : styles.dataCol}>
-              {data[3]
-                ? data[3].map((e) => {
-                    return (
-                      <View key={JSON.stringify(e)} style={styles.dataItem}>
-                        <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                      </View>
-                    );
-                  })
-                : null}
-            </View>
-            {/* 금요일 컬럼 */}
-            <View style={todayDay === 5 ? styles.dataColToday : styles.dataCol}>
-              {data[4]
-                ? data[4].map((e, i) => {
-                    return (
-                      <View key={JSON.stringify(e)} style={styles.dataItem}>
-                        <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                      </View>
-                    );
-                  })
-                : null}
+            <View style={styles.dataWrap}>
+              {/* 월요일 컬럼 */}
+              <View
+                style={todayDay === 1 ? styles.dataColToday : styles.dataCol}
+              >
+                {data[0]
+                  ? data[0].map((e) => {
+                      return (
+                        <View key={JSON.stringify(e)} style={styles.dataItem}>
+                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
+                        </View>
+                      );
+                    })
+                  : null}
+              </View>
+              {/* 화요일 컬럼 */}
+              <View
+                style={todayDay === 2 ? styles.dataColToday : styles.dataCol}
+              >
+                {data[1]
+                  ? data[1].map((e) => {
+                      return (
+                        <View key={JSON.stringify(e)} style={styles.dataItem}>
+                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
+                        </View>
+                      );
+                    })
+                  : null}
+              </View>
+              {/* 수요일 컬럼 */}
+              <View
+                style={todayDay === 3 ? styles.dataColToday : styles.dataCol}
+              >
+                {data[2]
+                  ? data[2].map((e) => {
+                      return (
+                        <View key={JSON.stringify(e)} style={styles.dataItem}>
+                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
+                        </View>
+                      );
+                    })
+                  : null}
+              </View>
+              {/* 목요일 컬럼 */}
+              <View
+                style={todayDay === 4 ? styles.dataColToday : styles.dataCol}
+              >
+                {data[3]
+                  ? data[3].map((e) => {
+                      return (
+                        <View key={JSON.stringify(e)} style={styles.dataItem}>
+                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
+                        </View>
+                      );
+                    })
+                  : null}
+              </View>
+              {/* 금요일 컬럼 */}
+              <View
+                style={todayDay === 5 ? styles.dataColToday : styles.dataCol}
+              >
+                {data[4]
+                  ? data[4].map((e, i) => {
+                      return (
+                        <View key={JSON.stringify(e)} style={styles.dataItem}>
+                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
+                        </View>
+                      );
+                    })
+                  : null}
+              </View>
             </View>
           </View>
-        </View>
-      </View>
-    );
-  }
+        </>
+      ) : (
+        <FullScreenLoader />
+      )}
+    </View>
+  );
 }
