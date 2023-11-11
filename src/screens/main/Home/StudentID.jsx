@@ -220,7 +220,7 @@ function Photo({ userData }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
         allowsMultipleSelection: false,
-        quality: 0.3,
+        quality: 0.5,
       });
 
       if (!result.canceled) {

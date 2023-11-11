@@ -48,7 +48,7 @@ export default function SecondNameAndYearInput({
     },
     input: {
       width: "100%",
-      height: 50,
+      height: 55,
       borderRadius: 12,
       borderWidth: 1,
       borderColor: colors.border,
@@ -58,26 +58,17 @@ export default function SecondNameAndYearInput({
       color: colors.text,
     },
 
+    pickerWrap: {
+      width: "100%",
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      marginTop: 24,
+    },
+
     picker: {
-      inputAndroid: {
-        width: "100%",
-        height: 50,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: colors.border,
-        paddingHorizontal: 16,
-        fontSize: 18,
-        fontWeight: "600",
-        color: colors.text,
-      },
+      inputAndroid: { fontWeight: "600", color: colors.text },
       inputIOS: {
-        width: "100%",
-        height: 50,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: colors.border,
-        paddingHorizontal: 16,
-        fontSize: 18,
         fontWeight: "600",
         color: colors.text,
       },
@@ -142,7 +133,7 @@ export default function SecondNameAndYearInput({
             animation="fadeInUp"
             duration={1500}
             delay={700}
-            style={styles.inputWrap}
+            style={styles.pickerWrap}
           >
             <RNPickerSelect
               style={styles.picker}

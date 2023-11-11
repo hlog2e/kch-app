@@ -19,28 +19,17 @@ export default function FirstType({ onNext }) {
 
     pickerWrap: {
       marginTop: 24,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      width: "100%",
     },
     picker: {
       inputAndroid: {
-        width: "100%",
-        height: 50,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: colors.border,
-        paddingHorizontal: 16,
-        fontSize: 18,
         fontWeight: "600",
         color: colors.text,
-        backgroundColor: "red",
       },
       inputIOS: {
-        width: "100%",
-        height: 50,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: colors.border,
-        paddingHorizontal: 16,
-        fontSize: 18,
         fontWeight: "600",
         color: colors.text,
       },
