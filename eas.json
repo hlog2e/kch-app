@@ -13,7 +13,8 @@
       "channel": "preview"
     },
     "production": {
-      "channel": "production"
+      "channel": "production",
+      "env": { "EXPO_PUBLIC_API_SERVER": "https://api-v2.kch-app.me" }
     }
   },
   "submit": {

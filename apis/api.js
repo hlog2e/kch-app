@@ -4,9 +4,7 @@ import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { navigate } from "../src/navigations/RootNavigation";
 
-const baseUrl = __DEV__
-  ? process.env.EXPO_PUBLIC_DEV_API_SERVER
-  : process.env.EXPO_PUBLIC_API_SERVER;
+const baseUrl = process.env.EXPO_PUBLIC_API_SERVER;
 
 export const apiInstance = axios.create({
   baseURL: baseUrl,
