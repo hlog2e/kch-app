@@ -23,6 +23,7 @@ export default function FirstType({ onNext }) {
       borderWidth: 1,
       borderColor: colors.border,
       width: "100%",
+      padding: 15,
     },
     picker: {
       inputAndroid: {

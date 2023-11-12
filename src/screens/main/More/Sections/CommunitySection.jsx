@@ -25,7 +25,7 @@ export default function CommunitySection({ navigation }) {
 
     Alert.alert("알림", "정말로 차단한 사용자를 모두 차단 해제 하시겠습니까?", [
       { text: "아니요", style: "cancel" },
-      { text: "에", style: "destructive", onPress: resetBlockedUser },
+      { text: "예", style: "destructive", onPress: resetBlockedUser },
     ]);
   };
 

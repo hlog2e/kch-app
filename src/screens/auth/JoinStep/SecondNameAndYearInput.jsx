@@ -48,7 +48,7 @@ export default function SecondNameAndYearInput({
     },
     input: {
       width: "100%",
-      height: 55,
+      height: 50,
       borderRadius: 12,
       borderWidth: 1,
       borderColor: colors.border,
@@ -59,6 +59,7 @@ export default function SecondNameAndYearInput({
     },
 
     pickerWrap: {
+      padding: 15,
       width: "100%",
       borderRadius: 12,
       borderWidth: 1,
