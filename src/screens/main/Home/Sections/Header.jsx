@@ -105,7 +105,9 @@ export default function Header({ navigation }) {
     <View style={styles.header}>
       <View>
         <Text style={styles.headerName}>
-          {grade && grade + " "}김홍록{alias && " " + alias}님,
+          {grade && grade + " "}
+          {user.name}
+          {alias && " " + alias}님,
         </Text>
         <Text style={styles.headerTitle}>{greetText}</Text>
       </View>
