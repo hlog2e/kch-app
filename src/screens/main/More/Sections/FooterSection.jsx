@@ -1,6 +1,5 @@
 import { View, Alert, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { getExpoPushTokenAsync } from "expo-notifications";
-import { Constants } from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { unRegisterPushTokenToDB } from "../../../../../apis/push-noti";
 import { useTheme } from "@react-navigation/native";
