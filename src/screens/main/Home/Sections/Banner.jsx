@@ -52,7 +52,7 @@ const Item = ({ item, dataLength, nowIndex }) => {
       paddingVertical: 6,
       paddingHorizontal: 14,
     },
-    image: { height: 150, borderRadius: 15 },
+    image: { width: "100%", aspectRatio: 3 / 1, borderRadius: 15 },
     pagination: {
       position: "absolute",
       bottom: 12,
@@ -77,7 +77,7 @@ const Item = ({ item, dataLength, nowIndex }) => {
       }}
     >
       <Image
-        contentFit={"cover"}
+        contentFit={"contain"}
         transition={500}
         style={styles.image}
         source={{
