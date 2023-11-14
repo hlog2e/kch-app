@@ -137,7 +137,7 @@ export default function NeisTimetable() {
       borderRightWidth: 1,
       borderTopWidth: 1,
       borderColor: colors.border,
-      backgroundColor: colors.bgBlue,
+      backgroundColor: colors.cardBg2,
     },
     dayHeaderItemText: {
       fontWeight: "700",
@@ -183,7 +183,7 @@ export default function NeisTimetable() {
       alignItems: "center",
       borderRightWidth: 1,
       borderColor: colors.border,
-      backgroundColor: colors.bgBlue,
+      backgroundColor: colors.cardBg2,
     },
     dataItem: {
       height: 50,

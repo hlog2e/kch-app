@@ -192,6 +192,7 @@ export default function FeedPOSTScreen({ navigation }) {
               }}
               style={styles.content_input}
               placeholder={"내용을 입력해주세요!"}
+              placeholderTextColor={colors.subText}
               multiline
             />
             <ScrollView horizontal style={styles.image_container}>

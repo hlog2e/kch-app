@@ -160,7 +160,7 @@ export default function CommunityPOSTScreen({ navigation }) {
     },
     content_input: {
       paddingHorizontal: 10,
-      color: colors.subText,
+      color: colors.text,
       marginTop: 10,
       paddingBottom: 100,
       textAlignVertical: "top",
@@ -215,6 +215,7 @@ export default function CommunityPOSTScreen({ navigation }) {
             />
             <TextInput
               value={content}
+              placeholderTextColor={colors.subText}
               onChangeText={(_value) => {
                 setContent(_value);
               }}

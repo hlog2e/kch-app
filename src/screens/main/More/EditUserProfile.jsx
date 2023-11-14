@@ -181,6 +181,7 @@ export default function EditUserProfileScreen({ navigation }) {
       borderColor: colors.border,
       borderRadius: 12,
       fontWeight: "700",
+      color: colors.text,
     },
 
     doneButton: {

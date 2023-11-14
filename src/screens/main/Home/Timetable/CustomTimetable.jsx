@@ -96,7 +96,7 @@ export default function CustomTimetable() {
       borderRightWidth: 1,
       borderTopWidth: 1,
       borderColor: colors.border,
-      backgroundColor: colors.bgBlue,
+      backgroundColor: colors.cardBg2,
     },
     dayHeaderItemText: {
       fontWeight: "700",
@@ -142,7 +142,7 @@ export default function CustomTimetable() {
       alignItems: "center",
       borderRightWidth: 1,
       borderColor: colors.border,
-      backgroundColor: colors.bgBlue,
+      backgroundColor: colors.cardBg2,
     },
     dataItem: {
       height: 50,

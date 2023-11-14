@@ -71,7 +71,6 @@ export default function RootStack() {
       cardBg2: "#f4f4f4",
       blue: "#3b82f6",
       red: "#CF5858",
-      bgBlue: "#eff6ff",
     },
   };
 
@@ -90,7 +89,6 @@ export default function RootStack() {
       cardBg2: "#212121",
       blue: "#3b82f6",
       red: "#CF5858",
-      bgBlue: "#eff6ff",
     },
   };
 

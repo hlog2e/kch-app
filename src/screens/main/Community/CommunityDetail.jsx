@@ -240,6 +240,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
                 onChangeText={(_text) => {
                   setComment(_text);
                 }}
+                placeholderTextColor={colors.subText}
                 placeholder={"댓글을 입력해주세요."}
                 multiline
               />
