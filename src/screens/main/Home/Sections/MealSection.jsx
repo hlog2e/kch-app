@@ -41,7 +41,7 @@ export default function MealSection() {
     mealImage: { marginLeft: 6, width: 40, height: 40 },
     scrollView: { marginTop: 16 },
   });
-  if (data)
+  if (data) {
     return (
       <View style={styles.mealWrap}>
         <View style={styles.flexRow}>
@@ -59,7 +59,7 @@ export default function MealSection() {
         <ScrollView
           scrollEventThrottle={1}
           onScroll={(e) => {
-            const average = e.nativeEvent.contentSize.width / 4; //5개는 급식 아이템
+            const average = e.nativeEvent.contentSize.width / data.meals.length;
 
             if (e.nativeEvent.contentOffset.x > 0) {
               setFocus(
@@ -85,6 +85,7 @@ export default function MealSection() {
         </ScrollView>
       </View>
     );
+  }
 }
 
 function MealItem({ title, kcal, menu }) {
