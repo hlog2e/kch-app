@@ -32,7 +32,7 @@ export default function Header({ navigation }) {
       setGreetText(grettings[0]);
     } else if (nowTime >= 3 && nowTime < 6) {
       setGreetText(grettings[1]);
-    } else if (nowTime >= 6 && nowTime < 7) {
+    } else if (nowTime >= 6 && nowTime < 8) {
       setGreetText(grettings[2]);
     } else if (nowTime >= 8 && nowTime < 10) {
       setGreetText(grettings[3]);
