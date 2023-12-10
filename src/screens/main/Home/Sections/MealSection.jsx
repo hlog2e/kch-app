@@ -41,7 +41,7 @@ export default function MealSection() {
     mealImage: { marginLeft: 6, width: 40, height: 40 },
     scrollView: { marginTop: 16 },
   });
-  if (data) {
+  if (data && data.meals.length > 0) {
     return (
       <View style={styles.mealWrap}>
         <View style={styles.flexRow}>
