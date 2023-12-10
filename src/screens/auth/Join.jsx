@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FirstType from "./JoinStep/FirstType";
 import { useEffect, useState, useContext } from "react";
@@ -12,6 +12,7 @@ import { UserContext } from "../../../context/UserContext";
 import ThirdVerifyUndergraduate from "./JoinStep/ThirdVerifyUndergraduate";
 import WrapBarCodeScanner from "../../components/common/WrapBarCodeScanner";
 import ThirdVerifyTeacher from "./JoinStep/ThridVerifyTeacher";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 export default function JoinScreen({ route, navigation }) {
   const { setUser } = useContext(UserContext);
@@ -32,6 +33,11 @@ export default function JoinScreen({ route, navigation }) {
     message: "",
   });
   const [scannerOpen, setScannerOpen] = useState(false);
+  const [hasPermission, setHasPermission] = useState(null);
+
+  useEffect(() => {
+    requestBarCodeScannerPermissions();
+  }, []);
 
   // userData에 phoneNumber, code 병합
   useEffect(() => {
@@ -39,6 +45,23 @@ export default function JoinScreen({ route, navigation }) {
       return { ..._prev, phoneNumber: phoneNumber, code: code };
     });
   }, [route.params]);
+
+  const handleOpenBarcodeScanner = () => {
+    if (hasPermission) {
+      setScannerOpen(true);
+    } else {
+      Alert.alert(
+        "오류",
+        "카메라 권한이 허용되지 않아서 바코드를 스캔할 수 없어요! 설정에서 카메라 권한을 허용해 주세요.",
+        [{ text: "확인" }]
+      );
+    }
+  };
+
+  const requestBarCodeScannerPermissions = async () => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
 
   const handleJoin = async (_userData) => {
     try {
@@ -131,7 +154,7 @@ export default function JoinScreen({ route, navigation }) {
 
         {step === "VerifyUndergraduate" && (
           <ThirdVerifyUndergraduate
-            openScanner={() => setScannerOpen(true)}
+            openScanner={handleOpenBarcodeScanner}
             barcode={userData.barcode}
             onNext={(hiddenCode) => {
               if (hiddenCode) {
