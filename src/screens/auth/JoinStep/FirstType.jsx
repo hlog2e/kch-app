@@ -23,7 +23,6 @@ export default function FirstType({ onNext }) {
       borderWidth: 1,
       borderColor: colors.border,
       width: "100%",
-      padding: 15,
     },
     picker: {
       inputAndroid: {
@@ -33,6 +32,7 @@ export default function FirstType({ onNext }) {
       inputIOS: {
         fontWeight: "600",
         color: colors.text,
+        padding: 15,
       },
     },
 

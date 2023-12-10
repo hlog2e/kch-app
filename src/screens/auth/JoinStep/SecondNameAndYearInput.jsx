@@ -59,7 +59,6 @@ export default function SecondNameAndYearInput({
     },
 
     pickerWrap: {
-      padding: 15,
       width: "100%",
       borderRadius: 12,
       borderWidth: 1,
@@ -72,6 +71,7 @@ export default function SecondNameAndYearInput({
       inputIOS: {
         fontWeight: "600",
         color: colors.text,
+        padding: 15,
       },
     },
 
