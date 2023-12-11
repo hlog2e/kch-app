@@ -35,7 +35,7 @@ module.exports = {
       },
     },
     android: {
-      versionCode: 9,
+      versionCode: 10,
       googleServicesFile: "./google-services.json",
       package: "me.kch_app.kch",
       adaptiveIcon: {
