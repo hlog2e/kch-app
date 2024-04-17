@@ -34,11 +34,11 @@ apiInstance.interceptors.response.use(
   },
   function (error) {
     if (!error.response) {
-      Alert.alert(
-        "오류",
-        "서버와의 연결이 불안정합니다. 나중에 다시 시도해 주세요. (503)",
-        [{ text: "확인" }]
-      );
+      // Alert.alert(
+      //   "오류",
+      //   "서버와의 연결이 불안정합니다. 나중에 다시 시도해 주세요. (503)",
+      //   [{ text: "확인" }]
+      // );
     }
 
     return Promise.reject(error);
@@ -62,11 +62,11 @@ apiAuthInstance.interceptors.response.use(
       navigate("Auth");
     }
     if (!error.response) {
-      Alert.alert(
-        "오류",
-        "서버와의 연결이 불안정합니다. 나중에 다시 시도해 주세요. (503)",
-        [{ text: "확인" }]
-      );
+      // Alert.alert(
+      //   "오류",
+      //   "서버와의 연결이 불안정합니다. 나중에 다시 시도해 주세요. (503)",
+      //   [{ text: "확인" }]
+      // );
     }
 
     return Promise.reject(error);
