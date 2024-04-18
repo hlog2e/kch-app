@@ -12,7 +12,7 @@ import {
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import moment from "moment";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import ImageView from "react-native-image-viewing";
@@ -31,12 +31,12 @@ import {
   postReportComment,
 } from "../../../../apis/community/community";
 
-import FullScreenLoader from "../../../components/common/FullScreenLoader";
+import FullScreenLoader from "../../../components/FullScreenLoader";
 import { UserContext } from "../../../../context/UserContext";
 
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import FullScreenBlurLoader from "../../../components/common/FullScreenBlurLoader";
+
 import Hyperlink from "react-native-hyperlink";
 
 export default function CommunityDetailScreen({ navigation, route }) {
@@ -165,7 +165,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
         <OnlyLeftArrowHeader navigation={navigation} />
         {isLoading ? <FullScreenLoader /> : null}
-        {commentPOSTLoading ? <FullScreenBlurLoader loading={true} /> : null}
+        {commentPOSTLoading ? <FullScreenLoader blur loading={true} /> : null}
         {isSuccess ? (
           <KeyboardAvoidingView
             style={{ flex: 1 }}

@@ -8,14 +8,14 @@ import {
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { Image } from "expo-image";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
 import { useTheme } from "@react-navigation/native";
 import { useMutation, useQueryClient } from "react-query";
-import CustomAlert from "../../../components/common/CustomAlert";
-import CustomLoader from "../../../components/common/CustomLoader";
+import CustomAlert from "../../../components/CustomAlert";
+import CustomLoader from "../../../components/CustomLoader";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 import {
@@ -201,13 +201,16 @@ export default function EditUserProfileScreen({ navigation }) {
         message={alert.message}
         onClose={() => setAlert({ show: false, status: null, message: null })}
       />
-      <CustomLoader
+      {/* <CustomLoader
         loading={photoLoading || profileLoading}
         text={
           photoLoading &&
           "이미지 업로드 중...\n(이미지 크기에 따라 최대 1분까지 소요될 수 있습니다.)"
         }
-      />
+      /> 
+            TODO: 여기에 alert 로 컴포넌트 통합
+      */}
+
       <OnlyLeftArrowHeader navigation={navigation} />
 
       <KeyboardAvoidingView

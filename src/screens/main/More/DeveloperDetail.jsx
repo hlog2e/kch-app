@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";

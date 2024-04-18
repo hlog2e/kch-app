@@ -1,5 +1,6 @@
 import AnimatedLottieView from "lottie-react-native";
 import { View, StyleSheet, Text } from "react-native";
+import lottieData from "../../assets/lottie/loader.json";
 
 export default function CustomLoader({ text, loading }) {
   if (loading) {
@@ -9,7 +10,7 @@ export default function CustomLoader({ text, loading }) {
           <AnimatedLottieView
             autoPlay
             style={styles.lottie}
-            source={require("../../../assets/lottie/loader.json")}
+            source={lottieData}
           />
           <Text style={styles.text}>{text}</Text>
         </View>

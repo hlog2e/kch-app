@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useQuery } from "react-query";
 import { getSchedule } from "../../../../apis/home/schedule";
-import FullScreenLoader from "../../../components/common/FullScreenLoader";
+import FullScreenLoader from "../../../components/FullScreenLoader";
 import uuid from "react-native-uuid";
 import { Ionicons } from "@expo/vector-icons";
 

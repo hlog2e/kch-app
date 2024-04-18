@@ -8,13 +8,7 @@ import { useTheme } from "@react-navigation/native";
 
 export default function MealSection() {
   const { colors } = useTheme();
-  const { data } = useQuery("meals", getMeals, {
-    onError: () => {
-      Alert.alert("오류", "급식 데이터를 가져오는데 오류가 발생하였습니다.", [
-        { text: "확인" },
-      ]);
-    },
-  });
+  const { data } = useQuery("meals", getMeals);
 
   const [focus, setFocus] = useState(0);
   const days = [

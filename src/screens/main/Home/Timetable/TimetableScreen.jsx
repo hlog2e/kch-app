@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../../components/OnlyLeftArrowHeader";
 import NeisTimetable from "./NeisTimetable";
 import { useState } from "react";
 import { useTheme } from "@react-navigation/native";

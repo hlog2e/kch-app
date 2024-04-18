@@ -13,6 +13,7 @@ export default function SettingSection({ navigation }) {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
+      marginBottom: 16,
     },
     buttonLeftWrap: { flexDirection: "row", alignItems: "center" },
     buttonText: {
@@ -38,6 +39,20 @@ export default function SettingSection({ navigation }) {
               color={colors.subText}
             />
             <Text style={styles.buttonText}>알림 설정</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.subText} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.push("VerifyUndergraduateScreen")}
+          style={styles.button}
+        >
+          <View style={styles.buttonLeftWrap}>
+            <Ionicons
+              name="shield-checkmark-outline"
+              size={26}
+              color={colors.subText}
+            />
+            <Text style={styles.buttonText}>재학생 인증</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.subText} />
         </TouchableOpacity>

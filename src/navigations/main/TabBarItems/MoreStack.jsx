@@ -5,6 +5,7 @@ import DeveloperDetailScreen from "../../../screens/main/More/DeveloperDetail";
 import CommunitiesWrittenByMeScreen from "../../../screens/main/More/CommunitiesWrittenByMe";
 import NotificationSettingScreen from "../../../screens/main/More/NotificationSetting";
 import EditUserProfileScreen from "../../../screens/main/More/EditUserProfile";
+import VerifyUndergraduateScreen from "../../../screens/main/More/VerifyUndergraduate";
 
 const Stack = createNativeStackNavigator();
 export default function MoreStack() {
@@ -30,6 +31,10 @@ export default function MoreStack() {
       <Stack.Screen
         name="NotificationSettingScreen"
         component={NotificationSettingScreen}
+      />
+      <Stack.Screen
+        name="VerifyUndergraduateScreen"
+        component={VerifyUndergraduateScreen}
       />
     </Stack.Navigator>
   );

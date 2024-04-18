@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import FirstRequestCode from "./\bLoginStep/FirstRequestCode";
 import SecondVerifyCode from "./\bLoginStep/SecondVerifyCode";
 import { postRequestCode, postVerifyCode } from "../../../apis/auth";
-import CustomAlert from "../../components/common/CustomAlert";
+import CustomAlert from "../../components/CustomAlert";
 import { UserContext } from "../../../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { registerForPushNotificationsAsync } from "../../../utils/expo_notification";

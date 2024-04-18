@@ -3,6 +3,7 @@ import CommunityScreen from "../../../screens/main/Community/Community";
 import AccessDeniedScreen from "../../../screens/main/Community/AccessDeniedScreen";
 import { useContext } from "react";
 import { UserContext } from "../../../../context/UserContext";
+import CommunityInnerListScreen from "../../../screens/main/Community/CommunityInnerListScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,14 +12,12 @@ export default function CommunityStack() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {user.type === "undergraduate" ? (
-        <Stack.Screen name="CommunityScreen" component={CommunityScreen} />
-      ) : (
-        <Stack.Screen
-          name="AccessDeniedScreen"
-          component={AccessDeniedScreen}
-        />
-      )}
+      <Stack.Screen name="CommunityScreen" component={CommunityScreen} />
+      <Stack.Screen name="AccessDeniedScreen" component={AccessDeniedScreen} />
+      <Stack.Screen
+        name="CommunityInnerListScreen"
+        component={CommunityInnerListScreen}
+      />
     </Stack.Navigator>
   );
 }

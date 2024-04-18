@@ -1,184 +1,182 @@
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import {
-  FlatList,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  Dimensions,
+  ScrollView,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
-
-import { Image } from "expo-image";
-
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import { comma } from "../../../../utils/intl";
-import moment from "moment";
-import "moment/locale/ko";
-import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
-import { useInfiniteQuery } from "react-query";
-import { getCommunities } from "../../../../apis/community/community";
-import FullScreenLoader from "../../../components/common/FullScreenLoader";
-import { useState } from "react";
-import FABPlus from "../../../components/common/FABPlus";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  getCommunityBoardFixeds,
+  getCommunityBoards,
+  postCommunityBoardFix,
+  postCommunityBoardUnFix,
+} from "../../../../apis/community/community";
 
 export default function CommunityScreen({ navigation }) {
-  const [refreshing, setRefreshing] = useState(false);
-  const {
-    isLoading,
-    isSuccess,
-    data,
-    refetch,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["community"],
-    queryFn: ({ pageParam = 0 }) => getCommunities({ offset: pageParam }),
-    getNextPageParam: (lastPage, allPages) => {
-      if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
-        return undefined;
-      }
-      return lastPage.nextCursor;
-    },
+  const { data: boardData } = useQuery("CommunityBoard", getCommunityBoards, {
+    initialData: [],
   });
+  const { data: fixedBoardData } = useQuery(
+    "CommunityBoardFixed",
+    getCommunityBoardFixeds,
+    { initialData: [] }
+  );
+  const { mutate: fixMutate } = useMutation(postCommunityBoardFix);
+  const { mutate: unFixMutate } = useMutation(postCommunityBoardUnFix);
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+      paddingHorizontal: 16,
     },
-    rightHeaderText: {
-      fontSize: 13,
+    title: { fontWeight: "700", fontSize: 24, marginTop: 14, marginBottom: 6 },
+    scroll: {
+      flex: 1,
+    },
+
+    banner: {
+      marginVertical: 12,
+      height: 100,
+      borderRadius: 12,
+      backgroundColor: "#f4f4f4",
+    },
+    tip: {
+      justifyContent: "center",
+      alignItems: "center",
+      paddingVertical: 12,
+      backgroundColor: "#f4f4f4",
+      borderRadius: 12,
+    },
+    tipText: {
+      fontSize: 12,
       color: "gray",
+      fontWeight: "600",
+    },
+
+    divider: {
+      marginVertical: 12,
+      borderWidth: 0.5,
+      borderColor: "#e2e8f0",
     },
   });
   return (
-    <View style={styles.container}>
-      <SafeTitleHeader title="커뮤니티" />
-      {isLoading ? <FullScreenLoader /> : null}
-      {isSuccess ? (
-        <FABPlus
-          onPress={() => {
-            navigation.push("CommunityPOSTScreen");
-          }}
-        />
-      ) : null}
+    <SafeAreaView edges={["top"]} style={styles.container}>
+      <Text style={styles.title}>커뮤니티</Text>
+      <ScrollView style={styles.scroll}>
+        <View style={styles.banner}></View>
+        {!fixedBoardData || fixedBoardData.length === 0 ? (
+          <View style={styles.tip}>
+            <Text style={styles.tipText}>
+              팁: 게시판 항목을 길게 누르면 고정 할 수 있습니다.
+            </Text>
+          </View>
+        ) : null}
+        {fixedBoardData && boardData ? (
+          <FixedList
+            fixedData={fixedBoardData}
+            boardData={boardData}
+            navigation={navigation}
+            unFixMutate={unFixMutate}
+          />
+        ) : null}
 
-      {data ? (
-        <FlatList
-          onEndReachedThreshold={0.8}
-          onEndReached={fetchNextPage}
-          ListFooterComponent={() => {
-            if (isFetchingNextPage) return <FullScreenLoader />;
-          }}
-          onRefresh={() => {
-            setRefreshing(true);
-            refetch().then(() => {
-              setRefreshing(false);
-            });
-          }}
-          refreshing={refreshing}
-          data={data.pages.flatMap((_i) => _i.communities)}
-          renderItem={(_item) => {
-            return <CommunityItem item={_item.item} navigation={navigation} />;
-          }}
-          keyExtractor={(_item) => _item._id}
-        />
-      ) : null}
-    </View>
+        <View style={styles.divider} />
+        {boardData ? (
+          <UnFixedList
+            fixedData={fixedBoardData}
+            boardData={boardData}
+            navigation={navigation}
+            fixMutate={fixMutate}
+          />
+        ) : null}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-function CommunityItem({ item, navigation }) {
-  const { colors } = useTheme();
+function FixedList({ fixedData, boardData, navigation, unFixMutate }) {
+  const queryClient = useQueryClient();
+  const filteredData = boardData.filter((_item) =>
+    fixedData.includes(_item._id)
+  );
+  return filteredData.map((_data) => (
+    <BoardItem
+      key={_data._id}
+      onPress={() => {
+        navigation.push("CommunityInnerListScreen", {
+          boardId: _data._id,
+        });
+      }}
+      onLongPress={() => {
+        unFixMutate(
+          { boardId: _data._id },
+          {
+            onSuccess: () => {
+              queryClient.invalidateQueries("CommunityBoardFixed");
+            },
+          }
+        );
+      }}
+      iconName={_data.iconName}
+      text={_data.name + " 게시판"}
+    />
+  ));
+}
+
+function UnFixedList({ fixedData, boardData, navigation, fixMutate }) {
+  const queryClient = useQueryClient();
+  const filteredData = boardData.filter(
+    (_item) => !fixedData.includes(_item._id)
+  );
+
+  return filteredData.map((_data) => (
+    <BoardItem
+      key={_data._id}
+      onPress={() => {
+        navigation.push("CommunityInnerListScreen", {
+          boardId: _data._id,
+        });
+      }}
+      onLongPress={() => {
+        fixMutate(
+          { boardId: _data._id },
+          {
+            onSuccess: () => {
+              queryClient.invalidateQueries("CommunityBoardFixed");
+            },
+          }
+        );
+      }}
+      iconName={_data.iconName}
+      text={_data.name + " 게시판"}
+    />
+  ));
+}
+
+function BoardItem({ onPress, iconName, text, onLongPress }) {
   const styles = StyleSheet.create({
-    container: {
-      backgroundColor: colors.background,
-      marginBottom: 8,
-      borderTopWidth: 0.5,
-      borderBottomWidth: 0.5,
-      borderColor: colors.border,
-      paddingHorizontal: 18,
+    button: {
+      paddingVertical: 8,
+      flexDirection: "row",
+      alignItems: "center",
     },
-    header: { marginTop: 30 },
-    title: {
-      fontSize: 20,
+    buttonText: {
+      marginLeft: 12,
+      fontSize: 16,
       fontWeight: "600",
-      color: colors.text,
     },
-    time: { fontSize: 11, color: "#b4b4b4", marginTop: 4 },
-    content: {
-      fontSize: 14,
-      color: colors.subText,
-
-      marginTop: 18,
-      height: 40,
-    },
-    image_container: {
-      flexDirection: "row",
-      paddingVertical: 4,
-    },
-    image: {
-      height: SCREEN_WIDTH / 2.2,
-      width: SCREEN_WIDTH / 2.2,
-      borderRadius: 15,
-      marginRight: 8,
-      backgroundColor: "#f9f9f9",
-    },
-    footer: {
-      flexDirection: "row",
-      paddingVertical: 12,
-    },
-    icon_wrap: { flexDirection: "row", alignItems: "center" },
-    icon_text: { fontSize: 12, marginLeft: 6, color: "#b4b4b4" },
   });
-
   return (
     <TouchableOpacity
-      onPress={() => {
-        navigation.push("CommunityDetailScreen", { id: item._id });
-      }}
-      style={styles.container}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      style={styles.button}
     >
-      <View style={styles.header}>
-        <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
-          {item.title}
-        </Text>
-        <Text style={styles.time}>{moment(item.createdAt).fromNow()}</Text>
-      </View>
-      <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
-        {item.content}
-      </Text>
-      {item.images.length > 0 ? (
-        <View style={styles.image_container}>
-          {item.images.map((_item) => (
-            <Image
-              key={_item}
-              style={styles.image}
-              placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
-              transition={500}
-              source={{ uri: _item }}
-            />
-          ))}
-        </View>
-      ) : null}
-
-      <View style={styles.footer}>
-        <View style={styles.icon_wrap}>
-          <FontAwesome name={"heart-o"} size={20} color={colors.text} />
-          <Text style={styles.icon_text}>{comma(item.likeCount)}</Text>
-        </View>
-        <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
-          <Ionicons name={"chatbubble-outline"} size={20} color={colors.text} />
-          <Text style={styles.icon_text}>{comma(item.commentCount)}</Text>
-        </View>
-        <View style={[styles.icon_wrap, { marginLeft: 14 }]}>
-          <Ionicons name={"eye-outline"} size={24} color={colors.text} />
-          <Text style={styles.icon_text}>
-            {item.views ? comma(item.views.length) : 0}
-          </Text>
-        </View>
-      </View>
+      <Ionicons name={iconName} size={24} color="#60a5fa" />
+      <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );
 }

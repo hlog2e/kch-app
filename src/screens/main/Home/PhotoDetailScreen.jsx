@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { Image } from "expo-image";
 import moment from "moment";
 import { useState } from "react";

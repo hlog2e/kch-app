@@ -10,7 +10,7 @@ import {
 import { Image } from "expo-image";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,7 +28,7 @@ import * as Haptics from "expo-haptics";
 import Barcode from "@kichiyaki/react-native-barcode-generator";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
-import WrapBarCodeScanner from "../../../components/common/WrapBarCodeScanner";
+import WrapBarCodeScanner from "../../../components/WrapBarCodeScanner";
 import { useTheme } from "@react-navigation/native";
 
 export default function StudentIDScreen({ navigation }) {

@@ -1,10 +1,32 @@
 import { apiAuthInstance } from "../api";
 
-export const getCommunities = async (props) => {
+export const getCommunityBoards = async () => {
+  const { data } = await apiAuthInstance.get("/community/board");
+  return data;
+};
+
+export const getCommunityBoardFixeds = async () => {
+  const { data } = await apiAuthInstance.get("/community/board/fixed");
+  return data;
+};
+
+export const postCommunityBoardFix = async ({ boardId }) => {
+  const { data } = await apiAuthInstance.post("/community/board/fix", {
+    boardId,
+  });
+};
+
+export const postCommunityBoardUnFix = async ({ boardId }) => {
+  const { data } = await apiAuthInstance.post("/community/board/unFix", {
+    boardId,
+  });
+};
+
+export const getCommunities = async ({ offset, boardId }) => {
   const limit = 5;
 
   const { data } = await apiAuthInstance.get("/community", {
-    params: { limit, offset: props.offset },
+    params: { limit, offset, boardId },
   });
 
   return data;

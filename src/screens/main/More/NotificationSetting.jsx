@@ -1,13 +1,13 @@
 import { View, Text, ScrollView, StyleSheet, Switch } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   getCurrentNotificaionSettings,
   postUpdateNotificationSetting,
 } from "../../../../apis/more/more";
-import FullScreenLoader from "../../../components/common/FullScreenLoader";
+import FullScreenLoader from "../../../components/FullScreenLoader";
 
 export default function NotificationSettingScreen({ navigation }) {
   const queryClient = useQueryClient();

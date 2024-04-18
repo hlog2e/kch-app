@@ -4,7 +4,7 @@ import LodashArray from "lodash";
 import { useTheme } from "@react-navigation/native";
 import { getTimetable } from "../../../../../apis/home/timetable";
 import { useEffect, useState } from "react";
-import FullScreenLoader from "../../../../components/common/FullScreenLoader";
+import FullScreenLoader from "../../../../components/FullScreenLoader";
 import { Ionicons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import AsyncStorage from "@react-native-async-storage/async-storage";

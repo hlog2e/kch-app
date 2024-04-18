@@ -12,15 +12,15 @@ import { Image } from "expo-image";
 import { useContext, useState } from "react";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
-import SafeTitleHeader from "../../../components/common/SafeTitleHeader";
+import SafeTitleHeader from "../../../components/SafeTitleHeader";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { deleteFeed, getFeeds } from "../../../../apis/feed/feed";
-import FullScreenLoader from "../../../components/common/FullScreenLoader";
+import FullScreenLoader from "../../../components/FullScreenLoader";
 import ImageView from "react-native-image-viewing";
 import { UserContext } from "../../../../context/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import Hyperlink from "react-native-hyperlink";
-import FABPlus from "../../../components/common/FABPlus";
+import FABPlus from "../../../components/FABPlus";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 

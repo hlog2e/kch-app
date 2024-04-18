@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import {
   TextInput,
   StyleSheet,
@@ -20,8 +20,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { postFeed } from "../../../../apis/feed/feed";
 
 import mime from "mime";
-import CustomLoader from "../../../components/common/CustomLoader";
-import CustomAlert from "../../../components/common/CustomAlert";
+import CustomLoader from "../../../components/CustomLoader";
+import CustomAlert from "../../../components/CustomAlert";
 
 export default function FeedPOSTScreen({ navigation }) {
   const { colors } = useTheme();
@@ -177,7 +177,9 @@ export default function FeedPOSTScreen({ navigation }) {
         message={alert.message}
         onClose={() => setAlert({ show: false, status: null, message: null })}
       />
-      <CustomLoader text={"업로드 중 입니다..."} loading={loading} />
+      {/* <CustomLoader text={"업로드 중 입니다..."} loading={loading} /> 
+            TODO: 여기에 alert 로 컴포넌트 통합
+            */}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}

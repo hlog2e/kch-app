@@ -7,11 +7,11 @@ import {
 } from "react-native";
 
 import { useTheme } from "@react-navigation/native";
-import OnlyLeftArrowHeader from "../../../components/common/OnlyLeftArrowHeader";
+import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
 import { getCommunitiesWrittenByMe } from "../../../../apis/more/more";
-import FullScreenLoader from "../../../components/common/FullScreenLoader";
+import FullScreenLoader from "../../../components/FullScreenLoader";
 import moment from "moment";
 
 import { comma } from "../../../../utils/intl";

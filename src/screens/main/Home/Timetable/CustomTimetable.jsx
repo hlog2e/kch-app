@@ -8,7 +8,7 @@ import {
   getCustomTimetable,
   postCustomTimetable,
 } from "../../../../../apis/home/timetable";
-import CustomAlert from "../../../../components/common/CustomAlert";
+import CustomAlert from "../../../../components/CustomAlert";
 
 export default function CustomTimetable() {
   const [alert, setAlert] = useState({

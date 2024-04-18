@@ -3,14 +3,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FirstType from "./JoinStep/FirstType";
 import { useEffect, useState, useContext } from "react";
 import SecondNameAndYearInput from "./JoinStep/SecondNameAndYearInput";
-import CustomAlert from "../../components/common/CustomAlert";
+import CustomAlert from "../../components/CustomAlert";
 import { postJoin } from "../../../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { registerForPushNotificationsAsync } from "../../../utils/expo_notification";
 import { registerPushTokenToDB } from "../../../apis/push-noti";
 import { UserContext } from "../../../context/UserContext";
 import ThirdVerifyUndergraduate from "./JoinStep/ThirdVerifyUndergraduate";
-import WrapBarCodeScanner from "../../components/common/WrapBarCodeScanner";
+import WrapBarCodeScanner from "../../components/WrapBarCodeScanner";
 import ThirdVerifyTeacher from "./JoinStep/ThridVerifyTeacher";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
