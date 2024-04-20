@@ -14,6 +14,7 @@ import {
   postCommunityBoardFix,
   postCommunityBoardUnFix,
 } from "../../../../apis/community/community";
+import Banner from "../../../components/Banner";
 
 export default function CommunityScreen({ navigation }) {
   const { data: boardData } = useQuery("CommunityBoard", getCommunityBoards, {
@@ -32,7 +33,7 @@ export default function CommunityScreen({ navigation }) {
       flex: 1,
       paddingHorizontal: 16,
     },
-    title: { fontWeight: "700", fontSize: 24, marginTop: 14, marginBottom: 6 },
+    title: { fontWeight: "700", fontSize: 24, marginTop: 14 },
     scroll: {
       flex: 1,
     },
@@ -66,7 +67,7 @@ export default function CommunityScreen({ navigation }) {
     <SafeAreaView edges={["top"]} style={styles.container}>
       <Text style={styles.title}>커뮤니티</Text>
       <ScrollView style={styles.scroll}>
-        <View style={styles.banner}></View>
+        <Banner location={"community"} height={90} parentPadding={32} />
         {!fixedBoardData || fixedBoardData.length === 0 ? (
           <View style={styles.tip}>
             <Text style={styles.tipText}>

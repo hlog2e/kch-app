@@ -7,15 +7,15 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useQuery } from "react-query";
-import { getBanners } from "../../../../../apis/home/banner";
+import { getBanners } from "../../apis/home/banner";
 import Carousel from "react-native-snap-carousel";
 import * as Linking from "expo-linking";
 import { useState } from "react";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-export default function Banner() {
-  const { data, isLoading } = useQuery("banner", getBanners, {
+export default function Banner({ location, height, padding, parentPadding }) {
+  const { data } = useQuery("banner", () => getBanners({ location }), {
     onSuccess: (_data) => {
       setDataLength(_data.length);
     },
@@ -24,16 +24,26 @@ export default function Banner() {
   const [nowIndex, setNowIndex] = useState(0);
 
   return (
-    <>
+    <View
+      style={{
+        paddingVertical: 14,
+        paddingHorizontal: padding ? padding : 0,
+      }}
+    >
       <Carousel
         data={data}
         renderItem={({ item }) => {
           return (
-            <Item item={item} dataLength={dataLength} nowIndex={nowIndex} />
+            <Item
+              item={item}
+              height={height}
+              dataLength={dataLength}
+              nowIndex={nowIndex}
+            />
           );
         }}
-        itemWidth={SCREEN_WIDTH}
-        sliderWidth={SCREEN_WIDTH}
+        itemWidth={SCREEN_WIDTH - (parentPadding || padding * 2)}
+        sliderWidth={SCREEN_WIDTH - (parentPadding || padding * 2)}
         autoplay
         autoplayDelay={0}
         autoplayInterval={6000}
@@ -41,22 +51,17 @@ export default function Banner() {
           setNowIndex(_index);
         }}
       />
-    </>
+    </View>
   );
 }
 
-const Item = ({ item, dataLength, nowIndex }) => {
+const Item = ({ item, height, dataLength, nowIndex }) => {
   const styles = StyleSheet.create({
-    container: {
-      marginTop: 16,
-      paddingVertical: 6,
-      paddingHorizontal: 14,
-    },
-    image: { width: "100%", aspectRatio: 3 / 1, borderRadius: 15 },
+    image: { width: "100%", height: height, borderRadius: 15 },
     pagination: {
       position: "absolute",
-      bottom: 12,
-      right: 22,
+      bottom: 8,
+      right: 10,
       backgroundColor: "white",
       paddingVertical: 1,
       paddingHorizontal: 5,
@@ -69,7 +74,6 @@ const Item = ({ item, dataLength, nowIndex }) => {
   });
   return (
     <TouchableOpacity
-      style={styles.container}
       onPress={() => {
         if (item.link) {
           Linking.openURL(item.link);
@@ -77,7 +81,7 @@ const Item = ({ item, dataLength, nowIndex }) => {
       }}
     >
       <Image
-        contentFit={"contain"}
+        contentFit={"cover"}
         transition={500}
         style={styles.image}
         source={{
