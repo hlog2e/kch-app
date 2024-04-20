@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useQuery } from "react-query";
-import { getBanners } from "../../apis/home/banner";
+import { getBanners } from "../../apis/common/banner";
 import Carousel from "react-native-snap-carousel";
 import * as Linking from "expo-linking";
 import { useState } from "react";
