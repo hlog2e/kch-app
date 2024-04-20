@@ -6,13 +6,13 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { Image } from "expo-image";
 import moment from "moment";
 import { useState } from "react";
 
 import ImageView from "react-native-image-viewing";
 import { useTheme } from "@react-navigation/native";
+import Header from "../../../components/Header/Header";
 
 export default function PhotoDetailScreen({ route, navigation }) {
   const { colors } = useTheme();
@@ -49,7 +49,7 @@ export default function PhotoDetailScreen({ route, navigation }) {
 
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
-      <OnlyLeftArrowHeader navigation={navigation} />
+      <Header navigation={navigation} />
       <View style={styles.header}>
         <Text style={styles.imageTitle}>{data.title}</Text>
         <Text style={styles.createdAt}>

@@ -10,7 +10,6 @@ import {
 import { Image } from "expo-image";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
@@ -30,6 +29,7 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 
 import WrapBarCodeScanner from "../../../components/WrapBarCodeScanner";
 import { useTheme } from "@react-navigation/native";
+import Header from "../../../components/Header/Header";
 
 export default function StudentIDScreen({ navigation }) {
   const { colors } = useTheme();
@@ -145,7 +145,7 @@ export default function StudentIDScreen({ navigation }) {
   });
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <OnlyLeftArrowHeader navigation={navigation} />
+      <Header navigation={navigation} />
       <WrapBarCodeScanner
         barCodeScannerOpen={barCodeScannerOpen}
         handleBarCodeScanned={handleBarCodeScanned}

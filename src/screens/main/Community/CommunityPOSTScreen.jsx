@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
+
 import {
   TextInput,
   StyleSheet,
@@ -19,8 +19,9 @@ import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "react-query";
 import { postCommunity } from "../../../../apis/community/community";
 import mime from "mime";
-import CustomLoader from "../../../components/CustomLoader";
-import CustomAlert from "../../../components/CustomAlert";
+import CustomLoader from "../../../components/Overlay/CustomLoader";
+import CustomAlert from "../../../components/Overlay/CustomAlert";
+import Header from "../../../components/Header/Header";
 
 export default function CommunityPOSTScreen({ navigation }) {
   const { colors } = useTheme();
@@ -205,7 +206,7 @@ export default function CommunityPOSTScreen({ navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : null}
       >
         <ScrollView>
-          <OnlyLeftArrowHeader navigation={navigation} />
+          <Header navigation={navigation} />
           <View style={styles.wrap}>
             <TextInput
               value={title}

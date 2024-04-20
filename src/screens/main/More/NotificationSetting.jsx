@@ -1,13 +1,13 @@
 import { View, Text, ScrollView, StyleSheet, Switch } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   getCurrentNotificaionSettings,
   postUpdateNotificationSetting,
 } from "../../../../apis/more/more";
-import FullScreenLoader from "../../../components/FullScreenLoader";
+import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
+import Header from "../../../components/Header/Header";
 
 export default function NotificationSettingScreen({ navigation }) {
   const queryClient = useQueryClient();
@@ -102,7 +102,7 @@ export default function NotificationSettingScreen({ navigation }) {
   const styles = StyleSheet.create({ container: { flex: 1 } });
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
-      <OnlyLeftArrowHeader navigation={navigation} />
+      <Header navigation={navigation} />
 
       {isLoading ? <FullScreenLoader /> : null}
       {isSuccess ? (

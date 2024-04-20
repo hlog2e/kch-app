@@ -7,15 +7,15 @@ import {
 } from "react-native";
 
 import { useTheme } from "@react-navigation/native";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
 import { getCommunitiesWrittenByMe } from "../../../../apis/more/more";
-import FullScreenLoader from "../../../components/FullScreenLoader";
+import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
 import moment from "moment";
 
 import { comma } from "../../../../utils/intl";
 import { useState } from "react";
+import Header from "../../../components/Header/Header";
 
 export default function CommunitiesWrittenByMeScreen({ navigation }) {
   const { colors } = useTheme();
@@ -38,7 +38,7 @@ export default function CommunitiesWrittenByMeScreen({ navigation }) {
   });
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <OnlyLeftArrowHeader navigation={navigation} />
+      <Header navigation={navigation} />
       <Text style={styles.header_title}>내가 작성한 글</Text>
 
       {isLoading ? <FullScreenLoader /> : null}

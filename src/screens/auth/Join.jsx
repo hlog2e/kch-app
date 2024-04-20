@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FirstType from "./JoinStep/FirstType";
 import { useEffect, useState, useContext } from "react";
 import SecondNameAndYearInput from "./JoinStep/SecondNameAndYearInput";
-import CustomAlert from "../../components/CustomAlert";
+import CustomAlert from "../../components/Overlay/CustomAlert";
 import { postJoin } from "../../../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { registerForPushNotificationsAsync } from "../../../utils/expo_notification";

@@ -8,14 +8,13 @@ import {
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { Image } from "expo-image";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../context/UserContext";
 import { useTheme } from "@react-navigation/native";
 import { useMutation, useQueryClient } from "react-query";
-import CustomAlert from "../../../components/CustomAlert";
-import CustomLoader from "../../../components/CustomLoader";
+import CustomAlert from "../../../components/Overlay/CustomAlert";
+import CustomLoader from "../../../components/Overlay/CustomLoader";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 import {
@@ -24,6 +23,7 @@ import {
   postRegisterProfilePhoto,
 } from "../../../../apis/more/more";
 import { Ionicons } from "@expo/vector-icons";
+import Header from "../../../components/Header/Header";
 
 export default function EditUserProfileScreen({ navigation }) {
   const { user } = useContext(UserContext);
@@ -211,7 +211,7 @@ export default function EditUserProfileScreen({ navigation }) {
             TODO: 여기에 alert 로 컴포넌트 통합
       */}
 
-      <OnlyLeftArrowHeader navigation={navigation} />
+      <Header navigation={navigation} />
 
       <KeyboardAvoidingView
         style={styles.flexWrap}

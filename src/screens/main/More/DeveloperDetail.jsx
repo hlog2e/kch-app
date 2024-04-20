@@ -8,10 +8,10 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
+import Header from "../../../components/Header/Header";
 
 export default function DeveloperDetailScreen({ navigation }) {
   const { colors } = useTheme();
@@ -207,7 +207,7 @@ export default function DeveloperDetailScreen({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
       <ScrollView>
-        <OnlyLeftArrowHeader navigation={navigation} />
+        <Header navigation={navigation} />
         <View style={styles.app_introduce}>
           <Text style={styles.stack_title}>금천고 앱의 기술 스택</Text>
           <ScrollView horizontal style={styles.stack_item_row}>

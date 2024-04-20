@@ -12,15 +12,16 @@ import { Image } from "expo-image";
 import { useContext, useState } from "react";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
-import SafeTitleHeader from "../../../components/SafeTitleHeader";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { deleteFeed, getFeeds } from "../../../../apis/feed/feed";
-import FullScreenLoader from "../../../components/FullScreenLoader";
+import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
 import ImageView from "react-native-image-viewing";
 import { UserContext } from "../../../../context/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import Hyperlink from "react-native-hyperlink";
-import FABPlus from "../../../components/FABPlus";
+import FABPlus from "../../../components/Button/FABPlus";
+import Header from "../../../components/Header/Header";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -46,8 +47,8 @@ export default function FeedScreen({ navigation }) {
   });
 
   return (
-    <View style={{ flex: 1 }}>
-      <SafeTitleHeader title="피드" />
+    <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
+      <Header title="피드" />
 
       {isLoading && <FullScreenLoader />}
 
@@ -75,7 +76,7 @@ export default function FeedScreen({ navigation }) {
           keyExtractor={(item) => item._id}
         />
       ) : null}
-    </View>
+    </SafeAreaView>
   );
 }
 

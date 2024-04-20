@@ -12,7 +12,6 @@ import {
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import moment from "moment";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import ImageView from "react-native-image-viewing";
@@ -31,13 +30,14 @@ import {
   postReportComment,
 } from "../../../../apis/community/community";
 
-import FullScreenLoader from "../../../components/FullScreenLoader";
+import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
 import { UserContext } from "../../../../context/UserContext";
 
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
 import Hyperlink from "react-native-hyperlink";
+import Header from "../../../components/Header/Header";
 
 export default function CommunityDetailScreen({ navigation, route }) {
   const { colors } = useTheme();
@@ -163,7 +163,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
   return (
     <ActionSheetProvider>
       <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-        <OnlyLeftArrowHeader navigation={navigation} />
+        <Header navigation={navigation} />
         {isLoading ? <FullScreenLoader /> : null}
         {commentPOSTLoading ? <FullScreenLoader blur loading={true} /> : null}
         {isSuccess ? (

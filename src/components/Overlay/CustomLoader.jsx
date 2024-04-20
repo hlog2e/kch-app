@@ -1,6 +1,6 @@
 import AnimatedLottieView from "lottie-react-native";
 import { View, StyleSheet, Text } from "react-native";
-import lottieData from "../../assets/lottie/loader.json";
+import lottieData from "../../../assets/lottie/loader.json";
 
 export default function CustomLoader({ text, loading }) {
   if (loading) {

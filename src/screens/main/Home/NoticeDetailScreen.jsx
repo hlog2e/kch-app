@@ -1,12 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../components/OnlyLeftArrowHeader";
 import WebView from "react-native-webview";
 import * as Linking from "expo-linking";
 import { useTheme } from "@react-navigation/native";
 import { useQuery } from "react-query";
 import { getNoticeDetail } from "../../../../apis/home/notice";
 import moment from "moment";
+import Header from "../../../components/Header/Header";
 
 export default function NoticeDetailScreen({ route, navigation }) {
   const { noticeId } = route.params;
@@ -62,7 +62,7 @@ export default function NoticeDetailScreen({ route, navigation }) {
   if (data) {
     return (
       <SafeAreaView edges={["top"]} style={styles.container}>
-        <OnlyLeftArrowHeader navigation={navigation} />
+        <Header navigation={navigation} />
         <View style={styles.header}>
           <Text style={styles.title}>{data.title}</Text>
           <Text style={styles.teacherAndDate}>

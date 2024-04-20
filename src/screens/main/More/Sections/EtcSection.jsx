@@ -67,7 +67,7 @@ iOS Model ID: ${Device.modelId}
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.subText} />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.push("DeveloperDetailScreen")}
           style={styles.button}
         >
@@ -80,7 +80,7 @@ iOS Model ID: ${Device.modelId}
             <Text style={styles.buttonText}>개발자 정보</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.subText} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={async () => {
             await WebBrowser.openBrowserAsync(

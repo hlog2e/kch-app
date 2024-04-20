@@ -1,11 +1,10 @@
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
-
 import { SafeAreaView } from "react-native-safe-area-context";
-import OnlyLeftArrowHeader from "../../../../components/OnlyLeftArrowHeader";
 import NeisTimetable from "./NeisTimetable";
 import { useState } from "react";
 import { useTheme } from "@react-navigation/native";
 import CustomTimetable from "./CustomTimetable";
+import Header from "../../../../components/Header/Header";
 
 export default function TimetableScreen({ navigation }) {
   const { colors } = useTheme();
@@ -51,7 +50,7 @@ export default function TimetableScreen({ navigation }) {
 
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
-      <OnlyLeftArrowHeader navigation={navigation} />
+      <Header navigation={navigation} />
 
       <View style={styles.header}>
         <TouchableOpacity

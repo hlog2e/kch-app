@@ -13,7 +13,7 @@ import { useColorScheme } from "react-native";
 import { navigationRef } from "./RootNavigation";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
-import FullScreenLoader from "../components/FullScreenLoader";
+import FullScreenLoader from "../components/Overlay/FullScreenLoader";
 
 import * as Linking from "expo-linking";
 
