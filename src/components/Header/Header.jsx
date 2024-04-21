@@ -5,7 +5,12 @@ import { useTheme } from "@react-navigation/native";
 
 export default function Header({ navigation, title, backArrowText }) {
   const styles = StyleSheet.create({
-    title: { fontWeight: "700", fontSize: 24, marginTop: 14, marginLeft: 16 },
+    title: {
+      fontWeight: "700",
+      fontSize: 24,
+      marginTop: 14,
+      marginLeft: 16,
+    },
   });
 
   return (
@@ -26,7 +31,12 @@ function BackArrowButton({ navigation, backArrowText }) {
   const { colors } = useTheme();
   return (
     <TouchableOpacity
-      style={{ flexDirection: "row", alignItems: "center", marginLeft: 16 }}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginLeft: 16,
+        marginBottom: 6,
+      }}
       onPress={() => {
         navigation.goBack();
       }}

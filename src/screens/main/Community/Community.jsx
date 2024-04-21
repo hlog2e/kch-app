@@ -109,7 +109,7 @@ function FixedList({ fixedData, boardData, navigation, unFixMutate }) {
       key={_data._id}
       onPress={() => {
         navigation.push("CommunityInnerListScreen", {
-          boardId: _data._id,
+          boardData: _data,
         });
       }}
       onLongPress={() => {
@@ -139,7 +139,7 @@ function UnFixedList({ fixedData, boardData, navigation, fixMutate }) {
       key={_data._id}
       onPress={() => {
         navigation.push("CommunityInnerListScreen", {
-          boardId: _data._id,
+          boardData: _data,
         });
       }}
       onLongPress={() => {
