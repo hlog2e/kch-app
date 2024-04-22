@@ -171,29 +171,41 @@ export default function Comment({ communityId, currentUser, data }) {
   }
 
   return (
-    <View style={styles.comment}>
-      <View style={styles.header}>
-        <Text style={styles.comment_writer_text}>익명</Text>
+    <View>
+      {data
+        ? data.map((_item) => (
+            <View key={_item._id} style={styles.comment}>
+              <View style={styles.header}>
+                <Text style={styles.comment_writer_text}>
+                  {_item.isAnonymous ? "익명" : _item.issuer.name}
+                </Text>
 
-        {/*작성자 본인일 때 삭제버튼 보이기*/}
-        {data.issuer === currentUser._id ? (
-          <TouchableOpacity onPress={handleCommentDelete}>
-            <Text style={styles.delete_text}>삭제</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={handleOpenActionSheet}>
-            <Ionicons name="ellipsis-horizontal" size={16} color="gray" />
-          </TouchableOpacity>
-        )}
-      </View>
-      <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
-        <Text selectable style={styles.comment_text}>
-          {data.comment}
-        </Text>
-      </Hyperlink>
-      <Text style={styles.comment_date}>
-        {moment(data.createdAt).fromNow()}
-      </Text>
+                {/*작성자 본인일 때 삭제버튼 보이기*/}
+                {_item.issuer === currentUser._id ? (
+                  <TouchableOpacity onPress={handleCommentDelete}>
+                    <Text style={styles.delete_text}>삭제</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity onPress={handleOpenActionSheet}>
+                    <Ionicons
+                      name="ellipsis-horizontal"
+                      size={16}
+                      color="gray"
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+              <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
+                <Text selectable style={styles.comment_text}>
+                  {_item.comment}
+                </Text>
+              </Hyperlink>
+              <Text style={styles.comment_date}>
+                {moment(_item.createdAt).fromNow()}
+              </Text>
+            </View>
+          ))
+        : null}
     </View>
   );
 }

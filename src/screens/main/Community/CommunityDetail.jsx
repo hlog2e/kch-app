@@ -12,7 +12,7 @@ import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { useQuery } from "react-query";
 import { getCommunityDetail } from "../../../../apis/community/community";
 import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
@@ -24,15 +24,16 @@ import Header from "../../../components/Header/Header";
 import HorizontalScrollImageView from "../../../components/Image/HorizontalScrollImageView";
 import Comment from "./components/CommunityDetail/Comment";
 import InteractionButtons from "./components/CommunityDetail/InteractionButtons";
+import CommentInput from "./components/CommunityDetail/CommentInput";
 
 export default function CommunityDetailScreen({ navigation, route }) {
   const { colors } = useTheme();
-  const itemId = route.params.id;
+  const communityId = route.params.id;
   const { user } = useContext(UserContext);
   const { data, isLoading } = useQuery(
     "CommunityDetail",
     () => {
-      return getCommunityDetail(itemId);
+      return getCommunityDetail(communityId);
     },
     {
       retry: false,
@@ -49,8 +50,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
       },
     }
   );
-
-  const commentInputRef = useRef();
 
   const styles = StyleSheet.create({
     container: {
@@ -114,23 +113,19 @@ export default function CommunityDetailScreen({ navigation, route }) {
                   <InteractionButtons
                     data={data}
                     user={user}
-                    communityId={itemId}
-                    commentInputRef={commentInputRef}
+                    communityId={communityId}
                     navigation={navigation}
                   />
                 </View>
-                {data.comments.map((_item) => {
-                  return (
-                    <Comment
-                      key={_item._id}
-                      communityId={itemId}
-                      data={_item}
-                      currentUser={user}
-                    />
-                  );
-                })}
+
+                <Comment
+                  communityId={communityId}
+                  data={data.comments}
+                  currentUser={user}
+                />
               </ScrollView>
             </View>
+            <CommentInput communityId={communityId} />
           </KeyboardAvoidingView>
         </SafeAreaView>
       </ActionSheetProvider>

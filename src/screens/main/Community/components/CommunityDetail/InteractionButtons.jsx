@@ -17,7 +17,7 @@ export default function InteractionButtons({
   data,
   user,
   communityId,
-  commentInputRef,
+
   navigation,
 }) {
   const { colors } = useTheme();
@@ -152,8 +152,7 @@ export default function InteractionButtons({
 
   const styles = StyleSheet.create({
     button_bar: {
-      marginTop: 20,
-      height: 40,
+      paddingVertical: 14,
       flexDirection: "row",
       alignItems: "center",
     },
@@ -187,12 +186,7 @@ export default function InteractionButtons({
           </>
         )}
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          commentInputRef.current.focus();
-        }}
-      >
+      <TouchableOpacity style={styles.button} onPress={() => {}}>
         <Ionicons name={"chatbubble-outline"} size={20} color={colors.text} />
         <Text style={styles.button_text}>{data.commentCount}</Text>
       </TouchableOpacity>

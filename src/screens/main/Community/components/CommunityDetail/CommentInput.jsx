@@ -7,13 +7,15 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { postComment } from "../../../../../../apis/community/community";
+import { useTheme } from "@react-navigation/native";
 
-export default function CommentInput() {
+export default function CommentInput({ communityId }) {
+  const { colors } = useTheme();
   const [comment, setComment] = useState("");
 
   const queryClient = useQueryClient();
-  const { mutate: commentMutate, isLoading: commentPOSTLoading } =
-    useMutation(postComment);
+  const { mutate: commentMutate } = useMutation(postComment);
 
   const styles = StyleSheet.create({
     input_container: {
@@ -36,7 +38,7 @@ export default function CommentInput() {
   const handlePostComment = async () => {
     if (comment !== "") {
       await commentMutate(
-        { comment: comment, communityId: itemId },
+        { comment: comment, communityId: communityId },
         {
           onSuccess: () => {
             queryClient.invalidateQueries("CommunityDetail");
@@ -49,7 +51,6 @@ export default function CommentInput() {
   return (
     <View style={styles.input_container}>
       <TextInput
-        ref={commentInputRef}
         style={styles.comment_input}
         value={comment}
         onChangeText={(_text) => {
