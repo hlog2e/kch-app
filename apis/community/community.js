@@ -56,7 +56,6 @@ export const postReportCommunityItem = async (props) => {
 
 export const postReportComment = async (props) => {
   const { data } = await apiAuthInstance.post("/community/report/comment", {
-    postId: props.postId,
     commentId: props.commentId,
   });
 
@@ -83,6 +82,7 @@ export const postComment = async (props) => {
   const { data } = await apiAuthInstance.post("/community/comment", {
     comment: props.comment,
     communityId: props.communityId,
+    isAnonymous: props.isAnonymous,
   });
 
   return data;

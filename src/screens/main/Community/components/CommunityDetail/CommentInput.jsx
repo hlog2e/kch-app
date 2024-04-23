@@ -13,6 +13,7 @@ import { useTheme } from "@react-navigation/native";
 export default function CommentInput({ communityId }) {
   const { colors } = useTheme();
   const [comment, setComment] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(true);
 
   const queryClient = useQueryClient();
   const { mutate: commentMutate } = useMutation(postComment);
@@ -38,7 +39,11 @@ export default function CommentInput({ communityId }) {
   const handlePostComment = async () => {
     if (comment !== "") {
       await commentMutate(
-        { comment: comment, communityId: communityId },
+        {
+          comment: comment,
+          communityId: communityId,
+          isAnonymous: isAnonymous,
+        },
         {
           onSuccess: () => {
             queryClient.invalidateQueries("CommunityDetail");

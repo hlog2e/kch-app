@@ -77,8 +77,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       color: colors.subText,
     },
     content: {
-      marginTop: 24,
-      fontSize: 15,
+      marginTop: 12,
       color: colors.text,
     },
   });
@@ -117,7 +116,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
                     navigation={navigation}
                   />
                 </View>
-
                 <Comment
                   communityId={communityId}
                   data={data.comments}

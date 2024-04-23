@@ -21,10 +21,9 @@ export default function Comment({ communityId, currentUser, data }) {
   const { mutate: blockUserMutate } = useMutation(postBlockUser);
   const { mutate: reportComment } = useMutation(postReportComment);
 
-  const { data: blockedUsers } = useQuery("BlockedUsers", getBlockedUsers);
-  const blockedUsersComment = blockedUsers
-    ? blockedUsers.includes(data.issuer)
-    : false;
+  const { data: blockedUsers } = useQuery("BlockedUsers", getBlockedUsers, {
+    initialData: [],
+  });
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -42,9 +41,20 @@ export default function Comment({ communityId, currentUser, data }) {
       alignItems: "center",
     },
 
+    header_left: {
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "row",
+    },
     comment_writer_text: {
       fontWeight: "600",
       color: colors.blue,
+    },
+    writer_desc: {
+      fontWeight: "400",
+      color: colors.subText,
+      fontSize: 11,
+      marginLeft: 5,
     },
     delete_text: { fontSize: 13, color: "gray" },
     delete_admin_text: { fontSize: 13, color: colors.red, marginTop: 10 },
@@ -54,27 +64,20 @@ export default function Comment({ communityId, currentUser, data }) {
     },
     comment_date: { fontSize: 12, color: colors.subText, marginTop: 8 },
 
-    blocked_users_comment: {
-      backgroundColor: "white",
-      borderTopWidth: 0.2,
-      borderBottomWidth: 0.2,
-      borderColor: "#d4d4d4",
-      padding: 17,
-    },
     blocked_users_comment_text: {
-      fontSize: 14,
       color: "gray",
     },
   });
 
-  const handleCommentDelete = async () => {
+  const handleCommentDelete = async ({ commentData }) => {
     Alert.alert("", "댓글을 삭제하시겠습니까?", [
       { text: "취소", style: "cancel" },
       {
         text: "확인",
         onPress: () => {
+          console.log(commentData);
           deleteCommentMutate(
-            { communityId: communityId, commentId: data._id },
+            { communityId: communityId, commentId: commentData._id },
             {
               onSuccess: () => {
                 queryClient.invalidateQueries("CommunityDetail");
@@ -86,10 +89,14 @@ export default function Comment({ communityId, currentUser, data }) {
     ]);
   };
 
-  const handleBlockUser = async () => {
+  const handleBlockUser = async ({ commentData }) => {
+    const issuerId = commentData.isAnonymous
+      ? commentData.issuer
+      : commentData.issuer._id;
+
     Alert.alert(
       "경고",
-      "해당 사용자를 차단하면 작성한 게시물과 댓글 모두 볼 수 없습니다. (차단하면 되돌릴 수 없습니다.)",
+      "해당 사용자를 차단하면 작성한 게시물과 댓글 모두 볼 수 없습니다.",
       [
         { text: "취소", style: "cancel" },
         {
@@ -97,7 +104,7 @@ export default function Comment({ communityId, currentUser, data }) {
           style: "destructive",
           onPress: () => {
             blockUserMutate(
-              { blockUserId: data.issuer },
+              { blockUserId: issuerId },
               {
                 onSuccess: () => {
                   queryClient.invalidateQueries("CommunityDetail");
@@ -111,7 +118,7 @@ export default function Comment({ communityId, currentUser, data }) {
     );
   };
 
-  const handleReportComment = async () => {
+  const handleReportComment = async ({ commentData }) => {
     Alert.alert("경고", "해당 댓글을 신고하시겠습니까?", [
       { text: "취소", style: "cancel" },
       {
@@ -119,7 +126,7 @@ export default function Comment({ communityId, currentUser, data }) {
         style: "destructive",
         onPress: () => {
           reportComment(
-            { postId: communityId, commentId: data._id },
+            { commentId: commentData._id },
             {
               onSuccess: () => {
                 Alert.alert("알림", "정상적으로 해당 댓글을 신고하였습니다.", [
@@ -133,7 +140,7 @@ export default function Comment({ communityId, currentUser, data }) {
     ]);
   };
 
-  const handleOpenActionSheet = async () => {
+  const handleOpenActionSheet = async (_commentData) => {
     const options = ["차단", "신고", "취소"];
     const destructiveButtonIndex = [0]; //빨간 강조 버튼의 인덱스들
     const cancelButtonIndex = 2;
@@ -148,45 +155,55 @@ export default function Comment({ communityId, currentUser, data }) {
         switch (selectedIndex) {
           case 0:
             // 차단하기
-            handleBlockUser();
+            handleBlockUser({ commentData: _commentData });
             break;
 
           case 1:
             // 신고하기
-            handleReportComment();
+            handleReportComment({ commentData: _commentData });
             break;
         }
       }
     );
   };
 
-  if (blockedUsersComment) {
-    return (
-      <View style={styles.blocked_users_comment}>
-        <Text style={styles.blocked_users_comment_text}>
-          차단한 사용자의 댓글입니다.
-        </Text>
-      </View>
-    );
-  }
-
   return (
     <View>
-      {data
-        ? data.map((_item) => (
+      {data.map((_item) => (
+        <View>
+          {blockedUsers.includes(_item.issuer._id || _item.issuer) ? (
+            <View style={styles.comment}>
+              <View style={styles.header}>
+                <View style={styles.header_left}>
+                  <Text style={styles.blocked_users_comment_text}>
+                    차단한 사용자의 댓글
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ) : (
             <View key={_item._id} style={styles.comment}>
               <View style={styles.header}>
-                <Text style={styles.comment_writer_text}>
-                  {_item.isAnonymous ? "익명" : _item.issuer.name}
-                </Text>
+                <View style={styles.header_left}>
+                  <Text style={styles.comment_writer_text}>
+                    {_item.isAnonymous ? "익명" : _item.issuer.name}
+                  </Text>
+                  <Text style={styles.writer_desc}>
+                    {_item.isAnonymous ? null : _item.issuer.desc}
+                  </Text>
+                </View>
 
                 {/*작성자 본인일 때 삭제버튼 보이기*/}
                 {_item.issuer === currentUser._id ? (
-                  <TouchableOpacity onPress={handleCommentDelete}>
+                  <TouchableOpacity
+                    onPress={() => handleCommentDelete({ commentData: _item })}
+                  >
                     <Text style={styles.delete_text}>삭제</Text>
                   </TouchableOpacity>
                 ) : (
-                  <TouchableOpacity onPress={handleOpenActionSheet}>
+                  <TouchableOpacity
+                    onPress={() => handleOpenActionSheet(_item)}
+                  >
                     <Ionicons
                       name="ellipsis-horizontal"
                       size={16}
@@ -197,15 +214,18 @@ export default function Comment({ communityId, currentUser, data }) {
               </View>
               <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
                 <Text selectable style={styles.comment_text}>
-                  {_item.comment}
+                  {_item.status === "hide"
+                    ? "관리자에 의해 숨겨진 댓글입니다."
+                    : _item.comment}
                 </Text>
               </Hyperlink>
               <Text style={styles.comment_date}>
                 {moment(_item.createdAt).fromNow()}
               </Text>
             </View>
-          ))
-        : null}
+          )}
+        </View>
+      ))}
     </View>
   );
 }
