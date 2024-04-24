@@ -170,7 +170,7 @@ export default function Comment({ communityId, currentUser, data }) {
   return (
     <View>
       {data.map((_item) => (
-        <View>
+        <View key={_item._id}>
           {blockedUsers.includes(_item.issuer._id || _item.issuer) ? (
             <View style={styles.comment}>
               <View style={styles.header}>

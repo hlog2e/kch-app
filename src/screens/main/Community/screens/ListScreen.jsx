@@ -1,7 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import FABPlus from "../../../components/Button/FABPlus";
-import Header from "../../../components/Header/Header";
-import CommunityList from "./components/CommunityList/CommunityList";
+import FABPlus from "../../../../components/Button/FABPlus";
+import Header from "../../../../components/Header/Header";
+import CommunityList from "../components/List/List";
 
 export default function CommunityInnerListScreen({ route, navigation }) {
   const boardData = route.params.boardData;

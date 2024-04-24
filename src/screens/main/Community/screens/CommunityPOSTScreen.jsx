@@ -17,11 +17,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "react-query";
-import { postCommunity } from "../../../../apis/community/community";
+import { postCommunity } from "../../../../../apis/community/community";
 import mime from "mime";
-import CustomLoader from "../../../components/Overlay/CustomLoader";
-import CustomAlert from "../../../components/Overlay/CustomAlert";
-import Header from "../../../components/Header/Header";
+import CustomLoader from "../../../../components/Overlay/CustomLoader";
+import CustomAlert from "../../../../components/Overlay/CustomAlert";
+import Header from "../../../../components/Header/Header";
 
 export default function CommunityPOSTScreen({ navigation }) {
   const { colors } = useTheme();

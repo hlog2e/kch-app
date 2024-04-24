@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useInfiniteQuery } from "react-query";
 import { getCommunities } from "../../../../../../apis/community/community";
 import FullScreenLoader from "../../../../../components/Overlay/FullScreenLoader";
-import CommunityItem from "./CommunityItem";
+import CommunityItem from "./Item";
 
 export default function CommunityList({ boardData, navigation, issuerId }) {
   const [refreshing, setRefreshing] = useState(false);

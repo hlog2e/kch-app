@@ -1,4 +1,4 @@
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import {
   StyleSheet,
   Text,
@@ -13,11 +13,11 @@ import {
   getCommunityBoards,
   postCommunityBoardFix,
   postCommunityBoardUnFix,
-} from "../../../../apis/community/community";
-import Banner from "../../../components/Banner";
-import Header from "../../../components/Header/Header";
+} from "../../../../../apis/community/community";
+import Banner from "../../../../components/Banner";
+import Header from "../../../../components/Header/Header";
 
-export default function CommunityScreen({ navigation }) {
+export default function CommunityBoardListScreen({ navigation }) {
   const { data: boardData } = useQuery("CommunityBoard", getCommunityBoards, {
     initialData: [],
   });

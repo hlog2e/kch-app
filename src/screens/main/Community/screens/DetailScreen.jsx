@@ -14,17 +14,17 @@ import moment from "moment";
 
 import { useContext } from "react";
 import { useQuery } from "react-query";
-import { getCommunityDetail } from "../../../../apis/community/community";
-import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
-import { UserContext } from "../../../../context/UserContext";
+import { getCommunityDetail } from "../../../../../apis/community/community";
+import FullScreenLoader from "../../../../components/Overlay/FullScreenLoader";
+import { UserContext } from "../../../../../context/UserContext";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 import Hyperlink from "react-native-hyperlink";
-import Header from "../../../components/Header/Header";
-import HorizontalScrollImageView from "../../../components/Image/HorizontalScrollImageView";
-import Comment from "./components/CommunityDetail/Comment";
-import InteractionButtons from "./components/CommunityDetail/InteractionButtons";
-import CommentInput from "./components/CommunityDetail/CommentInput";
+import Header from "../../../../components/Header/Header";
+import HorizontalScrollImageView from "../../../../components/Image/HorizontalScrollImageView";
+import Comment from "../components/Detail/Comment";
+import InteractionButtons from "../components/Detail/InteractionButtons";
+import CommentInput from "../components/Detail/CommentInput";
 
 export default function CommunityDetailScreen({ navigation, route }) {
   const { colors } = useTheme();

@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import CommunityScreen from "../../../screens/main/Community/Community";
+import CommunityScreen from "../../../screens/main/Community/screens/BoardListScreen";
 import AccessDeniedScreen from "../../../screens/main/Community/AccessDeniedScreen";
 import { useContext } from "react";
 import { UserContext } from "../../../../context/UserContext";
-import CommunityInnerListScreen from "../../../screens/main/Community/CommunityInnerListScreen";
+import CommunityInnerListScreen from "../../../screens/main/Community/screens/ListScreen";
 
 const Stack = createNativeStackNavigator();
 

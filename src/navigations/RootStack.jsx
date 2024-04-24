@@ -6,8 +6,8 @@ import {
   DarkTheme,
 } from "@react-navigation/native";
 import AuthStack from "./auth/AuthStack";
-import CommunityDetailScreen from "../screens/main/Community/CommunityDetail";
-import CommunityPOSTScreen from "../screens/main/Community/CommunityPOSTScreen";
+import CommunityDetailScreen from "../screens/main/Community/screens/DetailScreen";
+import CommunityPOSTScreen from "../screens/main/Community/screens/CommunityPOSTScreen";
 import FeedPOSTScreen from "../screens/main/Feed/FeedPOSTScreen";
 import { useColorScheme } from "react-native";
 import { navigationRef } from "./RootNavigation";
