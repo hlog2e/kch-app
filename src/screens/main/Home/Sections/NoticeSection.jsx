@@ -77,7 +77,7 @@ function Item({ navigation, _id, title, teacher, createdAt }) {
   const styles = StyleSheet.create({
     item: {
       padding: 14,
-      height: 150,
+      height: 130,
       width: 250,
       marginRight: 10,
       borderWidth: 1,
