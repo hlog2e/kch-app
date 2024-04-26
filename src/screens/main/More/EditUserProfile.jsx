@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../../../context/UserContext";
+import { useEffect, useState } from "react";
+import { useUser } from "../../../../context/UserContext";
 import { useTheme } from "@react-navigation/native";
 import { useMutation, useQueryClient } from "react-query";
 import CustomAlert from "../../../components/Overlay/CustomAlert";
@@ -26,7 +26,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Header from "../../../components/Header/Header";
 
 export default function EditUserProfileScreen({ navigation }) {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const { colors } = useTheme();
 
   const [inputData, setInputData] = useState({ name: null, desc: null });

@@ -1,21 +1,20 @@
 import { StyleSheet, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FirstType from "./JoinStep/FirstType";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import SecondNameAndYearInput from "./JoinStep/SecondNameAndYearInput";
 import CustomAlert from "../../components/Overlay/CustomAlert";
 import { postJoin } from "../../../apis/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { registerForPushNotificationsAsync } from "../../../utils/expo_notification";
 import { registerPushTokenToDB } from "../../../apis/push-noti";
-import { UserContext } from "../../../context/UserContext";
 import ThirdVerifyUndergraduate from "./JoinStep/ThirdVerifyUndergraduate";
 import WrapBarCodeScanner from "../../components/WrapBarCodeScanner";
 import ThirdVerifyTeacher from "./JoinStep/ThridVerifyTeacher";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { useUser } from "../../../context/UserContext";
 
 export default function JoinScreen({ route, navigation }) {
-  const { setUser } = useContext(UserContext);
+  const { login } = useUser();
   const { phoneNumber, code } = route.params || {
     phoneNumber: "01095645490",
     code: "1234",
@@ -66,11 +65,7 @@ export default function JoinScreen({ route, navigation }) {
   const handleJoin = async (_userData) => {
     try {
       const response = await postJoin({ ..._userData });
-
-      await AsyncStorage.setItem("token", JSON.stringify(response.token));
-      await AsyncStorage.setItem("user", JSON.stringify(response.user));
-
-      setUser(response.user);
+      await login({ token: response.token, user: response.user });
 
       navigation.replace("Main");
 

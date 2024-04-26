@@ -5,12 +5,12 @@ import * as SMS from "expo-sms";
 import * as Device from "expo-device";
 import * as WebBrowser from "expo-web-browser";
 import moment from "moment";
-import { useContext } from "react";
-import { UserContext } from "../../../../../context/UserContext";
+
+import { useUser } from "../../../../../context/UserContext";
 
 export default function EtcSection({ navigation }) {
   const { colors } = useTheme();
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
 
   const handleSendSMS = async () => {
     const smsIsAvailable = await SMS.isAvailableAsync();

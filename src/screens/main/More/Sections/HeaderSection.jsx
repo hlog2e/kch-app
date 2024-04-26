@@ -2,15 +2,15 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useQuery } from "react-query";
 import { getUserInfo } from "../../../../../apis/more/more";
-import { useContext, useEffect } from "react";
-import { UserContext } from "../../../../../context/UserContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
+import { useUser } from "../../../../../context/UserContext";
+
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
 export default function HeaderSection({ navigation }) {
   const { data } = useQuery("UserData", getUserInfo);
-  const { user, setUser } = useContext(UserContext);
+  const { user, update } = useUser();
 
   const { colors } = useTheme();
 
@@ -18,8 +18,7 @@ export default function HeaderSection({ navigation }) {
   useEffect(() => {
     if (data) {
       if (JSON.stringify(user) !== JSON.stringify(data)) {
-        setUser(data);
-        AsyncStorage.setItem("user", JSON.stringify(data));
+        update({ user: data });
       }
     }
   }, [data]);

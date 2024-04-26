@@ -8,8 +8,8 @@ import {
   Alert,
 } from "react-native";
 import { Image } from "expo-image";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../../../context/UserContext";
+import { useEffect, useState } from "react";
+import { useUser } from "../../../../context/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
@@ -33,7 +33,7 @@ import Header from "../../../components/Header/Header";
 
 export default function StudentIDScreen({ navigation }) {
   const { colors } = useTheme();
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const queryClient = useQueryClient();
   const { data: userData } = useQuery("IdCardUserData", getUserInfo);
   const { mutate: registerBarcodeMutate } = useMutation(postRegisterBarCode);

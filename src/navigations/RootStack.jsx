@@ -11,21 +11,15 @@ import CommunityPOSTScreen from "../screens/main/Community/screens/CommunityPOST
 import FeedPOSTScreen from "../screens/main/Feed/FeedPOSTScreen";
 import { useColorScheme } from "react-native";
 import { navigationRef } from "./RootNavigation";
-import { useContext } from "react";
-import { UserContext } from "../../context/UserContext";
-import FullScreenLoader from "../components/Overlay/FullScreenLoader";
+import { useUser } from "../../context/UserContext";
 
 import * as Linking from "expo-linking";
 
 const Stack = createNativeStackNavigator();
 
 export default function RootStack() {
-  const { user, isLoading } = useContext(UserContext);
+  const { user } = useUser();
   const NowColorState = useColorScheme();
-
-  if (isLoading) {
-    return <FullScreenLoader />;
-  }
 
   const config = {
     screens: {

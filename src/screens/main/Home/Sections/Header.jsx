@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../../../../context/UserContext";
+import { useEffect, useState } from "react";
+import { useUser } from "../../../../../context/UserContext";
 import { useTheme } from "@react-navigation/native";
 import moment from "moment";
 
 export default function Header({ navigation }) {
   const nowTime = moment().format("H");
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const { colors } = useTheme();
 
   const [grade, setGrade] = useState(null);

@@ -1,15 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CommunityScreen from "../../../screens/main/Community/screens/BoardListScreen";
 import AccessDeniedScreen from "../../../screens/main/Community/AccessDeniedScreen";
-import { useContext } from "react";
-import { UserContext } from "../../../../context/UserContext";
 import CommunityInnerListScreen from "../../../screens/main/Community/screens/ListScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function CommunityStack() {
-  const { user } = useContext(UserContext);
-
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="CommunityScreen" component={CommunityScreen} />

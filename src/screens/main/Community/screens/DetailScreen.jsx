@@ -12,11 +12,10 @@ import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 
-import { useContext } from "react";
 import { useQuery } from "react-query";
 import { getCommunityDetail } from "../../../../../apis/community/community";
 import FullScreenLoader from "../../../../components/Overlay/FullScreenLoader";
-import { UserContext } from "../../../../../context/UserContext";
+import { useUser } from "../../../../../context/UserContext";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 import Hyperlink from "react-native-hyperlink";
@@ -29,7 +28,7 @@ import CommentInput from "../components/Detail/CommentInput";
 export default function CommunityDetailScreen({ navigation, route }) {
   const { colors } = useTheme();
   const communityId = route.params.id;
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const { data, isLoading } = useQuery(
     "CommunityDetail",
     () => {

@@ -1,16 +1,14 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useContext, useState } from "react";
-import FirstRequestCode from "./\bLoginStep/FirstRequestCode";
-import SecondVerifyCode from "./\bLoginStep/SecondVerifyCode";
+import { useState } from "react";
+import FirstRequestCode from "./LoginStep/FirstRequestCode";
+import SecondVerifyCode from "./LoginStep/SecondVerifyCode";
 import { postRequestCode, postVerifyCode } from "../../../apis/auth";
 import CustomAlert from "../../components/Overlay/CustomAlert";
-import { UserContext } from "../../../context/UserContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { registerForPushNotificationsAsync } from "../../../utils/expo_notification";
-import { registerPushTokenToDB } from "../../../apis/push-noti";
+import { useUser } from "../../../context/UserContext";
 
 export default function LoginScreen({ navigation }) {
+  const { login } = useUser();
   const [step, setStep] = useState("RequestCode");
   const [data, setData] = useState({
     phoneNumber: "",
@@ -21,8 +19,6 @@ export default function LoginScreen({ navigation }) {
     status: null,
     message: "",
   });
-
-  const { setUser } = useContext(UserContext);
 
   const handleRequestCode = async (_phoneNumber) => {
     // ------ 인증번호 요청 POST ------
@@ -44,16 +40,8 @@ export default function LoginScreen({ navigation }) {
 
       if (response.user) {
         // 이미 가입되어있는 경우
-        await AsyncStorage.setItem("token", JSON.stringify(response.token));
-        await AsyncStorage.setItem("user", JSON.stringify(response.user));
-        setUser(response.user);
-
+        await login({ token: response.token, user: response.user });
         navigation.replace("Main");
-
-        const pushToken = await registerForPushNotificationsAsync();
-        if (pushToken) {
-          await registerPushTokenToDB(pushToken);
-        }
       } else {
         //가입되지 않은 경우
         navigation.replace("Join", {

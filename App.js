@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClientProvider, QueryClient } from "react-query";
 import RootStack from "./src/navigations/RootStack";
-import { UserContext } from "./context/UserContext";
+import { UserProvider } from "./context/UserContext";
 import { useEffect, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
@@ -13,24 +13,13 @@ import * as Linking from "expo-linking";
 const queryClient = new QueryClient();
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
   //for Expo Notification ----
   const notificationListener = useRef();
   const responseListener = useRef();
   //--------------------------
 
-  //async storage 에서 유저 데이터 불러오기
-  async function getUserOnAsyncStorage() {
-    const _user = await AsyncStorage.getItem("user");
-    const parsedUserData = JSON.parse(_user);
-    setUser(parsedUserData);
-    setIsLoading(false);
-  }
-
   useEffect(() => {
-    getUserOnAsyncStorage();
+    // getUserOnAsyncStorage();
 
     //알림이 도착했을때 리스너
     notificationListener.current =
@@ -81,9 +70,10 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <UserContext.Provider value={{ user, setUser, isLoading }}>
+        <UserProvider>
           <RootStack />
-        </UserContext.Provider>
+        </UserProvider>
+
         <StatusBar />
         <Toast config={toastConfig} />
       </SafeAreaProvider>

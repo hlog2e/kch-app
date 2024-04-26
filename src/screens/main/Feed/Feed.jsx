@@ -9,24 +9,24 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { deleteFeed, getFeeds } from "../../../../apis/feed/feed";
 import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
 import ImageView from "react-native-image-viewing";
-import { UserContext } from "../../../../context/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import Hyperlink from "react-native-hyperlink";
 import FABPlus from "../../../components/Button/FABPlus";
 import Header from "../../../components/Header/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useUser } from "../../../../context/UserContext";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function FeedScreen({ navigation }) {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const [refreshing, setRefreshing] = useState(false);
   const {
     data,
@@ -81,7 +81,7 @@ export default function FeedScreen({ navigation }) {
 }
 
 function FeedItem({ item }) {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const { colors } = useTheme();
   const [activeSnapIndex, setActiveSnapIndex] = useState(0);
   const [imageOpen, setImageOpen] = useState(false);

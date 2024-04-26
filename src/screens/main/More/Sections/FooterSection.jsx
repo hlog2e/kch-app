@@ -1,41 +1,23 @@
 import { View, Alert, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { getExpoPushTokenAsync } from "expo-notifications";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { unRegisterPushTokenToDB } from "../../../../../apis/push-noti";
 import { useTheme } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import * as Device from "expo-device";
-import { useContext } from "react";
-import { UserContext } from "../../../../../context/UserContext";
+import { useUser } from "../../../../../context/UserContext";
 import { Image } from "expo-image";
 import Constants from "expo-constants";
 import * as Linking from "expo-linking";
 
 export default function FooterSection({ navigation }) {
-  const { setUser } = useContext(UserContext);
+  const { logout } = useUser();
   const { colors } = useTheme();
 
   const handleLogout = async () => {
-    const removePushTokenOnDB = async () => {
-      const { data: pushToken } = await getExpoPushTokenAsync({
-        projectId: Constants.expoConfig.extra.eas.projectId,
-      });
-      await unRegisterPushTokenToDB(pushToken);
-    };
-
     Alert.alert("알림", "로그아웃 하시겠습니까?", [
       { text: "취소", style: "cancel" },
       {
         text: "확인",
         onPress: async () => {
           try {
-            // 실제 디바이스 경우 푸시 토큰을 DB에서 지우는 로직
-            if (Device.isDevice) {
-              await removePushTokenOnDB();
-            }
-            await AsyncStorage.removeItem("user");
-            await AsyncStorage.removeItem("token");
-            setUser(null);
+            await logout();
             navigation.push("Auth");
           } catch (_err) {
             Alert.alert(
