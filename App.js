@@ -3,12 +3,12 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClientProvider, QueryClient } from "react-query";
 import RootStack from "./src/navigations/RootStack";
 import { UserProvider } from "./context/UserContext";
-import { useEffect, useState, useRef } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useRef } from "react";
 import * as Notifications from "expo-notifications";
 import Toast, { BaseToast } from "react-native-toast-message";
 import * as Haptics from "expo-haptics";
 import * as Linking from "expo-linking";
+import { AlertProvider } from "./context/AlertContext";
 
 const queryClient = new QueryClient();
 
@@ -19,8 +19,6 @@ export default function App() {
   //--------------------------
 
   useEffect(() => {
-    // getUserOnAsyncStorage();
-
     //알림이 도착했을때 리스너
     notificationListener.current =
       Notifications.addNotificationReceivedListener((_notification) => {
@@ -70,9 +68,11 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <UserProvider>
-          <RootStack />
-        </UserProvider>
+        <AlertProvider>
+          <UserProvider>
+            <RootStack />
+          </UserProvider>
+        </AlertProvider>
 
         <StatusBar />
         <Toast config={toastConfig} />
