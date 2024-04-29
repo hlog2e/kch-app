@@ -3,7 +3,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FirstType from "./JoinStep/FirstType";
 import { useEffect, useState } from "react";
 import SecondNameAndYearInput from "./JoinStep/SecondNameAndYearInput";
-import CustomAlert from "../../components/Overlay/CustomAlert";
 import { postJoin } from "../../../apis/auth";
 import { registerForPushNotificationsAsync } from "../../../utils/expo_notification";
 import { registerPushTokenToDB } from "../../../apis/push-noti";
@@ -12,9 +11,11 @@ import WrapBarCodeScanner from "../../components/WrapBarCodeScanner";
 import ThirdVerifyTeacher from "./JoinStep/ThridVerifyTeacher";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useUser } from "../../../context/UserContext";
+import { useAlert } from "../../../context/AlertContext";
 
 export default function JoinScreen({ route, navigation }) {
   const { login } = useUser();
+  const alert = useAlert();
   const { phoneNumber, code } = route.params || {
     phoneNumber: "01095645490",
     code: "1234",
@@ -26,11 +27,7 @@ export default function JoinScreen({ route, navigation }) {
     birthYear: null,
     barcode: null,
   });
-  const [alertData, setAlertData] = useState({
-    show: false,
-    status: null,
-    message: "",
-  });
+
   const [scannerOpen, setScannerOpen] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
 
@@ -74,29 +71,15 @@ export default function JoinScreen({ route, navigation }) {
         await registerPushTokenToDB(pushToken);
       }
     } catch (error) {
-      setAlertData({
-        show: true,
-        status: "error",
-        message: error.response.data.message
+      alert.error(
+        error.response.data.message
           ? error.response.data.message
-          : "회원가입 중 오류가 발생하였습니다!",
-      });
+          : "회원가입 중 오류가 발생하였습니다!"
+      );
     }
   };
   return (
     <>
-      <CustomAlert
-        show={alertData.show}
-        status={alertData.status}
-        message={alertData.message}
-        onClose={() =>
-          setAlertData({
-            show: false,
-            status: null,
-            message: "",
-          })
-        }
-      />
       <WrapBarCodeScanner
         barCodeScannerOpen={scannerOpen}
         setBarCodeScannerOpen={setScannerOpen}

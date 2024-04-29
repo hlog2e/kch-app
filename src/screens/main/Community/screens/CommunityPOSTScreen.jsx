@@ -7,31 +7,23 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Alert,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { Image } from "expo-image";
-import { Ionicons } from "@expo/vector-icons";
+
 import { useState } from "react";
-import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "react-query";
 import { postCommunity } from "../../../../../apis/community/community";
 import mime from "mime";
-import CustomLoader from "../../../../components/Overlay/CustomLoader";
-import CustomAlert from "../../../../components/Overlay/CustomAlert";
+
 import Header from "../../../../components/Header/Header";
+import HorizontalImagePicker from "../../../../components/Image/HorizontalImagePicker";
+import { useAlert } from "../../../../../context/AlertContext";
 
 export default function CommunityPOSTScreen({ navigation }) {
   const { colors } = useTheme();
-
-  const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState({
-    show: false,
-    status: null,
-    message: null,
-  });
+  const alert = useAlert();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -40,106 +32,39 @@ export default function CommunityPOSTScreen({ navigation }) {
   const formData = new FormData();
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(postCommunity);
-
-  const handleImagePicking = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        quality: 0.5,
-        allowsMultipleSelection: true,
-      });
-
-      if (!result.canceled) {
-        setImages(result.assets);
-      } else {
-        console.log("이미지 선택 취소");
-      }
-    } catch (_err) {
-      Alert.alert("오류", "이미지를 로드하는 중 오류가 발생하였습니다.", [
-        { text: "확인" },
-      ]);
-    }
-  };
-
-  const handleImageDelete = (_assetId) => {
-    const copyBeforeImage = [...images];
-    const deletedNewArray = copyBeforeImage.filter(
-      ({ assetId }) => assetId !== _assetId
-    );
-
-    Alert.alert("삭제", "선택한 이미지를 삭제하시겠습니까?", [
-      { text: "취소", style: "cancel" },
-      {
-        text: "삭제",
-        onPress: () => {
-          setImages(deletedNewArray);
-        },
-      },
-    ]);
-  };
-
-  const checkBeforePOST = async () => {
-    setLoading(true);
-    if (title === "" || content === "") {
-      setAlert({
-        show: true,
-        status: "info",
-        message: "제목이랑 내용 모두 작성해 주세요 :)",
-      });
-      setLoading(false);
-      return { passed: false };
-    }
-
-    return { passed: true };
-  };
+  const { mutateAsync } = useMutation(postCommunity);
 
   const handlePOST = async () => {
-    const { passed } = await checkBeforePOST();
-    if (passed) {
-      try {
-        formData.append("title", title);
-        formData.append("content", content);
-        images.map(({ uri }) => {
-          formData.append("image", {
-            uri: uri,
-            name: uri.split("/").pop(),
-            type: mime.getType(uri),
-          });
-        });
+    if (title === "" || content === "") {
+      return alert.info("제목이랑 내용 모두 작성해 주세요 !");
+    }
 
-        mutate(formData, {
-          onSuccess: () => {
-            setLoading(false);
-            setTitle("");
-            setContent("");
-            setImages([]);
+    alert.loading("업로드 중 입니다...");
+    try {
+      formData.append("title", title);
+      formData.append("content", content);
+      images.map(({ uri }) => {
+        formData.append("image", {
+          uri: uri,
+          name: uri.split("/").pop(),
+          type: mime.getType(uri),
+        });
+      });
+      await mutateAsync(formData);
 
-            queryClient.invalidateQueries("community");
-            navigation.goBack();
-          },
-          onError: (error) => {
-            setLoading(false);
-            if (error.response.data.message) {
-              setAlert({
-                show: true,
-                status: "error",
-                message: error.response.data.message,
-              });
-            }
-          },
-        });
-      } catch (err) {
-        console.log(err);
-        setAlert({
-          show: true,
-          status: "error",
-          message:
-            "커뮤니티 글 작성 중 알 수 없는 오류가 발생하였습니다. 잠시 후 다시 시도해주세요!",
-        });
-        setLoading(false);
-      }
+      setTitle("");
+      setContent("");
+      setImages([]);
+
+      alert.close();
+      queryClient.invalidateQueries("community");
+      navigation.goBack();
+    } catch (error) {
+      error.response
+        ? alert.error(error.response.data.message)
+        : alert.error(
+            "커뮤니티 글 작성 중 알 수 없는 오류가 발생하였습니다. 잠시 후 다시 시도해주세요!"
+          );
     }
   };
 
@@ -166,22 +91,6 @@ export default function CommunityPOSTScreen({ navigation }) {
       paddingBottom: 100,
       textAlignVertical: "top",
     },
-    image_skeleton: {
-      backgroundColor: colors.cardBg2,
-      width: 100,
-      height: 100,
-      borderRadius: 10,
-      paddingVertical: 20,
-      marginLeft: 10,
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    image_wrap: {
-      marginLeft: 10,
-    },
-    image: { width: 100, height: 100, borderRadius: 10 },
-    image_skeleton_text: { color: "gray", fontWeight: "700", fontSize: 13 },
-
     footer: {
       padding: 14,
 
@@ -192,15 +101,6 @@ export default function CommunityPOSTScreen({ navigation }) {
 
   return (
     <SafeAreaView edges={["top", "bottom"]} style={styles.container}>
-      <CustomAlert
-        show={alert.show}
-        status={alert.status}
-        message={alert.message}
-        onClose={() => setAlert({ show: false, status: null, message: null })}
-      />
-      {/* <CustomLoader text={"업로드 중 입니다..."} loading={loading} />
-      TODO: 여기에 alert 로 컴포넌트 통합
-      */}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
@@ -228,31 +128,7 @@ export default function CommunityPOSTScreen({ navigation }) {
               }
               multiline
             />
-            <ScrollView horizontal style={styles.image_container}>
-              {images.map(({ assetId, uri }) => {
-                return (
-                  <TouchableOpacity
-                    key={assetId}
-                    style={styles.image_wrap}
-                    onPress={() => handleImageDelete(assetId)}
-                  >
-                    <Image
-                      placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
-                      transition={500}
-                      style={styles.image}
-                      source={{ uri: uri }}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-              <TouchableOpacity
-                style={styles.image_skeleton}
-                onPress={handleImagePicking}
-              >
-                <Ionicons name="camera" size={30} color="gray" />
-                <Text style={styles.image_skeleton_text}>이미지 선택</Text>
-              </TouchableOpacity>
-            </ScrollView>
+            <HorizontalImagePicker images={images} setImages={setImages} />
           </View>
         </ScrollView>
         <View style={styles.footer}>

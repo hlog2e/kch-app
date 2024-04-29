@@ -19,19 +19,15 @@ import { useMutation, useQueryClient } from "react-query";
 import { postFeed } from "../../../../apis/feed/feed";
 
 import mime from "mime";
-import CustomLoader from "../../../components/Overlay/CustomLoader";
-import CustomAlert from "../../../components/Overlay/CustomAlert";
+
 import Header from "../../../components/Header/Header";
+import { useAlert } from "../../../../context/AlertContext";
 
 export default function FeedPOSTScreen({ navigation }) {
   const { colors } = useTheme();
+  const alert = useAlert();
 
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState({
-    show: false,
-    status: null,
-    message: null,
-  });
 
   const [content, setContent] = useState("");
 
@@ -80,12 +76,7 @@ export default function FeedPOSTScreen({ navigation }) {
   };
 
   const handlePOST = async () => {
-    if (content === "")
-      return setAlert({
-        show: true,
-        status: "info",
-        message: "내용을 작성해주세요:)",
-      });
+    if (content === "") return alert.info("내용을 작성해주세요!");
 
     if (content !== "") {
       setLoading(true);
@@ -99,7 +90,7 @@ export default function FeedPOSTScreen({ navigation }) {
           });
         });
 
-        mutate(formData, {
+        mutateAsync(formData, {
           onSuccess: () => {
             setLoading(false);
             setContent("");
@@ -111,22 +102,15 @@ export default function FeedPOSTScreen({ navigation }) {
           onError: (error) => {
             setLoading(false);
             if (error.response.data.message) {
-              setAlert({
-                show: true,
-                status: "error",
-                message: error.response.data.message,
-              });
+              alert.error(error.response.data.message);
             }
           },
         });
       } catch (err) {
         console.log(err);
-        setAlert({
-          show: true,
-          status: "error",
-          message:
-            "피드 작성 중 알 수 없는 오류가 발생하였습니다. 잠시 후 다시 시도해주세요!",
-        });
+        alert.error(
+          "피드 작성 중 알 수 없는 오류가 발생하였습니다. 잠시 후 다시 시도해주세요!"
+        );
         setLoading(false);
       }
     }
@@ -171,15 +155,6 @@ export default function FeedPOSTScreen({ navigation }) {
 
   return (
     <SafeAreaView edges={["top", "bottom"]} style={styles.container}>
-      <CustomAlert
-        show={alert.show}
-        status={alert.status}
-        message={alert.message}
-        onClose={() => setAlert({ show: false, status: null, message: null })}
-      />
-      {/* <CustomLoader text={"업로드 중 입니다..."} loading={loading} /> 
-            TODO: 여기에 alert 로 컴포넌트 통합
-            */}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}

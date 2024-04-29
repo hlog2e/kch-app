@@ -16,8 +16,10 @@ import {
 } from "../../../../../apis/community/community";
 import Banner from "../../../../components/Banner";
 import Header from "../../../../components/Header/Header";
+import { useTheme } from "@react-navigation/native";
 
 export default function CommunityBoardListScreen({ navigation }) {
+  const { colors } = useTheme();
   const { data: boardData } = useQuery("CommunityBoard", getCommunityBoards, {
     initialData: [],
   });
@@ -39,17 +41,11 @@ export default function CommunityBoardListScreen({ navigation }) {
       paddingHorizontal: 16,
     },
 
-    banner: {
-      marginVertical: 12,
-      height: 100,
-      borderRadius: 12,
-      backgroundColor: "#f4f4f4",
-    },
     tip: {
       justifyContent: "center",
       alignItems: "center",
       paddingVertical: 12,
-      backgroundColor: "#f4f4f4",
+      backgroundColor: colors.cardBg2,
       borderRadius: 12,
     },
     tipText: {

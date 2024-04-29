@@ -8,14 +8,9 @@ import {
   getCustomTimetable,
   postCustomTimetable,
 } from "../../../../../apis/home/timetable";
-import CustomAlert from "../../../../components/Overlay/CustomAlert";
 
 export default function CustomTimetable() {
-  const [alert, setAlert] = useState({
-    show: false,
-    status: null,
-    message: null,
-  });
+  const alert = useAlert();
   const times = ["1", "2", "3", "4", "5", "6", "7"];
   const dayNames = ["월", "화", "수", "목", "금"];
   const todayDay = moment().day();
@@ -40,12 +35,9 @@ export default function CustomTimetable() {
   const handleEditingEnd = async () => {
     mutate(data, {
       onError: () => {
-        setAlert({
-          show: true,
-          status: "error",
-          message:
-            "나만의 시간표 서버가 응답하지 않습니다.\n(시간표를 수정하더라도 반영되지 않을 수 있습니다.)",
-        });
+        alert.error(
+          "나만의 시간표 서버가 응답하지 않습니다.\n(시간표를 수정하더라도 반영되지 않을 수 있습니다.)"
+        );
       },
     });
   };
@@ -166,12 +158,6 @@ export default function CustomTimetable() {
 
   return (
     <KeyboardAwareScrollView style={styles.container}>
-      <CustomAlert
-        show={alert.show}
-        status={alert.status}
-        message={alert.message}
-        onClose={() => setAlert({ show: false, status: null, message: null })}
-      />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>나만의 시간표</Text>
       </View>

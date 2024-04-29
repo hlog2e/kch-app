@@ -42,7 +42,7 @@ export default function SettingSection({ navigation }) {
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.subText} />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.push("VerifyUndergraduateScreen")}
           style={styles.button}
         >
@@ -55,7 +55,7 @@ export default function SettingSection({ navigation }) {
             <Text style={styles.buttonText}>재학생 인증</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.subText} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

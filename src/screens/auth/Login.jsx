@@ -4,20 +4,18 @@ import { useState } from "react";
 import FirstRequestCode from "./LoginStep/FirstRequestCode";
 import SecondVerifyCode from "./LoginStep/SecondVerifyCode";
 import { postRequestCode, postVerifyCode } from "../../../apis/auth";
-import CustomAlert from "../../components/Overlay/CustomAlert";
+import { useAlert } from "../../../context/AlertContext";
+
 import { useUser } from "../../../context/UserContext";
 
 export default function LoginScreen({ navigation }) {
   const { login } = useUser();
+  const alert = useAlert();
+
   const [step, setStep] = useState("RequestCode");
   const [data, setData] = useState({
     phoneNumber: "",
     code: "",
-  });
-  const [alertData, setAlertData] = useState({
-    show: false,
-    status: null,
-    message: "",
   });
 
   const handleRequestCode = async (_phoneNumber) => {
@@ -25,12 +23,11 @@ export default function LoginScreen({ navigation }) {
     try {
       await postRequestCode(_phoneNumber);
     } catch (error) {
-      setAlertData({
-        status: "error",
-        message: error.response.data.message
+      alert.error(
+        error.response.data.message
           ? error.response.data.message
-          : "인증번호 발송중 오류가 발생하였습니다!",
-      });
+          : "인증번호 발송중 오류가 발생하였습니다!"
+      );
     }
   };
   const handleVerifyCodeAndLogin = async (_phoneNumber, _code) => {
@@ -50,61 +47,45 @@ export default function LoginScreen({ navigation }) {
         });
       }
     } catch (error) {
-      setAlertData({
-        show: true,
-        status: "error",
-        message: error.response.data.message
+      alert.error(
+        error.response.data.message
           ? error.response.data.message
-          : "인증번호 검증중 오류가 발생하였습니다!",
-      });
+          : "인증번호 검증중 오류가 발생하였습니다!"
+      );
     }
   };
 
   return (
-    <>
-      <CustomAlert
-        show={alertData.show}
-        status={alertData.status}
-        message={alertData.message}
-        onClose={() =>
-          setAlertData({
-            show: false,
-            status: null,
-            message: "",
-          })
-        }
-      />
-      <SafeAreaView edges={["top"]} style={styles.container}>
-        {step === "RequestCode" && (
-          <FirstRequestCode
-            onNext={async (_phoneNumber) => {
-              setData((_prev) => {
-                return {
-                  ..._prev,
-                  phoneNumber: _phoneNumber,
-                };
-              });
-              setStep("VerifyCode");
-              await handleRequestCode(_phoneNumber);
-            }}
-          />
-        )}
+    <SafeAreaView edges={["top"]} style={styles.container}>
+      {step === "RequestCode" && (
+        <FirstRequestCode
+          onNext={async (_phoneNumber) => {
+            setData((_prev) => {
+              return {
+                ..._prev,
+                phoneNumber: _phoneNumber,
+              };
+            });
+            setStep("VerifyCode");
+            await handleRequestCode(_phoneNumber);
+          }}
+        />
+      )}
 
-        {step === "VerifyCode" && (
-          <SecondVerifyCode
-            data={data}
-            back={() => setStep("RequestCode")}
-            onNext={async (_code) => {
-              setData((_prev) => {
-                return { ..._prev, code: _code };
-              });
+      {step === "VerifyCode" && (
+        <SecondVerifyCode
+          data={data}
+          back={() => setStep("RequestCode")}
+          onNext={async (_code) => {
+            setData((_prev) => {
+              return { ..._prev, code: _code };
+            });
 
-              await handleVerifyCodeAndLogin(data.phoneNumber, _code);
-            }}
-          />
-        )}
-      </SafeAreaView>
-    </>
+            await handleVerifyCodeAndLogin(data.phoneNumber, _code);
+          }}
+        />
+      )}
+    </SafeAreaView>
   );
 }
 

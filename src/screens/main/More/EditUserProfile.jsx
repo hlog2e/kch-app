@@ -13,8 +13,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "../../../../context/UserContext";
 import { useTheme } from "@react-navigation/native";
 import { useMutation, useQueryClient } from "react-query";
-import CustomAlert from "../../../components/Overlay/CustomAlert";
-import CustomLoader from "../../../components/Overlay/CustomLoader";
+
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 import {
@@ -24,25 +23,17 @@ import {
 } from "../../../../apis/more/more";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../../components/Header/Header";
+import { useAlert } from "../../../../context/AlertContext";
 
 export default function EditUserProfileScreen({ navigation }) {
   const { user } = useUser();
+  const alert = useAlert();
   const { colors } = useTheme();
 
   const [inputData, setInputData] = useState({ name: null, desc: null });
-
-  const [alert, setAlert] = useState({
-    show: false,
-    status: null,
-    message: null,
-  });
-  const { mutate: photoMutate, isLoading: photoLoading } = useMutation(
-    postRegisterProfilePhoto
-  );
-  const { mutate: deletePhotoMutate, isLoading: deletePhotoLoading } =
-    useMutation(deleteProfilePhoto);
-  const { mutate: profileMutate, isLoading: profileLoading } =
-    useMutation(postEditUserProfile);
+  const { mutate: photoMutate } = useMutation(postRegisterProfilePhoto);
+  const { mutate: deletePhotoMutate } = useMutation(deleteProfilePhoto);
+  const { mutate: profileMutate } = useMutation(postEditUserProfile);
 
   const formData = new FormData();
   const queryClient = useQueryClient();
@@ -67,15 +58,12 @@ export default function EditUserProfileScreen({ navigation }) {
         await handlePOSTPhoto(image);
       }
     } catch (_err) {
-      setAlert({
-        show: true,
-        status: "error",
-        message: "이미지를 불러오는 중 오류가 발생하였습니다.",
-      });
+      alert.error("이미지를 로드하는 중 오류가 발생하였습니다.");
     }
   };
 
   const handlePOSTPhoto = async (image) => {
+    alert.loading();
     formData.append("image", {
       uri: image.uri,
       name: image.uri.split("/").pop(),
@@ -85,64 +73,52 @@ export default function EditUserProfileScreen({ navigation }) {
     photoMutate(formData, {
       onSuccess: () => {
         queryClient.invalidateQueries("UserData");
-        setAlert({
-          show: true,
-          status: "success",
-          message:
-            "이미지를 성공적으로 업로드 하였습니다.\n화면 상에서 변경되기까지 약 30초 정도 걸려요:)",
-        });
+        alert.success(
+          "이미지를 성공적으로 업로드 하였습니다.\n화면 상에서 변경되기까지 약 30초 정도 걸려요:)"
+        );
       },
       onError: (error) =>
-        setAlert({
-          show: true,
-          status: "error",
-          message:
-            "이미지를 업로드 하던 중 오류가 발생하였습니다." +
-            error?.response?.data?.message,
-        }),
+        alert.error(
+          "이미지를 업로드 하던 중 오류가 발생하였습니다." +
+            error?.response?.data?.message
+        ),
     });
   };
 
   const handleDeleteProfilePhoto = async () => {
+    alert.loading();
     deletePhotoMutate(
       {},
       {
         onSuccess: () => {
           queryClient.invalidateQueries("UserData");
-          setAlert({
-            show: true,
-            status: "success",
-            message:
-              "기본 프로필 이미지로 변경하였습니다.\n화면 상에서 변경되기까지는 약 30초 정도 걸려요:)",
-          });
+          alert.success(
+            "기본 프로필 이미지로 변경하였습니다.\n화면 상에서 변경되기까지는 약 30초 정도 걸려요:)"
+          );
         },
         onError: (error) => {
-          setAlert({
-            show: true,
-            status: "error",
-            message:
-              "기본 프로필 이미지로 변경하던 중 오류가 발생하였습니다." +
-              error?.response?.data?.message,
-          });
+          alert.error(
+            "기본 프로필 이미지로 변경하던 중 오류가 발생하였습니다." +
+              error?.response?.data?.message
+          );
         },
       }
     );
   };
 
   const handlePOSTUserData = async () => {
+    alert.loading();
     profileMutate(inputData, {
       onSuccess: () => {
         queryClient.invalidateQueries("UserData");
         navigation.goBack();
+        alert.close();
       },
       onError: (error) => {
-        setAlert({
-          show: true,
-          status: "error",
-          message:
-            "프로필을 수정하던 중 오류가 발생하였습니다." +
-            error?.response?.data?.message,
-        });
+        alert.error(
+          "프로필을 수정하던 중 오류가 발생하였습니다." +
+            error?.response?.data?.message
+        );
       },
     });
   };
@@ -195,22 +171,6 @@ export default function EditUserProfileScreen({ navigation }) {
   });
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
-      <CustomAlert
-        show={alert.show}
-        status={alert.status}
-        message={alert.message}
-        onClose={() => setAlert({ show: false, status: null, message: null })}
-      />
-      {/* <CustomLoader
-        loading={photoLoading || profileLoading}
-        text={
-          photoLoading &&
-          "이미지 업로드 중...\n(이미지 크기에 따라 최대 1분까지 소요될 수 있습니다.)"
-        }
-      /> 
-            TODO: 여기에 alert 로 컴포넌트 통합
-      */}
-
       <Header navigation={navigation} />
 
       <KeyboardAvoidingView

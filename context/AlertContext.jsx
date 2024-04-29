@@ -1,6 +1,8 @@
 import { useContext, useState, createContext } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import AnimatedLottieView from "lottie-react-native";
+import lottieData from "../assets/lottie/loader.json";
 
 export const AlertContext = createContext({
   error: () => {},
@@ -69,19 +71,55 @@ export function AlertProvider({ children }) {
     });
   };
 
+  const close = () => {
+    setAlert({
+      show: false,
+      status: null,
+      message: null,
+      icon: null,
+      color: null,
+    });
+  };
+
   return (
-    <AlertContext.Provider value={{ error, info, success, warning }}>
+    <AlertContext.Provider
+      value={{ error, info, success, warning, loading, close }}
+    >
       {alert.show ? (
         <View style={styles.container}>
           <View style={styles.alert}>
-            <View style={styles.wrap}>
-              <Ionicons name={alert.icon} size={70} color={alert.color} />
+            {alert.status === "loading" ? (
+              <View style={styles.wrap}>
+                <AnimatedLottieView
+                  autoPlay
+                  style={styles.lottie}
+                  source={lottieData}
+                />
+                <Text style={styles.text}>{alert.message}</Text>
+              </View>
+            ) : (
+              <>
+                <View style={styles.wrap}>
+                  <Ionicons name={alert.icon} size={70} color={alert.color} />
 
-              <Text style={styles.text}>{alert.message}</Text>
-            </View>
-            <TouchableOpacity onPress={onClose} style={styles.button}>
-              <Text style={styles.buttonText}>확인</Text>
-            </TouchableOpacity>
+                  <Text style={styles.text}>{alert.message}</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() =>
+                    setAlert({
+                      show: false,
+                      status: null,
+                      message: null,
+                      icon: null,
+                      color: null,
+                    })
+                  }
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>확인</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       ) : null}
@@ -113,6 +151,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   wrap: { alignItems: "center" },
+  lottie: { marginTop: -5, width: 160, height: 160 },
   text: {
     fontSize: 18,
     fontWeight: "600",
