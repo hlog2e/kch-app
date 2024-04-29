@@ -97,8 +97,10 @@ export default function CommunityDetailScreen({ navigation, route }) {
                 <View style={styles.wrap}>
                   <Text style={styles.title}>{data.title}</Text>
                   <Text style={styles.nameAndDate}>
-                    {data.isAnonymous ? "익명" : data.publisherName} |{" "}
-                    {moment(data.createdAt).fromNow()}
+                    {data.isAnonymous
+                      ? "익명"
+                      : data.publisherName + ` (${data.publisherDesc})`}{" "}
+                    | {moment(data.createdAt).fromNow()}
                   </Text>
 
                   <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>

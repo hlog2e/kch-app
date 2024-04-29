@@ -51,8 +51,10 @@ export default function CommunityItem({ item, navigation }) {
           {item.title}
         </Text>
         <Text style={styles.nameAndTime}>
-          {item.isAnonymous ? "익명" : item.publisherName} |{" "}
-          {moment(item.createdAt).fromNow()}
+          {item.isAnonymous
+            ? "익명"
+            : item.publisherName + ` (${item.publisherDesc})`}{" "}
+          | {moment(item.createdAt).fromNow()}
         </Text>
       </View>
       <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
