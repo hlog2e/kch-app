@@ -70,7 +70,7 @@ export default function CommunityDetailScreen({ navigation, route }) {
       fontWeight: "600",
       color: colors.text,
     },
-    date: {
+    nameAndDate: {
       marginTop: 4,
       fontSize: 12,
       color: colors.subText,
@@ -87,7 +87,6 @@ export default function CommunityDetailScreen({ navigation, route }) {
         <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
           <Header navigation={navigation} />
           {isLoading ? <FullScreenLoader /> : null}
-          {/* {commentPOSTLoading ? <FullScreenLoader blur loading={true} /> : null} */}
 
           <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -97,7 +96,8 @@ export default function CommunityDetailScreen({ navigation, route }) {
               <ScrollView style={styles.scroll_view}>
                 <View style={styles.wrap}>
                   <Text style={styles.title}>{data.title}</Text>
-                  <Text style={styles.date}>
+                  <Text style={styles.nameAndDate}>
+                    {data.isAnonymous ? "익명" : data.publisherName} |{" "}
                     {moment(data.createdAt).fromNow()}
                   </Text>
 

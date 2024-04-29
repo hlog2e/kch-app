@@ -10,24 +10,18 @@ export default function CommunityList({ boardData, navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const { colors } = useTheme();
 
-  const {
-    isLoading,
-    isSuccess,
-    data,
-    refetch,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["community", boardData],
-    queryFn: ({ pageParam = 0 }) =>
-      getCommunities({ boardId: boardData._id, offset: pageParam }),
-    getNextPageParam: (lastPage, allPages) => {
-      if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
-        return undefined;
-      }
-      return lastPage.nextCursor;
-    },
-  });
+  const { isLoading, data, refetch, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["community", boardData],
+      queryFn: ({ pageParam = 0 }) =>
+        getCommunities({ boardId: boardData._id, offset: pageParam }),
+      getNextPageParam: (lastPage, allPages) => {
+        if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
+          return undefined;
+        }
+        return lastPage.nextCursor;
+      },
+    });
 
   const styles = StyleSheet.create({
     header: { padding: 12, backgroundColor: colors.cardBg2 },

@@ -3,8 +3,18 @@ import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
-export default function Header({ navigation, title, backArrowText }) {
+export default function Header({
+  navigation,
+  title,
+  backArrowText,
+  rightComponent,
+}) {
   const styles = StyleSheet.create({
+    header: {
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexDirection: "row",
+    },
     title: {
       fontWeight: "700",
       fontSize: 24,
@@ -23,6 +33,7 @@ export default function Header({ navigation, title, backArrowText }) {
           backArrowText={backArrowText}
         />
       )}
+      {rightComponent}
     </View>
   );
 }

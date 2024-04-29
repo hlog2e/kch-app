@@ -100,6 +100,7 @@ function FixedList({ fixedData, boardData, navigation, unFixMutate }) {
   const filteredData = boardData.filter((_item) =>
     fixedData.includes(_item._id)
   );
+
   return filteredData.map((_data) => (
     <BoardItem
       key={_data._id}
@@ -129,28 +130,35 @@ function UnFixedList({ fixedData, boardData, navigation, fixMutate }) {
   const filteredData = boardData.filter(
     (_item) => !fixedData.includes(_item._id)
   );
+  const styles = StyleSheet.create({
+    spacer: {
+      height: 12,
+    },
+  });
 
-  return filteredData.map((_data) => (
-    <BoardItem
-      key={_data._id}
-      onPress={() => {
-        navigation.push("CommunityInnerListScreen", {
-          boardData: _data,
-        });
-      }}
-      onLongPress={() => {
-        fixMutate(
-          { boardId: _data._id },
-          {
-            onSuccess: () => {
-              queryClient.invalidateQueries("CommunityBoardFixed");
-            },
-          }
-        );
-      }}
-      iconName={_data.iconName}
-      text={_data.name + " 게시판"}
-    />
+  return filteredData.map((_data, _index) => (
+    <View key={_data._id}>
+      {_index !== 0 && _index % 3 === 0 ? <View style={styles.spacer} /> : null}
+      <BoardItem
+        onPress={() => {
+          navigation.push("CommunityInnerListScreen", {
+            boardData: _data,
+          });
+        }}
+        onLongPress={() => {
+          fixMutate(
+            { boardId: _data._id },
+            {
+              onSuccess: () => {
+                queryClient.invalidateQueries("CommunityBoardFixed");
+              },
+            }
+          );
+        }}
+        iconName={_data.iconName}
+        text={_data.name + " 게시판"}
+      />
+    </View>
   ));
 }
 

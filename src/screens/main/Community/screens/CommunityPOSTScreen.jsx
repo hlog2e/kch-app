@@ -1,5 +1,4 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import {
   TextInput,
   StyleSheet,
@@ -10,23 +9,24 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import Checkbox from "expo-checkbox";
 import { useTheme } from "@react-navigation/native";
-
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { postCommunity } from "../../../../../apis/community/community";
 import mime from "mime";
-
 import Header from "../../../../components/Header/Header";
 import HorizontalImagePicker from "../../../../components/Image/HorizontalImagePicker";
 import { useAlert } from "../../../../../context/AlertContext";
 
-export default function CommunityPOSTScreen({ navigation }) {
+export default function CommunityPOSTScreen({ navigation, route }) {
   const { colors } = useTheme();
   const alert = useAlert();
+  const { boardData } = route.params;
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   const [images, setImages] = useState([]);
   const formData = new FormData();
@@ -43,6 +43,9 @@ export default function CommunityPOSTScreen({ navigation }) {
     try {
       formData.append("title", title);
       formData.append("content", content);
+      formData.append("boardId", boardData._id);
+      formData.append("isAnonymous", isAnonymous);
+
       images.map(({ uri }) => {
         formData.append("image", {
           uri: uri,
@@ -93,9 +96,19 @@ export default function CommunityPOSTScreen({ navigation }) {
     },
     footer: {
       padding: 14,
-
-      alignItems: "flex-end",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
+    checkbox_wrap: { flexDirection: "row", alignItems: "center" },
+    checkbox: { borderRadius: 5, color: colors.blue },
+    checkbox_text: {
+      marginLeft: 5,
+      fontWeight: "600",
+      color: colors.subText,
+      fontSize: 13,
+    },
+
     footer_button_text: { color: "gray", fontWeight: "700" },
   });
 
@@ -106,7 +119,10 @@ export default function CommunityPOSTScreen({ navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : null}
       >
         <ScrollView>
-          <Header navigation={navigation} />
+          <Header
+            navigation={navigation}
+            backArrowText={boardData.name + "게시판 글 작성"}
+          />
           <View style={styles.wrap}>
             <TextInput
               value={title}
@@ -124,7 +140,7 @@ export default function CommunityPOSTScreen({ navigation }) {
               }}
               style={styles.content_input}
               placeholder={
-                "내용\n\n※경고※\n공공질서 또는 미풍양속에 반하는 표현행위, 제3자를 모욕, 폄하하는 행위 등 커뮤니티에 적합하지 않은 내용을 게시할 시 금천고 앱 영구 이용 정지 처리될 수 있습니다."
+                "내용\n\n※경고※\n공공질서 또는 미풍양속에 반하는 표현행위, 제3자를 모욕, 폄하하는 행위 등 커뮤니티에 적합하지 않은 내용을 게시할 시 앱 영구 이용 정지 처리될 수 있습니다."
               }
               multiline
             />
@@ -132,6 +148,24 @@ export default function CommunityPOSTScreen({ navigation }) {
           </View>
         </ScrollView>
         <View style={styles.footer}>
+          <View style={styles.checkbox_wrap}>
+            <Checkbox
+              style={styles.checkbox}
+              value={isAnonymous}
+              onValueChange={() => {
+                if (!isAnonymous && !boardData.allowAnonymous) {
+                  alert.info(
+                    boardData.name +
+                      "게시판은 익명 작성이 불가능한 게시판입니다."
+                  );
+                } else {
+                  setIsAnonymous((_prev) => !_prev);
+                }
+              }}
+            />
+            <Text style={styles.checkbox_text}>익명</Text>
+          </View>
+
           <TouchableOpacity onPress={handlePOST}>
             <Text style={styles.footer_button_text}>작성하기</Text>
           </TouchableOpacity>

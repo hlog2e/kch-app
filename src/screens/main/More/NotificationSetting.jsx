@@ -78,25 +78,25 @@ export default function NotificationSettingScreen({ navigation }) {
         );
       },
     },
-    {
-      id: "community",
-      title: "커뮤니티 알림",
-      desc: "커뮤니티에 새로운 글이 올라오면 알려드려요!",
-      value: currentSettings ? currentSettings.includes("community") : false,
-      onPress: () => {
-        updateSettingMutate(
-          {
-            category: "community",
-            isRegister: !currentSettings.includes("community"),
-          },
-          {
-            onSuccess: () => {
-              queryClient.invalidateQueries("NotificationSetting");
-            },
-          }
-        );
-      },
-    },
+    // {
+    //   id: "community",
+    //   title: "커뮤니티 알림",
+    //   desc: "커뮤니티에 새로운 글이 올라오면 알려드려요!",
+    //   value: currentSettings ? currentSettings.includes("community") : false,
+    //   onPress: () => {
+    //     updateSettingMutate(
+    //       {
+    //         category: "community",
+    //         isRegister: !currentSettings.includes("community"),
+    //       },
+    //       {
+    //         onSuccess: () => {
+    //           queryClient.invalidateQueries("NotificationSetting");
+    //         },
+    //       }
+    //     );
+    //   },
+    // },
   ];
 
   const styles = StyleSheet.create({ container: { flex: 1 } });

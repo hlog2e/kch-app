@@ -75,7 +75,6 @@ export default function Comment({ communityId, currentUser, data }) {
       {
         text: "확인",
         onPress: () => {
-          console.log(commentData);
           deleteCommentMutate(
             { communityId: communityId, commentId: commentData._id },
             {
@@ -186,10 +185,10 @@ export default function Comment({ communityId, currentUser, data }) {
               <View style={styles.header}>
                 <View style={styles.header_left}>
                   <Text style={styles.comment_writer_text}>
-                    {_item.isAnonymous ? "익명" : _item.issuer.name}
+                    {_item.isAnonymous ? "익명" : _item.issuerName}
                   </Text>
                   <Text style={styles.writer_desc}>
-                    {_item.isAnonymous ? null : _item.issuer.desc}
+                    {_item.isAnonymous ? null : _item.issuerDesc}
                   </Text>
                 </View>
 
