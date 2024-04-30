@@ -1,6 +1,6 @@
 import { View, ScrollView, Alert, StyleSheet, Text } from "react-native";
 import { useQuery } from "react-query";
-import { getMeals } from "../../../../../apis/home/meal";
+import { getMeals } from "../../../../../apis/school_data/meal";
 import { useState } from "react";
 import moment from "moment";
 import { Image } from "expo-image";

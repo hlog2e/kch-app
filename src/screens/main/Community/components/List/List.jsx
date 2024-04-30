@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
 import { useInfiniteQuery } from "react-query";
-import { getCommunities } from "../../../../../../apis/community/community";
+import { getCommunities } from "../../../../../../apis/community/index";
 import FullScreenLoader from "../../../../../components/Overlay/FullScreenLoader";
 import CommunityItem from "./Item";
 import { useTheme } from "@react-navigation/native";

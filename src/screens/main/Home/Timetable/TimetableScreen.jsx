@@ -11,7 +11,7 @@ export default function TimetableScreen({ navigation }) {
   const styles = StyleSheet.create({
     header: {
       marginTop: 10,
-      marginBottom: 30,
+
       flexDirection: "row",
       justifyContent: "space-between",
       paddingHorizontal: 10,

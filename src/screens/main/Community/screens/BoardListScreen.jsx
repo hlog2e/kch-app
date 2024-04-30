@@ -13,7 +13,7 @@ import {
   getCommunityBoards,
   postCommunityBoardFix,
   postCommunityBoardUnFix,
-} from "../../../../../apis/community/community";
+} from "../../../../../apis/community/index";
 import Banner from "../../../../components/Banner";
 import Header from "../../../../components/Header/Header";
 import { useTheme } from "@react-navigation/native";

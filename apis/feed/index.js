@@ -1,4 +1,4 @@
-import { apiAuthInstance } from "../api";
+import { apiAuthInstance } from "../instance";
 
 export const getFeeds = async (offset) => {
   const limit = 5;

@@ -5,7 +5,7 @@ import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useQuery } from "react-query";
-import { getSchedule } from "../../../../apis/home/schedule";
+import { getSchedule } from "../../../../apis/neis/schedule";
 import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
 import uuid from "react-native-uuid";
 import { Ionicons } from "@expo/vector-icons";

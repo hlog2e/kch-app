@@ -1,4 +1,4 @@
-import { apiAuthInstance } from "./api";
+import { apiAuthInstance } from "../instance";
 
 export const registerPushTokenToDB = async (_token) => {
   const { data } = await apiAuthInstance.post("/push-noti/register", {

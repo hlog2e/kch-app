@@ -7,7 +7,7 @@ import {
   FlatList,
 } from "react-native";
 import { useInfiniteQuery } from "react-query";
-import { getPhotos } from "../../../../../apis/home/photo";
+import { getPhotos } from "../../../../../apis/school_data/photo";
 import { useTheme } from "@react-navigation/native";
 
 export default function PhotoSection({ navigation }) {

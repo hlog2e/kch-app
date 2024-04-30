@@ -16,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "react-query";
-import { postFeed } from "../../../../apis/feed/feed";
+import { postFeed } from "../../../../apis/feed/index";
 
 import mime from "mime";
 

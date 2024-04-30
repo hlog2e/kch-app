@@ -9,7 +9,7 @@ import {
 import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
-import { getCommunitiesWrittenByMe } from "../../../../apis/more/more";
+import { getCommunitiesWrittenByMe } from "../../../../apis/user/index";
 import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
 import moment from "moment";
 

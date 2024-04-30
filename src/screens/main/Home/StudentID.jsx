@@ -15,10 +15,10 @@ import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
-  getUserInfo,
   postRegisterBarCode,
   postRegisterPhoto,
-} from "../../../../apis/home/studentID";
+} from "../../../../apis/user/studentID";
+import { getUserInfo } from "../../../../apis/user";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 

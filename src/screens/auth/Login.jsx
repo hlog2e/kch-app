@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import FirstRequestCode from "./LoginStep/FirstRequestCode";
 import SecondVerifyCode from "./LoginStep/SecondVerifyCode";
-import { postRequestCode, postVerifyCode } from "../../../apis/auth";
+import { postRequestCode, postVerifyCode } from "../../../apis/auth/index";
 import { useAlert } from "../../../context/AlertContext";
 
 import { useUser } from "../../../context/UserContext";

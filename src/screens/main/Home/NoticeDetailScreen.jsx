@@ -4,7 +4,7 @@ import WebView from "react-native-webview";
 import * as Linking from "expo-linking";
 import { useTheme } from "@react-navigation/native";
 import { useQuery } from "react-query";
-import { getNoticeDetail } from "../../../../apis/home/notice";
+import { getNoticeDetail } from "../../../../apis/school_data/notice";
 import moment from "moment";
 import Header from "../../../components/Header/Header";
 

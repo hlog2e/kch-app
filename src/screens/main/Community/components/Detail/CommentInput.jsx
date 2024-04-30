@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { postComment } from "../../../../../../apis/community/community";
+import { postComment } from "../../../../../../apis/community/index";
 import { useTheme } from "@react-navigation/native";
 import FullScreenLoader from "../../../../../components/Overlay/FullScreenLoader";
 import Checkbox from "expo-checkbox";

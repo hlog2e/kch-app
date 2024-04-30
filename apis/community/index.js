@@ -1,4 +1,4 @@
-import { apiAuthInstance } from "../api";
+import { apiAuthInstance } from "../instance";
 
 export const getCommunityBoards = async () => {
   const { data } = await apiAuthInstance.get("/community/board");

@@ -1,9 +1,4 @@
-import { apiAuthInstance } from "../api";
-
-export const getUserInfo = async (props) => {
-  const { data } = await apiAuthInstance.get("/user/info");
-  return data;
-};
+import { apiAuthInstance } from "../instance";
 
 export const postRegisterPhoto = async (formData) => {
   const { data } = await apiAuthInstance.post(

@@ -13,7 +13,7 @@ import Checkbox from "expo-checkbox";
 import { useTheme } from "@react-navigation/native";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { postCommunity } from "../../../../../apis/community/community";
+import { postCommunity } from "../../../../../apis/community/index";
 import mime from "mime";
 import Header from "../../../../components/Header/Header";
 import HorizontalImagePicker from "../../../../components/Image/HorizontalImagePicker";

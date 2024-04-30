@@ -1,4 +1,4 @@
-import { apiAuthInstance } from "../api";
+import { apiAuthInstance } from "../instance";
 import moment from "moment";
 
 export const getMeals = async () => {

@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useInfiniteQuery } from "react-query";
-import { getNotices } from "../../../../../apis/home/notice";
+import { getNotices } from "../../../../../apis/school_data/notice";
 import moment from "moment";
 
 export default function NoticeSection({ navigation }) {

@@ -20,7 +20,7 @@ import {
   deleteProfilePhoto,
   postEditUserProfile,
   postRegisterProfilePhoto,
-} from "../../../../apis/more/more";
+} from "../../../../apis/user/profile";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../../components/Header/Header";
 import { useAlert } from "../../../../context/AlertContext";

@@ -4,7 +4,7 @@ import { registerForPushNotificationsAsync } from "../utils/expo_notification";
 import {
   registerPushTokenToDB,
   unRegisterPushTokenToDB,
-} from "../apis/push-noti";
+} from "../apis/push-noti/index";
 import { getExpoPushTokenAsync } from "expo-notifications";
 import Constants from "expo-constants";
 import * as Device from "expo-device";

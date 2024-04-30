@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
 
 import { useQuery } from "react-query";
-import { getCommunityDetail } from "../../../../../apis/community/community";
+import { getCommunityDetail } from "../../../../../apis/community/index";
 import FullScreenLoader from "../../../../components/Overlay/FullScreenLoader";
 import { useUser } from "../../../../../context/UserContext";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";

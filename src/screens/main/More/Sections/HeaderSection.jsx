@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useQuery } from "react-query";
-import { getUserInfo } from "../../../../../apis/more/more";
+import { getUserInfo } from "../../../../../apis/user/index";
 import { useEffect } from "react";
 import { useUser } from "../../../../../context/UserContext";
 

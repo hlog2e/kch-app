@@ -4,7 +4,7 @@ import {
   communityDelete,
   postBlockUser,
   postReportCommunityItem,
-} from "../../../../../../apis/community/community";
+} from "../../../../../../apis/community/index";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 

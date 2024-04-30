@@ -2,7 +2,7 @@ import { useTheme } from "@react-navigation/native";
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "react-query";
-import { postResetBlockedUsers } from "../../../../../apis/more/more";
+import { postResetBlockedUsers } from "../../../../../apis/user/index";
 
 export default function CommunitySection({ navigation }) {
   const { colors } = useTheme();

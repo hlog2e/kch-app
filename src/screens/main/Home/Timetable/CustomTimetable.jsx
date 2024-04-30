@@ -7,7 +7,8 @@ import { useMutation, useQuery } from "react-query";
 import {
   getCustomTimetable,
   postCustomTimetable,
-} from "../../../../../apis/home/timetable";
+} from "../../../../../apis/user/timetable";
+import { useAlert } from "../../../../../context/AlertContext";
 
 export default function CustomTimetable() {
   const alert = useAlert();

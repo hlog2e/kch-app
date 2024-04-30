@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   getCurrentNotificaionSettings,
   postUpdateNotificationSetting,
-} from "../../../../apis/more/more";
+} from "../../../../apis/user/index";
 import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
 import Header from "../../../components/Header/Header";
 

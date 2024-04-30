@@ -1,8 +1,15 @@
-import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import moment from "moment";
 import LodashArray from "lodash";
 import { useTheme } from "@react-navigation/native";
-import { getTimetable } from "../../../../../apis/home/timetable";
+import { getNeisTimetable } from "../../../../../apis/neis/timetable";
 import { useEffect, useState } from "react";
 import FullScreenLoader from "../../../../components/Overlay/FullScreenLoader";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,7 +21,7 @@ export default function NeisTimetable() {
   const [gradeClass, setGradeClass] = useState({ grade: 1, class: 1 });
 
   const [data, setData] = useState();
-  const [times, setTimes] = useState([]);
+  const times = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
   const dayNames = ["월", "화", "수", "목", "금"];
 
@@ -30,8 +37,8 @@ export default function NeisTimetable() {
     .subtract(1, "days")
     .format("YYYYMMDD");
 
-  async function getNeisTimetable() {
-    const res = await getTimetable(
+  async function getNeisData() {
+    const res = await getNeisTimetable(
       gradeClass.grade,
       gradeClass.class,
       weekFirstDay,
@@ -55,17 +62,6 @@ export default function NeisTimetable() {
       return acc;
     }, []);
 
-    const colMaxLength = uniqueData.reduce((acc, current) => {
-      current.length > 0 ? (acc = current.length) : acc;
-      return acc;
-    }, 0);
-
-    let timesArray = [];
-    for (let i = 1; i <= colMaxLength; i++) {
-      timesArray.push(i);
-    }
-
-    setTimes(timesArray);
     setData(uniqueData);
   }
 
@@ -80,7 +76,7 @@ export default function NeisTimetable() {
 
   useEffect(() => {
     if (gradeClass.grade && gradeClass.class) {
-      getNeisTimetable();
+      getNeisData();
     }
 
     if (!gradeClass.grade || !gradeClass.class) {
@@ -93,6 +89,9 @@ export default function NeisTimetable() {
   }, []);
 
   const styles = StyleSheet.create({
+    container: {
+      paddingVertical: 10,
+    },
     header: {
       flexDirection: "row",
       alignItems: "center",
@@ -203,7 +202,7 @@ export default function NeisTimetable() {
   });
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>이번주 시간표</Text>
         <View style={styles.headerButtonWrap}>
@@ -382,6 +381,6 @@ export default function NeisTimetable() {
       ) : (
         <FullScreenLoader />
       )}
-    </View>
+    </ScrollView>
   );
 }

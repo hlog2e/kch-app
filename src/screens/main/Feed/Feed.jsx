@@ -13,7 +13,7 @@ import { useState } from "react";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import moment from "moment";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
-import { deleteFeed, getFeeds } from "../../../../apis/feed/feed";
+import { deleteFeed, getFeeds } from "../../../../apis/feed/index";
 import FullScreenLoader from "../../../components/Overlay/FullScreenLoader";
 import ImageView from "react-native-image-viewing";
 import { Ionicons } from "@expo/vector-icons";

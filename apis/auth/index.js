@@ -1,4 +1,4 @@
-import { apiInstance } from "./api";
+import { apiInstance } from "../instance";
 
 export const postRequestCode = async (_phoneNumber) => {
   const { data } = await apiInstance.post("/auth/code", {

@@ -1,4 +1,4 @@
-import { apiInstance } from "../api";
+import { apiInstance } from "../instance";
 
 export const getNotices = async ({ skip }) => {
   const { data } = await apiInstance.get("/notice", {

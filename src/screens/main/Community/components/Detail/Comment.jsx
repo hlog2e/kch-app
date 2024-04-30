@@ -3,7 +3,7 @@ import {
   postReportComment,
   postBlockUser,
   getBlockedUsers,
-} from "../../../../../../apis/community/community";
+} from "../../../../../../apis/community/index";
 import { useTheme } from "@react-navigation/native";
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import { useActionSheet } from "@expo/react-native-action-sheet";
