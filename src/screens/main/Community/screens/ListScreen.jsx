@@ -4,6 +4,11 @@ import Header from "../../../../components/Header/Header";
 import CommunityList from "../components/List/List";
 import { View, Text, Switch, StyleSheet } from "react-native";
 import { useTheme } from "@react-navigation/native";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  getCurrentNotificaionSettings,
+  postUpdateNotificationSetting,
+} from "../../../../../apis/user/notification";
 
 export default function CommunityInnerListScreen({ route, navigation }) {
   const boardData = route.params.boardData;
@@ -27,6 +32,13 @@ export default function CommunityInnerListScreen({ route, navigation }) {
 
 function RightNotificationSwitch({ boardData }) {
   const { colors } = useTheme();
+  const { data } = useQuery(
+    "NotificationSetting",
+    getCurrentNotificaionSettings
+  );
+  const { mutate } = useMutation(postUpdateNotificationSetting);
+  const queryClient = useQueryClient();
+  const isSubscribe = data?.includes(boardData._id);
 
   const styles = StyleSheet.create({
     container: { flexDirection: "row", alignItems: "center", marginRight: 10 },
@@ -39,7 +51,17 @@ function RightNotificationSwitch({ boardData }) {
       <Text style={styles.text}>알림</Text>
       <Switch
         style={styles.switch}
-        value={true}
+        value={isSubscribe}
+        onValueChange={(_value) => {
+          mutate(
+            { category: boardData._id, isRegister: _value },
+            {
+              onSuccess: () => {
+                queryClient.invalidateQueries("NotificationSetting");
+              },
+            }
+          );
+        }}
         trackColor={{ true: colors.blue, false: null }}
       />
     </View>

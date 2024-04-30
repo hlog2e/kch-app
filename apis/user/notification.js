@@ -1,3 +1,5 @@
+import { apiAuthInstance } from "../instance";
+
 export const getCurrentNotificaionSettings = async () => {
   const { data } = await apiAuthInstance.get("/user/notificationSetting");
 
