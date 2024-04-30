@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CommunityScreen from "../../../screens/main/Community/screens/BoardListScreen";
-import AccessDeniedScreen from "../../../screens/main/Community/AccessDeniedScreen";
+import AccessDeniedScreen from "../../../screens/main/Community/screens/AccessDeniedScreen";
 import CommunityInnerListScreen from "../../../screens/main/Community/screens/ListScreen";
 
 const Stack = createNativeStackNavigator();

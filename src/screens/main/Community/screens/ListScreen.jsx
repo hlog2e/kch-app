@@ -9,25 +9,38 @@ import {
   getCurrentNotificaionSettings,
   postUpdateNotificationSetting,
 } from "../../../../../apis/user/notification";
+import { useUser } from "../../../../../context/UserContext";
+
+import { useEffect } from "react";
 
 export default function CommunityInnerListScreen({ route, navigation }) {
   const boardData = route.params.boardData;
+  const { user } = useUser();
+  const accessAllowed = boardData.role.includes(user.type);
 
-  return (
-    <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
-      <Header
-        navigation={navigation}
-        backArrowText={boardData.name + " 게시판"}
-        rightComponent={<RightNotificationSwitch boardData={boardData} />}
-      />
-      <FABPlus
-        onPress={() => {
-          navigation.push("CommunityPOSTScreen", { boardData });
-        }}
-      />
-      <CommunityList boardData={boardData} navigation={navigation} />
-    </SafeAreaView>
-  );
+  useEffect(() => {
+    if (!accessAllowed) {
+      navigation.replace("AccessDeniedScreen", { boardData });
+    }
+  }, [navigation]);
+
+  if (accessAllowed) {
+    return (
+      <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
+        <Header
+          navigation={navigation}
+          backArrowText={boardData.name + " 게시판"}
+          rightComponent={<RightNotificationSwitch boardData={boardData} />}
+        />
+        <FABPlus
+          onPress={() => {
+            navigation.push("CommunityPOSTScreen", { boardData });
+          }}
+        />
+        <CommunityList boardData={boardData} navigation={navigation} />
+      </SafeAreaView>
+    );
+  }
 }
 
 function RightNotificationSwitch({ boardData }) {
