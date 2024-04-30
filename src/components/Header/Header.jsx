@@ -9,6 +9,7 @@ export default function Header({
   backArrowText,
   rightComponent,
 }) {
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     header: {
       alignItems: "center",
@@ -20,6 +21,7 @@ export default function Header({
       fontSize: 24,
       marginTop: 14,
       marginLeft: 16,
+      color: colors.text,
     },
   });
 
@@ -40,22 +42,29 @@ export default function Header({
 
 function BackArrowButton({ navigation, backArrowText }) {
   const { colors } = useTheme();
+  const styles = StyleSheet.create({
+    wrap: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginLeft: 16,
+      marginBottom: 6,
+    },
+    backArrowText: {
+      paddingHorizontal: 10,
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text,
+    },
+  });
   return (
     <TouchableOpacity
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        marginLeft: 16,
-        marginBottom: 6,
-      }}
+      style={styles.wrap}
       onPress={() => {
         navigation.goBack();
       }}
     >
       <Octicons name="chevron-left" size={30} color={colors.text} />
-      <Text style={{ paddingHorizontal: 10, fontSize: 16, fontWeight: "600" }}>
-        {backArrowText}
-      </Text>
+      <Text style={styles.backArrowText}>{backArrowText}</Text>
     </TouchableOpacity>
   );
 }

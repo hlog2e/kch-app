@@ -148,23 +148,21 @@ export default function CommunityPOSTScreen({ navigation, route }) {
           </View>
         </ScrollView>
         <View style={styles.footer}>
-          <View style={styles.checkbox_wrap}>
-            <Checkbox
-              style={styles.checkbox}
-              value={isAnonymous}
-              onValueChange={() => {
-                if (!isAnonymous && !boardData.allowAnonymous) {
-                  alert.info(
-                    boardData.name +
-                      "게시판은 익명 작성이 불가능한 게시판입니다."
-                  );
-                } else {
-                  setIsAnonymous((_prev) => !_prev);
-                }
-              }}
-            />
+          <TouchableOpacity
+            style={styles.checkbox_wrap}
+            onPress={() => {
+              if (!isAnonymous && !boardData.allowAnonymous) {
+                alert.info(
+                  boardData.name + "게시판은 익명 작성이 불가능한 게시판입니다."
+                );
+              } else {
+                setIsAnonymous((_prev) => !_prev);
+              }
+            }}
+          >
+            <Checkbox style={styles.checkbox} value={isAnonymous} />
             <Text style={styles.checkbox_text}>익명</Text>
-          </View>
+          </TouchableOpacity>
 
           <TouchableOpacity onPress={handlePOST}>
             <Text style={styles.footer_button_text}>작성하기</Text>

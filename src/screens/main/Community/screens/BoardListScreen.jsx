@@ -50,7 +50,7 @@ export default function CommunityBoardListScreen({ navigation }) {
     },
     tipText: {
       fontSize: 12,
-      color: "gray",
+      color: colors.subText,
       fontWeight: "600",
     },
 
@@ -163,6 +163,7 @@ function UnFixedList({ fixedData, boardData, navigation, fixMutate }) {
 }
 
 function BoardItem({ onPress, iconName, text, onLongPress }) {
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     button: {
       paddingVertical: 8,
@@ -173,6 +174,7 @@ function BoardItem({ onPress, iconName, text, onLongPress }) {
       marginLeft: 12,
       fontSize: 16,
       fontWeight: "600",
+      color: colors.text,
     },
   });
   return (
