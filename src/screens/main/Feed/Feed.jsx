@@ -120,25 +120,18 @@ function FeedItem({ item }) {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.background,
-
-      marginHorizontal: 15,
-      marginTop: 10,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 15,
-      padding: 10,
+      marginTop: 14,
+    },
+    withoutImgWrap: {
+      paddingHorizontal: 12,
     },
     header: {
       padding: 3,
       flexDirection: "row",
-      justifyContent: "space-between",
-    },
-    publisherPhoto: { width: 45, height: 45, borderRadius: 50 },
 
-    headerLeftWrap: {
-      flexDirection: "row",
       alignItems: "center",
     },
+    publisherPhoto: { width: 45, height: 45, borderRadius: 50 },
 
     publisherWrap: { marginLeft: 8 },
     publisherText: {
@@ -152,7 +145,7 @@ function FeedItem({ item }) {
       color: colors.subText,
     },
 
-    date: { fontSize: 12, color: colors.subText },
+    date: { fontSize: 12, color: colors.subText, marginTop: 8 },
 
     deleteButtonWrap: {
       flexDirection: "row",
@@ -162,8 +155,8 @@ function FeedItem({ item }) {
     deleteButton: {},
     deleteButtonText: { fontSize: 12, fontWeight: "300", color: colors.red },
 
+    content: { paddingHorizontal: 12, marginTop: 10 },
     contentText: {
-      marginTop: 10,
       fontSize: 14,
       fontWeight: "200",
       color: colors.text,
@@ -174,14 +167,14 @@ function FeedItem({ item }) {
     image: {
       aspectRatio: 1,
       width: "100%",
-      borderRadius: 20,
+
       backgroundColor: colors.cardBg2,
     },
   });
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerLeftWrap}>
+      <View style={styles.withoutImgWrap}>
+        <View style={styles.header}>
           {item.publisherPhoto ? (
             <Image
               placeholder={"L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"}
@@ -198,19 +191,6 @@ function FeedItem({ item }) {
             <Text style={styles.publisherText}>{item.publisherName}</Text>
             <Text style={styles.publisherDesc}>{item.publisherDesc}</Text>
           </View>
-        </View>
-
-        <Text style={styles.date}>
-          {moment(item.createdAt).format("M월 D일")}
-        </Text>
-      </View>
-      <View style={styles.content}>
-        <View>
-          <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
-            <Text selectable style={styles.contentText}>
-              {item.content}
-            </Text>
-          </Hyperlink>
         </View>
       </View>
 
@@ -232,8 +212,8 @@ function FeedItem({ item }) {
                 </TouchableOpacity>
               );
             }}
-            itemWidth={SCREEN_WIDTH - 60}
-            sliderWidth={SCREEN_WIDTH - 50}
+            itemWidth={SCREEN_WIDTH}
+            sliderWidth={SCREEN_WIDTH}
           />
 
           <Pagination
@@ -258,6 +238,20 @@ function FeedItem({ item }) {
               </TouchableOpacity>
             </View>
           )}
+
+          <View style={styles.content}>
+            <View>
+              <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
+                <Text selectable style={styles.contentText}>
+                  {item.content}
+                </Text>
+              </Hyperlink>
+
+              <Text style={styles.date}>
+                {moment(item.createdAt).format("M월 D일")}
+              </Text>
+            </View>
+          </View>
 
           <ImageView
             visible={imageOpen}
