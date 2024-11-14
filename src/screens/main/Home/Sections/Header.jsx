@@ -77,7 +77,7 @@ export default function Header({ navigation }) {
     },
     headerName: { fontSize: 18, fontWeight: "200", color: colors.subText },
     headerTitle: {
-      fontSize: 22,
+      fontSize: 18,
       fontWeight: "700",
       marginTop: 2,
       color: colors.text,
@@ -109,7 +109,10 @@ export default function Header({ navigation }) {
           {user.name}
           {alias && " " + alias}님,
         </Text>
-        <Text style={styles.headerTitle}>{greetText}</Text>
+        {/* <Text style={styles.headerTitle}>{greetText}</Text> */}
+        <Text style={styles.headerTitle}>
+          {`수험생 여러분 고생하셨습니다:)`}
+        </Text>
       </View>
       {user.type === "undergraduate" && (
         <TouchableOpacity
