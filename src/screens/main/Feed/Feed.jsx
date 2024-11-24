@@ -149,8 +149,7 @@ function FeedItem({ item }) {
 
     deleteButtonWrap: {
       flexDirection: "row",
-      justifyContent: "flex-end",
-      marginTop: 4,
+      padding: 12,
     },
     deleteButton: {},
     deleteButtonText: { fontSize: 12, fontWeight: "300", color: colors.red },
@@ -228,17 +227,6 @@ function FeedItem({ item }) {
             dotsLength={item.images.length}
           />
 
-          {item.publisher === user._id && (
-            <View style={styles.deleteButtonWrap}>
-              <TouchableOpacity
-                onPress={handleDeleteComment}
-                style={styles.deleteButton}
-              >
-                <Text style={styles.deleteButtonText}>삭제하기</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
           <View style={styles.content}>
             <View>
               <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
@@ -252,6 +240,16 @@ function FeedItem({ item }) {
               </Text>
             </View>
           </View>
+          {item.publisher === user._id && (
+            <View style={styles.deleteButtonWrap}>
+              <TouchableOpacity
+                onPress={handleDeleteComment}
+                style={styles.deleteButton}
+              >
+                <Text style={styles.deleteButtonText}>삭제하기</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
           <ImageView
             visible={imageOpen}

@@ -109,10 +109,7 @@ export default function Header({ navigation }) {
           {user.name}
           {alias && " " + alias}님,
         </Text>
-        {/* <Text style={styles.headerTitle}>{greetText}</Text> */}
-        <Text style={styles.headerTitle}>
-          {`수험생 여러분 고생하셨습니다:)`}
-        </Text>
+        <Text style={styles.headerTitle}>{greetText}</Text>
       </View>
       {user.type === "undergraduate" && (
         <TouchableOpacity

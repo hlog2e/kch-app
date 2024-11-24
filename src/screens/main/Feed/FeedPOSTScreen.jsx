@@ -90,7 +90,7 @@ export default function FeedPOSTScreen({ navigation }) {
           });
         });
 
-        mutateAsync(formData, {
+        mutate(formData, {
           onSuccess: () => {
             setLoading(false);
             setContent("");
