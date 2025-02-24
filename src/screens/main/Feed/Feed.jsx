@@ -48,8 +48,6 @@ export default function FeedScreen({ navigation }) {
 
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
-      <Header title="피드" />
-
       {isLoading && <FullScreenLoader />}
 
       {isSuccess &&
@@ -61,6 +59,7 @@ export default function FeedScreen({ navigation }) {
         <FlatList
           onEndReachedThreshold={0.8}
           onEndReached={fetchNextPage}
+          ListHeaderComponent={<Header title="피드" />}
           ListFooterComponent={() => {
             if (isFetchingNextPage) return <FullScreenLoader />;
           }}
@@ -121,6 +120,7 @@ function FeedItem({ item }) {
     container: {
       backgroundColor: colors.background,
       marginTop: 14,
+      paddingBottom: 16,
     },
     withoutImgWrap: {
       paddingHorizontal: 12,
@@ -162,11 +162,10 @@ function FeedItem({ item }) {
       lineHeight: 18,
     },
 
-    carouselWrap: { marginTop: 15 },
+    carouselWrap: {},
     image: {
       aspectRatio: 1,
       width: "100%",
-
       backgroundColor: colors.cardBg2,
     },
   });
@@ -227,30 +226,6 @@ function FeedItem({ item }) {
             dotsLength={item.images.length}
           />
 
-          <View style={styles.content}>
-            <View>
-              <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
-                <Text selectable style={styles.contentText}>
-                  {item.content}
-                </Text>
-              </Hyperlink>
-
-              <Text style={styles.date}>
-                {moment(item.createdAt).format("M월 D일")}
-              </Text>
-            </View>
-          </View>
-          {item.publisher === user._id && (
-            <View style={styles.deleteButtonWrap}>
-              <TouchableOpacity
-                onPress={handleDeleteComment}
-                style={styles.deleteButton}
-              >
-                <Text style={styles.deleteButtonText}>삭제하기</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
           <ImageView
             visible={imageOpen}
             images={imageUris}
@@ -259,6 +234,30 @@ function FeedItem({ item }) {
             }}
             imageIndex={activeSnapIndex}
           />
+        </View>
+      )}
+
+      <View style={styles.content}>
+        <View>
+          <Hyperlink linkDefault linkStyle={{ color: "#3b82f6" }}>
+            <Text selectable style={styles.contentText}>
+              {item.content}
+            </Text>
+          </Hyperlink>
+
+          <Text style={styles.date}>
+            {moment(item.createdAt).format("M월 D일")}
+          </Text>
+        </View>
+      </View>
+      {item.publisher === user._id && (
+        <View style={styles.deleteButtonWrap}>
+          <TouchableOpacity
+            onPress={handleDeleteComment}
+            style={styles.deleteButton}
+          >
+            <Text style={styles.deleteButtonText}>삭제하기</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
