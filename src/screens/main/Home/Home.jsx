@@ -21,7 +21,7 @@ export default function Home({ navigation }) {
         <MealSection />
         <ButtonBar navigation={navigation} />
 
-        <PhotoSection navigation={navigation} />
+        {/* <PhotoSection navigation={navigation} /> */}
         <NoticeSection navigation={navigation} />
       </ScrollView>
     </SafeAreaView>

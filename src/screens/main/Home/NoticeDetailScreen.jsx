@@ -51,13 +51,12 @@ export default function NoticeDetailScreen({ route, navigation }) {
     },
     webviewWrap: {
       flex: 1,
-      padding: 6,
-      margin: 14,
+
       borderWidth: 1,
       borderRadius: 14,
       borderColor: colors.border,
     },
-    webview: { flex: 1, borderRadius: 10 },
+    webview: { flex: 1, borderRadius: 10, margin: 6 },
   });
   if (data) {
     return (
@@ -86,22 +85,17 @@ export default function NoticeDetailScreen({ route, navigation }) {
           <Text style={styles.contentTitle}>내용</Text>
         </View>
 
-        <View style={styles.webviewWrap}>
-          <WebView
-            style={styles.webview}
-            onShouldStartLoadWithRequest={({ url }) => {
-              if (url !== "about:blank") {
-                Linking.openURL(url);
-                return false;
-              } else {
-                return true;
-              }
-            }}
-            source={{
-              html: data.html,
-            }}
-          />
-        </View>
+        <WebView
+          style={styles.webview}
+          onShouldStartLoadWithRequest={({ url }) => {
+            if (url !== "about:blank") {
+              Linking.openURL(url);
+              return false;
+            }
+            return true;
+          }}
+          source={{ html: data.html }}
+        />
       </SafeAreaView>
     );
   }

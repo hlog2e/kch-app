@@ -21,11 +21,9 @@ import {
 import { getUserInfo } from "../../../../apis/user";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
-
 import * as Haptics from "expo-haptics";
-
 import Barcode from "@kichiyaki/react-native-barcode-generator";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { Camera } from "expo-camera";
 
 import WrapBarCodeScanner from "../../../components/WrapBarCodeScanner";
 import { useTheme } from "@react-navigation/native";
@@ -42,9 +40,13 @@ export default function StudentIDScreen({ navigation }) {
   const [barCodeScannerOpen, setBarCodeScannerOpen] = useState(false);
 
   useEffect(() => {
-    // 마운트시 바코드 스캐너 카메라 권한 요청
-    requestBarCodeScannerPermissions();
-  });
+    requestCameraPermissions();
+  }, []);
+
+  const requestCameraPermissions = async () => {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
 
   const openBarCodeScanner = () => {
     if (hasPermission) {
@@ -56,10 +58,6 @@ export default function StudentIDScreen({ navigation }) {
         [{ text: "확인" }]
       );
     }
-  };
-  const requestBarCodeScannerPermissions = async () => {
-    const { status } = await BarCodeScanner.requestPermissionsAsync();
-    setHasPermission(status === "granted");
   };
 
   const handleBarCodeScanned = async ({ type, data }) => {
@@ -247,6 +245,9 @@ function Photo({ userData }) {
         queryClient.invalidateQueries("IdCardUserData");
         setLoading(false);
       },
+      onError: () => {
+        setLoading(false);
+      },
     });
   };
 
@@ -283,7 +284,7 @@ function Photo({ userData }) {
     );
   }
 
-  // userData === undefinded 일때 처리
+  // userData가 없을 경우
   if (!userData) {
     return null;
   }
@@ -331,6 +332,7 @@ function BarCodeSection({ userData, openBarCodeScanner }) {
     },
     dummy_text: { fontSize: 10, color: "gray" },
   });
+
   if (!userData) {
     return null;
   }
@@ -349,19 +351,17 @@ function BarCodeSection({ userData, openBarCodeScanner }) {
     );
   }
 
-  if (!userData.barcode || userData.barcode === "") {
-    return (
-      <View style={styles.dummy_barcode_container}>
-        <TouchableOpacity
-          style={styles.dummy_barcode}
-          onPress={() => {
-            openBarCodeScanner();
-          }}
-        >
-          <Ionicons name="barcode" size={24} color="gray" />
-          <Text style={styles.dummy_text}>바코드를 등록해주세요</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  return (
+    <View style={styles.dummy_barcode_container}>
+      <TouchableOpacity
+        style={styles.dummy_barcode}
+        onPress={() => {
+          openBarCodeScanner();
+        }}
+      >
+        <Ionicons name="barcode" size={24} color="gray" />
+        <Text style={styles.dummy_text}>바코드를 등록해주세요</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }

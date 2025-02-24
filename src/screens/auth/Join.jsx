@@ -9,7 +9,7 @@ import { registerPushTokenToDB } from "../../../apis/push-noti/index";
 import ThirdVerifyUndergraduate from "./JoinStep/ThirdVerifyUndergraduate";
 import WrapBarCodeScanner from "../../components/WrapBarCodeScanner";
 import ThirdVerifyTeacher from "./JoinStep/ThridVerifyTeacher";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { Camera } from "expo-camera";
 import { useUser } from "../../../context/UserContext";
 import { useAlert } from "../../../context/AlertContext";
 
@@ -32,7 +32,7 @@ export default function JoinScreen({ route, navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
 
   useEffect(() => {
-    requestBarCodeScannerPermissions();
+    requestCameraPermissions();
   }, []);
 
   // userData에 phoneNumber, code 병합
@@ -54,8 +54,8 @@ export default function JoinScreen({ route, navigation }) {
     }
   };
 
-  const requestBarCodeScannerPermissions = async () => {
-    const { status } = await BarCodeScanner.requestPermissionsAsync();
+  const requestCameraPermissions = async () => {
+    const { status } = await Camera.requestCameraPermissionsAsync();
     setHasPermission(status === "granted");
   };
 
@@ -72,12 +72,13 @@ export default function JoinScreen({ route, navigation }) {
       }
     } catch (error) {
       alert.error(
-        error.response.data.message
+        error.response?.data?.message
           ? error.response.data.message
           : "회원가입 중 오류가 발생하였습니다!"
       );
     }
   };
+
   return (
     <>
       <WrapBarCodeScanner

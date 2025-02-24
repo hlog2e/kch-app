@@ -21,3 +21,6 @@ google-services.json
 
 .env
 .env*
+
+*.app
+build-*.tar.gz

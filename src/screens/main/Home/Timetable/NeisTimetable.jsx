@@ -19,19 +19,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function NeisTimetable() {
   const { colors } = useTheme();
   const [gradeClass, setGradeClass] = useState({ grade: 1, class: 1 });
-
   const [data, setData] = useState();
-  const times = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  const [noData, setNoData] = useState(false);
 
+  const times = ["1", "2", "3", "4", "5", "6", "7", "8"];
   const dayNames = ["월", "화", "수", "목", "금"];
 
   const todayDay = moment().day();
-
-  const weekFirstDay = moment() //이번주 월요일날짜
+  const weekFirstDay = moment()
     .startOf("weeks")
     .add(1, "days")
     .format("YYYYMMDD");
-
   const weekLastDay = moment()
     .endOf("week")
     .subtract(1, "days")
@@ -46,40 +44,33 @@ export default function NeisTimetable() {
     );
 
     if (!res.hisTimetable) {
-      Alert.alert(
-        "오류",
-        "교육청(NEIS)서버에 시간표 정보가 없거나, 서버가 응답하지 않습니다.",
-        [{ text: "확인" }]
-      );
+      setNoData(true);
+      setData(null);
+      return;
     }
 
+    setNoData(false);
     const rowData = res.hisTimetable[1].row;
     const groupedData = LodashArray.groupBy(rowData, "ALL_TI_YMD");
     const flatedData = Object.values(groupedData);
-
     const uniqueData = flatedData.reduce((acc, current) => {
       acc.push(LodashArray.uniqBy(current, "PERIO"));
       return acc;
     }, []);
-
     setData(uniqueData);
   }
 
   const getStoredGradeClass = async () => {
     const storedGradeClass = await AsyncStorage.getItem("gradeClass");
-
     if (storedGradeClass) {
-      const parsed = JSON.parse(storedGradeClass);
-      setGradeClass(parsed);
+      setGradeClass(JSON.parse(storedGradeClass));
     }
   };
 
   useEffect(() => {
     if (gradeClass.grade && gradeClass.class) {
       getNeisData();
-    }
-
-    if (!gradeClass.grade || !gradeClass.class) {
+    } else {
       setData(null);
     }
   }, [gradeClass]);
@@ -92,6 +83,16 @@ export default function NeisTimetable() {
     container: {
       paddingVertical: 10,
     },
+    nullWrap: {
+      justifyContent: "center",
+      alignItems: "center",
+      paddingVertical: 20,
+    },
+    nullText: {
+      marginTop: 8,
+      fontSize: 12,
+      fontWeight: "600",
+    },
     header: {
       flexDirection: "row",
       alignItems: "center",
@@ -102,19 +103,16 @@ export default function NeisTimetable() {
       fontWeight: "700",
       paddingVertical: 8,
     },
-
     headerButton: {
       flexDirection: "row",
       alignItems: "center",
       marginRight: 8,
     },
-
     headerButtonWrap: { flexDirection: "row" },
     headerButtonText: {
       fontWeight: "700",
       color: colors.subText,
     },
-
     dayHeader: {
       flexDirection: "row",
       height: 45,
@@ -151,9 +149,7 @@ export default function NeisTimetable() {
       borderColor: colors.border,
     },
     tableWrap: { flexDirection: "row" },
-
     dataWrap: { flexDirection: "row", flex: 1 },
-
     leftSideCol: { marginRight: 0 },
     leftSideColItem: {
       height: 50,
@@ -170,7 +166,6 @@ export default function NeisTimetable() {
       fontSize: 16,
       color: colors.text,
     },
-
     dataCol: {
       flex: 1,
       alignItems: "center",
@@ -220,9 +215,7 @@ export default function NeisTimetable() {
                 "gradeClass",
                 JSON.stringify({ grade: _value, class: gradeClass.class })
               );
-              setGradeClass((_prev) => {
-                return { ..._prev, grade: _value };
-              });
+              setGradeClass((_prev) => ({ ..._prev, grade: _value }));
             }}
           >
             <TouchableOpacity style={styles.headerButton}>
@@ -257,9 +250,7 @@ export default function NeisTimetable() {
                 "gradeClass",
                 JSON.stringify({ grade: gradeClass.grade, class: _value })
               );
-              setGradeClass((_prev) => {
-                return { ..._prev, class: _value };
-              });
+              setGradeClass((_prev) => ({ ..._prev, class: _value }));
             }}
           >
             <TouchableOpacity style={styles.headerButton}>
@@ -274,112 +265,65 @@ export default function NeisTimetable() {
         </View>
       </View>
 
-      {data ? (
+      {noData && (
+        <View style={styles.nullWrap}>
+          <Text style={[styles.nullText, { color: colors.subText }]}>
+            교육청(NEIS)서버에 시간표 정보가 없습니다.
+          </Text>
+        </View>
+      )}
+
+      {data && (
         <>
           <View style={styles.dayHeader}>
             <View style={styles.dayHeaderDummy} />
-            {dayNames.map((e, i) => {
-              return (
-                <View
-                  key={e}
-                  style={
-                    i + 1 === todayDay
-                      ? styles.dayHeaderItemToday
-                      : styles.dayHeaderItem
-                  }
-                >
-                  <Text style={styles.dayHeaderItemText}>{e}</Text>
-                </View>
-              );
-            })}
+            {dayNames.map((dayName, i) => (
+              <View
+                key={dayName}
+                style={
+                  i + 1 === todayDay
+                    ? styles.dayHeaderItemToday
+                    : styles.dayHeaderItem
+                }
+              >
+                <Text style={styles.dayHeaderItemText}>{dayName}</Text>
+              </View>
+            ))}
           </View>
           <View style={styles.tableWrap}>
             <View style={styles.leftSideCol}>
-              {/* 1교시 ~ 7교시 까지 숫자 렌더링 */}
-              {times.map((e) => {
+              {times.map((time) => (
+                <View key={time} style={styles.leftSideColItem}>
+                  <Text style={styles.leftSideColText}>{time}</Text>
+                </View>
+              ))}
+            </View>
+            <View style={styles.dataWrap}>
+              {dayNames.map((_, idx) => {
+                const isToday = todayDay === idx + 1;
                 return (
-                  <View key={e} style={styles.leftSideColItem}>
-                    <Text style={styles.leftSideColText}>{e}</Text>
+                  <View
+                    key={idx}
+                    style={isToday ? styles.dataColToday : styles.dataCol}
+                  >
+                    {data[idx]
+                      ? data[idx].map((item) => (
+                          <View
+                            key={JSON.stringify(item)}
+                            style={styles.dataItem}
+                          >
+                            <Text style={styles.dataText}>
+                              {item.ITRT_CNTNT}
+                            </Text>
+                          </View>
+                        ))
+                      : null}
                   </View>
                 );
               })}
             </View>
-            <View style={styles.dataWrap}>
-              {/* 월요일 컬럼 */}
-              <View
-                style={todayDay === 1 ? styles.dataColToday : styles.dataCol}
-              >
-                {data[0]
-                  ? data[0].map((e) => {
-                      return (
-                        <View key={JSON.stringify(e)} style={styles.dataItem}>
-                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                        </View>
-                      );
-                    })
-                  : null}
-              </View>
-              {/* 화요일 컬럼 */}
-              <View
-                style={todayDay === 2 ? styles.dataColToday : styles.dataCol}
-              >
-                {data[1]
-                  ? data[1].map((e) => {
-                      return (
-                        <View key={JSON.stringify(e)} style={styles.dataItem}>
-                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                        </View>
-                      );
-                    })
-                  : null}
-              </View>
-              {/* 수요일 컬럼 */}
-              <View
-                style={todayDay === 3 ? styles.dataColToday : styles.dataCol}
-              >
-                {data[2]
-                  ? data[2].map((e) => {
-                      return (
-                        <View key={JSON.stringify(e)} style={styles.dataItem}>
-                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                        </View>
-                      );
-                    })
-                  : null}
-              </View>
-              {/* 목요일 컬럼 */}
-              <View
-                style={todayDay === 4 ? styles.dataColToday : styles.dataCol}
-              >
-                {data[3]
-                  ? data[3].map((e) => {
-                      return (
-                        <View key={JSON.stringify(e)} style={styles.dataItem}>
-                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                        </View>
-                      );
-                    })
-                  : null}
-              </View>
-              {/* 금요일 컬럼 */}
-              <View
-                style={todayDay === 5 ? styles.dataColToday : styles.dataCol}
-              >
-                {data[4]
-                  ? data[4].map((e, i) => {
-                      return (
-                        <View key={JSON.stringify(e)} style={styles.dataItem}>
-                          <Text style={styles.dataText}>{e.ITRT_CNTNT}</Text>
-                        </View>
-                      );
-                    })
-                  : null}
-              </View>
-            </View>
           </View>
         </>
-      ) : (
-        <FullScreenLoader />
       )}
     </ScrollView>
   );

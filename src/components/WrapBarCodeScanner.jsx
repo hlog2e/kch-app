@@ -1,13 +1,6 @@
-import {
-  StyleSheet,
-  Dimensions,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { Camera } from "expo-camera";
 
 export default function WrapBarCodeScanner({
   barCodeScannerOpen,
@@ -49,34 +42,36 @@ export default function WrapBarCodeScanner({
     },
   });
 
-  if (barCodeScannerOpen) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.alert}>
-          <Ionicons name="alert-circle" size={24} color="white" />
-          <Text style={styles.alertText}>
-            학생증 뒷면의 바코드를 스캔해주세요 !
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={styles.close_button}
-          onPress={() => {
-            setBarCodeScannerOpen(false);
-          }}
-        >
-          <Ionicons name="close" size={32} color="#a4a4a4" />
-        </TouchableOpacity>
-
-        <BarCodeScanner
-          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
-          onBarCodeScanned={handleBarCodeScanned}
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: "black",
-          }}
-        />
-      </View>
-    );
+  if (!barCodeScannerOpen) {
+    return null;
   }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.alert}>
+        <Ionicons name="alert-circle" size={24} color="white" />
+        <Text style={styles.alertText}>
+          학생증 뒷면의 바코드를 스캔해주세요 !
+        </Text>
+      </View>
+
+      <TouchableOpacity
+        style={styles.close_button}
+        onPress={() => setBarCodeScannerOpen(false)}
+      >
+        <Ionicons name="close" size={32} color="#a4a4a4" />
+      </TouchableOpacity>
+
+      <Camera
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          backgroundColor: "black",
+        }}
+        barCodeScannerSettings={{
+          barCodeTypes: [Camera.Constants.BarCodeType.code39],
+        }}
+        onBarCodeScanned={(barcodeData) => handleBarCodeScanned(barcodeData)}
+      />
+    </View>
+  );
 }

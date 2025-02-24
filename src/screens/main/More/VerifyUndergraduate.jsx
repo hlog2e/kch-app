@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,7 +12,7 @@ import * as SMS from "expo-sms";
 import Dialog from "react-native-dialog";
 import { useEffect, useState } from "react";
 import { useTheme } from "@react-navigation/native";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { Camera } from "expo-camera";
 import WrapBarCodeScanner from "../../../components/WrapBarCodeScanner";
 
 export default function VerifyUndergraduateScreen() {
@@ -25,11 +26,11 @@ export default function VerifyUndergraduateScreen() {
   const [hasPermission, setHasPermission] = useState(null);
 
   useEffect(() => {
-    requestBarCodeScannerPermissions();
+    requestCameraPermissions();
   }, []);
 
-  const requestBarCodeScannerPermissions = async () => {
-    const { status } = await BarCodeScanner.requestPermissionsAsync();
+  const requestCameraPermissions = async () => {
+    const { status } = await Camera.requestCameraPermissionsAsync();
     setHasPermission(status === "granted");
   };
 
@@ -43,6 +44,13 @@ export default function VerifyUndergraduateScreen() {
         [{ text: "확인" }]
       );
     }
+  };
+
+  // 실제로 이 화면에서 onNext 로직(서버에 인증 요청 등)을 관리한다면,
+  // 상위에서 받아온 Props로 함수를 전달받아 처리하거나,
+  // 이 안에서 직접 handle함수를 만들어 처리하시면 됩니다.
+  const onNext = (codeVal) => {
+    Alert.alert("확인", `인증코드: ${codeVal || barcode}`);
   };
 
   const styles = StyleSheet.create({
@@ -100,9 +108,7 @@ export default function VerifyUndergraduateScreen() {
         barCodeScannerOpen={scannerOpen}
         setBarCodeScannerOpen={setScannerOpen}
         handleBarCodeScanned={({ data }) => {
-          setUserData((_prev) => {
-            return { ..._prev, barcode: data };
-          });
+          setBarcode(data);
           setScannerOpen(false);
         }}
       />
@@ -153,11 +159,10 @@ export default function VerifyUndergraduateScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            if (barcode) {
-              onNext();
-            }
             if (hiddenCode) {
               onNext(hiddenCode);
+            } else if (barcode) {
+              onNext();
             }
           }}
           style={styles.nextButton}
