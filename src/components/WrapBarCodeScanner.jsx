@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Camera } from "expo-camera";
+import { CameraView } from "expo-camera";
 
 export default function WrapBarCodeScanner({
   barCodeScannerOpen,
@@ -62,15 +62,15 @@ export default function WrapBarCodeScanner({
         <Ionicons name="close" size={32} color="#a4a4a4" />
       </TouchableOpacity>
 
-      <Camera
+      <CameraView
         style={{
           ...StyleSheet.absoluteFillObject,
           backgroundColor: "black",
         }}
         barCodeScannerSettings={{
-          barCodeTypes: [Camera.Constants.BarCodeType.code39],
+          barCodeTypes: ["code39"],
         }}
-        onBarCodeScanned={(barcodeData) => handleBarCodeScanned(barcodeData)}
+        onBarcodeScanned={(barcodeData) => handleBarCodeScanned(barcodeData)}
       />
     </View>
   );

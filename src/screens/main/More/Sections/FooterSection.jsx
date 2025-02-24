@@ -64,7 +64,7 @@ export default function FooterSection({ navigation }) {
     <View style={styles.wrap}>
       <TouchableOpacity onPress={handleLogout} style={styles.button}>
         <View style={styles.buttonLeftWrap}>
-          <Ionicons name="md-log-out-outline" size={26} color={colors.red} />
+          <Ionicons name="log-out-outline" size={26} color={colors.red} />
           <Text style={styles.buttonText}>로그아웃</Text>
         </View>
       </TouchableOpacity>

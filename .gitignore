@@ -24,3 +24,8 @@ google-services.json
 
 *.app
 build-*.tar.gz
+
+*.ipa
+*.apk
+*.xcodeproj
+*.xcodeworkspace

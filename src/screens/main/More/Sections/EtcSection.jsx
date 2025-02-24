@@ -91,7 +91,7 @@ iOS Model ID: ${Device.modelId}
         >
           <View style={styles.buttonLeftWrap}>
             <Ionicons
-              name="ios-lock-closed-outline"
+              name="document-lock-outline"
               size={26}
               color={colors.subText}
             />
