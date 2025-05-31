@@ -27,5 +27,8 @@ build-*.tar.gz
 
 *.ipa
 *.apk
+*.aab
 *.xcodeproj
 *.xcodeworkspace
+
+
