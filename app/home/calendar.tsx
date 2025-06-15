@@ -10,12 +10,19 @@ import FullScreenLoader from "../../src/components/Overlay/FullScreenLoader";
 import uuid from "react-native-uuid";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../src/components/Header/Header";
+import { useLocalSearchParams } from "expo-router";
 
 export default function CalendarScreen() {
   const { colors } = useTheme();
+  const { selectedDate } = useLocalSearchParams();
+
+  // 쿼리 파라미터에서 받은 날짜가 있으면 사용, 없으면 오늘 날짜
+  const initialDate = selectedDate
+    ? String(selectedDate)
+    : moment().format("YYYY-MM-DD");
   const todayDate = moment().format("YYYY-MM-DD");
 
-  const [selDate, setSelDate] = useState(todayDate);
+  const [selDate, setSelDate] = useState(initialDate);
   const [selDataCount, setSelDataCount] = useState(0);
   const [firstDate, setFistDate] = useState(
     moment().startOf("M").format("YYYYMMDD")
@@ -207,34 +214,104 @@ export default function CalendarScreen() {
 
 function Item({ data }: { data: any }) {
   const { colors } = useTheme();
+
+  const getEventIcon = (eventName: string) => {
+    if (eventName.includes("고사") || eventName.includes("시험")) return "📝";
+    if (eventName.includes("방학") || eventName.includes("휴업")) return "🏖️";
+    if (eventName.includes("개학") || eventName.includes("입학")) return "🎒";
+    if (eventName.includes("축제") || eventName.includes("행사")) return "🎉";
+    if (eventName.includes("토요") || eventName.includes("휴일")) return "😴";
+    return "📅";
+  };
+
   const styles = StyleSheet.create({
     container: {
-      borderWidth: 1,
-      borderColor: colors.border,
-      marginHorizontal: 20,
-      padding: 14,
-      borderRadius: 15,
-      marginBottom: 10,
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between",
+      backgroundColor: colors.cardBg,
+      borderRadius: 20,
+      padding: 16,
+      marginHorizontal: 14,
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: colors.border,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 4,
     },
-    event_name: {
+    leftSection: {
+      width: 50,
+      height: 50,
+      borderRadius: 18,
+      backgroundColor: "#F2F9FF",
+      borderWidth: 1,
+      borderColor: "#E0F0FF",
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: 16,
+    },
+    eventIcon: {
+      fontSize: 20,
+    },
+    eventContent: {
+      flex: 1,
+    },
+    eventName: {
       fontSize: 16,
       fontWeight: "700",
       color: colors.text,
+      marginBottom: 4,
+      lineHeight: 20,
     },
-    desc: {
+    eventSource: {
       fontSize: 12,
-      fontWeight: "400",
-      color: "gray",
+      color: colors.subText,
+      fontWeight: "500",
+    },
+    rightSection: {
+      alignItems: "flex-end",
+    },
+    dateBadge: {
+      backgroundColor: "rgba(74, 144, 226, 0.1)",
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+      borderRadius: 50,
+      borderWidth: 1,
+      borderColor: "#4A90E2",
+    },
+    eventDate: {
+      fontSize: 11,
+      color: "#4A90E2",
+      fontWeight: "600",
+      textAlign: "center",
     },
   });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.event_name}>{data.EVENT_NM}</Text>
-      <Text style={styles.desc}>NEIS 제공</Text>
+      <View style={styles.leftSection}>
+        <Text style={styles.eventIcon}>{getEventIcon(data.EVENT_NM)}</Text>
+      </View>
+
+      <View style={styles.eventContent}>
+        <Text style={styles.eventName} numberOfLines={2}>
+          {data.EVENT_NM}
+        </Text>
+        <Text style={styles.eventSource}>NEIS 제공</Text>
+      </View>
+
+      <View style={styles.rightSection}>
+        <View style={styles.dateBadge}>
+          <Text style={styles.eventDate}>
+            {moment(data.AA_YMD, "YYYYMMDD").format("M/D")}
+          </Text>
+        </View>
+      </View>
     </View>
   );
 }

@@ -61,7 +61,8 @@
     "react-native-toast-message": "^2.1.5",
     "react-native-uuid": "^2.0.1",
     "react-native-webview": "13.12.5",
-    "react-query": "^3.39.2"
+    "react-query": "^3.39.2",
+    "react-native-reanimated": "~3.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

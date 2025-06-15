@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,12 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withDelay,
+  withSpring,
+} from "react-native-reanimated";
 import { useTheme } from "@react-navigation/native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -26,7 +32,6 @@ const mockCommunityPosts = [
     commentCount: 23,
     createdAt: "2024-06-18T10:30:00Z",
     category: "학습",
-    isHot: true,
     images: ["https://picsum.photos/200/150?random=1"],
   },
   {
@@ -40,7 +45,6 @@ const mockCommunityPosts = [
     commentCount: 18,
     createdAt: "2024-06-18T14:15:00Z",
     category: "생활",
-    isHot: false,
   },
   {
     id: "3",
@@ -52,7 +56,6 @@ const mockCommunityPosts = [
     commentCount: 41,
     createdAt: "2024-06-17T16:45:00Z",
     category: "행사",
-    isHot: true,
     images: [
       "https://picsum.photos/200/150?random=2",
       "https://picsum.photos/200/150?random=3",
@@ -64,6 +67,27 @@ const mockCommunityPosts = [
 export default function CommunitySection() {
   const { colors } = useTheme();
   const router = useRouter();
+
+  // 애니메이션 설정
+  const translateY = useSharedValue(40);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    // 800ms 지연 후 아래에서 위로 슬라이드인
+    translateY.value = withDelay(
+      800,
+      withSpring(0, { damping: 15, stiffness: 120 })
+    );
+    opacity.value = withDelay(
+      800,
+      withSpring(1, { damping: 15, stiffness: 120 })
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+    opacity: opacity.value,
+  }));
 
   const styles = StyleSheet.create({
     container: {
@@ -108,7 +132,7 @@ export default function CommunitySection() {
   });
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, animatedStyle]}>
       <View style={styles.headerSection}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>인기 커뮤니티 🔥</Text>
@@ -132,7 +156,7 @@ export default function CommunitySection() {
           <CommunityPostCard key={post.id} post={post} index={index} />
         ))}
       </ScrollView>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -155,12 +179,12 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
     card: {
       width: screenWidth - 80,
       minHeight: 140,
-      backgroundColor: post.isHot ? "#F2F9FF" : colors.cardBg,
+      backgroundColor: index % 2 === 0 ? "#F2F9FF" : colors.cardBg,
       borderRadius: 20,
       marginRight: 12,
       padding: 16,
       borderWidth: 1,
-      borderColor: post.isHot ? "#E0F0FF" : colors.border,
+      borderColor: index % 2 === 0 ? "#E0F0FF" : colors.border,
       shadowColor: "#000",
       shadowOffset: {
         width: 0,

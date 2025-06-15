@@ -8,6 +8,7 @@ import ButtonBar from "../../../src/components/home/ButtonBar";
 import CommunitySection from "../../../src/components/home/CommunitySection";
 import PhotoSection from "../../../src/components/home/PhotoSection";
 import NoticeSection from "../../../src/components/home/NoticeSection";
+import UpcomingEventsSection from "../../../src/components/home/UpcomingEventsSection";
 
 interface HomeProps {
   navigation: any;
@@ -21,15 +22,13 @@ export default function Home() {
     <SafeAreaView edges={["top"]} style={styles.container}>
       <ScrollView>
         <Header />
-        <Banner location={"home"} height={120} padding={14} />
+        <UpcomingEventsSection />
+
+        <Banner location={"home"} height={90} padding={14} />
 
         <MealSection />
-        <ButtonBar />
 
         <CommunitySection />
-
-        {/* <PhotoSection navigation={navigation} /> */}
-        {/* <NoticeSection /> */}
       </ScrollView>
     </SafeAreaView>
   );

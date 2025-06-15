@@ -1,4 +1,11 @@
+import React, { useEffect } from "react";
 import { View, ScrollView, Alert, StyleSheet, Text } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withDelay,
+  withSpring,
+} from "react-native-reanimated";
 import { useQuery } from "react-query";
 import { getMeals } from "../../../apis/school_data/meal";
 import { useState } from "react";
@@ -12,6 +19,27 @@ const riceImage = require("../../../assets/svgs/rice.png");
 export default function MealSection() {
   const { colors } = useTheme();
   const { data } = useQuery("meals", getMeals);
+
+  // 애니메이션 설정
+  const translateX = useSharedValue(-50);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    // 600ms 지연 후 왼쪽에서 슬라이드인
+    translateX.value = withDelay(
+      600,
+      withSpring(0, { damping: 15, stiffness: 120 })
+    );
+    opacity.value = withDelay(
+      600,
+      withSpring(1, { damping: 15, stiffness: 120 })
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+    opacity: opacity.value,
+  }));
 
   const [focus, setFocus] = useState(0);
   const days = [
@@ -27,20 +55,20 @@ export default function MealSection() {
   const styles = StyleSheet.create({
     flexRow: { flexDirection: "row", alignItems: "center" },
     mealWrap: {
-      marginTop: 12,
+      // marginTop: 4,
     },
     mealTitle: {
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: "600",
       marginLeft: 14,
       color: colors.text,
     },
-    mealImage: { marginLeft: 6, width: 40, height: 40 },
-    scrollView: { marginTop: 16 },
+    mealImage: { marginLeft: 6, width: 30, height: 30 },
+    scrollView: { marginTop: 16, paddingLeft: 14 },
   });
   if (data && data.meals.length > 0) {
     return (
-      <View style={styles.mealWrap}>
+      <Animated.View style={[styles.mealWrap, animatedStyle]}>
         <View style={styles.flexRow}>
           <Text style={styles.mealTitle}>
             {moment(data.meals[focus]._id).isSame(new Date(), "day")
@@ -78,7 +106,7 @@ export default function MealSection() {
             });
           })}
         </ScrollView>
-      </View>
+      </Animated.View>
     );
   }
 }
@@ -87,29 +115,29 @@ function MealItem({ title, kcal, menu }: { title: any; kcal: any; menu: any }) {
   const { colors } = useTheme();
   const styles = StyleSheet.create({
     container: {
-      borderWidth: title === "중식" ? 0 : 1,
+      borderWidth: title === "석식" ? 0 : 0.5,
       borderColor: colors.border,
       borderRadius: 30,
-      minHeight: 180,
-      width: 180,
-      padding: 18,
-      marginLeft: 12,
-      backgroundColor: title === "중식" ? colors.cardBg2 : colors.cardBg,
+      minHeight: 160,
+      width: 160,
+      padding: 14,
+      marginRight: 12,
+      backgroundColor: title === "석식" ? "#F2F9FF" : "white",
     },
     header: {
       alignItems: "flex-end",
       justifyContent: "center",
       flexDirection: "row",
     },
-    headerTitle: { fontSize: 18, fontWeight: "700", color: colors.text },
+    headerTitle: { fontSize: 16, fontWeight: "700", color: colors.text },
     kcal: {
       fontWeight: "200",
-      fontSize: 11,
+      fontSize: 10,
       marginLeft: 4,
       color: colors.subText,
     },
 
-    menuWrap: { marginTop: 10 },
+    menuWrap: { marginTop: 12 },
     menuText: { color: colors.subText, fontSize: 13, lineHeight: 16 },
   });
   return (

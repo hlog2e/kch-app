@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -6,6 +6,12 @@ import {
   View,
   Text,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withDelay,
+  withSpring,
+} from "react-native-reanimated";
 import { Image } from "expo-image";
 import { useQuery } from "react-query";
 import { getBanners } from "../../apis/banner/index";
@@ -33,6 +39,27 @@ export default function Banner({
   padding = 0,
   parentPadding,
 }: BannerProps) {
+  // 애니메이션 설정
+  const scale = useSharedValue(0.8);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    // 400ms 지연 후 스케일과 페이드인
+    scale.value = withDelay(
+      400,
+      withSpring(1, { damping: 15, stiffness: 120 })
+    );
+    opacity.value = withDelay(
+      400,
+      withSpring(1, { damping: 15, stiffness: 120 })
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
   const { data = [] } = useQuery<BannerItem[]>(
     ["banner", location],
     () => getBanners({ location }),
@@ -47,11 +74,15 @@ export default function Banner({
   const [nowIndex, setNowIndex] = useState<number>(0);
 
   return (
-    <View
-      style={{
-        paddingVertical: 14,
-        paddingHorizontal: padding ?? 0,
-      }}
+    <Animated.View
+      style={[
+        {
+          marginTop: 4,
+          paddingVertical: 14,
+          paddingHorizontal: padding ?? 0,
+        },
+        animatedStyle,
+      ]}
     >
       <Carousel<BannerItem>
         data={data}
@@ -71,7 +102,7 @@ export default function Banner({
         onSnapToItem={setNowIndex}
         vertical={false}
       />
-    </View>
+    </Animated.View>
   );
 }
 
