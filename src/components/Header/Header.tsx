@@ -3,16 +3,14 @@ import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 
 import { Octicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-
+import { useRouter } from "expo-router";
 interface HeaderProps {
-  navigation: any; // NavigationProp<Record<string, object | undefined>> etc.
   title?: string;
   backArrowText?: string;
   rightComponent?: React.ReactNode;
 }
 
 export default function Header({
-  navigation,
   title,
   backArrowText = "",
   rightComponent,
@@ -38,10 +36,7 @@ export default function Header({
       {title ? (
         <Text style={styles.title}>{title}</Text>
       ) : (
-        <BackArrowButton
-          navigation={navigation}
-          backArrowText={backArrowText}
-        />
+        <BackArrowButton backArrowText={backArrowText} />
       )}
       {rightComponent}
     </View>
@@ -49,11 +44,11 @@ export default function Header({
 }
 
 interface BackArrowProps {
-  navigation: any;
   backArrowText: string;
 }
 
-function BackArrowButton({ navigation, backArrowText }: BackArrowProps) {
+function BackArrowButton({ backArrowText }: BackArrowProps) {
+  const router = useRouter();
   const { colors } = useTheme();
   const styles = StyleSheet.create({
     wrap: {
@@ -73,7 +68,7 @@ function BackArrowButton({ navigation, backArrowText }: BackArrowProps) {
     <TouchableOpacity
       style={styles.wrap}
       onPress={() => {
-        navigation.goBack();
+        router.back();
       }}
     >
       <Octicons name="chevron-left" size={30} color={colors.text} />

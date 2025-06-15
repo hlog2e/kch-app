@@ -16,7 +16,15 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 
 interface User {
-  // define properties; using any for unknown
+  _id?: string;
+  name: string;
+  desc: string;
+  profilePhoto?: string;
+  email?: string;
+  verified?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  // 추가 속성들을 위한 index signature
   [key: string]: any;
 }
 
@@ -31,6 +39,7 @@ interface UpdatePayload {
 
 interface UserContextValue {
   user: User | null;
+  isLoading: boolean;
   login: (payload: LoginPayload) => Promise<void>;
   logout: () => Promise<void>;
   update: (payload: UpdatePayload) => Promise<void>;
@@ -38,6 +47,7 @@ interface UserContextValue {
 
 export const UserContext = createContext<UserContextValue>({
   user: null,
+  isLoading: true,
   login: async () => {},
   logout: async () => {},
   update: async () => {},
@@ -47,15 +57,20 @@ export const useUser = () => useContext(UserContext);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const initalize = async (): Promise<void> => {
-    const _user = await AsyncStorage.getItem("user");
-    if (!_user) {
-      setUser(null);
-      return;
+    try {
+      const _user = await AsyncStorage.getItem("user");
+      if (!_user) {
+        setUser(null);
+        return;
+      }
+      const parsedUserData: User = JSON.parse(_user);
+      setUser(parsedUserData);
+    } finally {
+      setIsLoading(false);
     }
-    const parsedUserData: User = JSON.parse(_user);
-    setUser(parsedUserData);
   };
 
   const login = async ({ token, user }: LoginPayload): Promise<void> => {
@@ -93,7 +108,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, login, logout, update }}>
+    <UserContext.Provider value={{ user, isLoading, login, logout, update }}>
       {children}
     </UserContext.Provider>
   );

@@ -6,7 +6,7 @@ import axios, {
 import { Alert } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { navigate } from "../src/navigations/RootNavigation";
+import { router } from "expo-router";
 
 const baseUrl = process.env.EXPO_PUBLIC_API_SERVER;
 
@@ -64,7 +64,7 @@ apiAuthInstance.interceptors.response.use(
         "인증이 만료되었습니다. 다시 로그인 해주세요! (401)",
         [{ text: "확인" }]
       );
-      navigate("Auth");
+      router.replace("/login");
     }
     if (!error.response) {
       // Alert.alert(

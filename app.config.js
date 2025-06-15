@@ -23,6 +23,18 @@ module.exports = {
     },
     runtimeVersion: { policy: "sdkVersion" },
     assetBundlePatterns: ["**/*"],
+    plugins: [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          backgroundColor: "#ffffff",
+          image: "./assets/splash.png",
+          imageWidth: 200,
+          resizeMode: "contain",
+        },
+      ],
+    ],
     ios: {
       bundleIdentifier: "me.kch-app.kch",
       supportsTablet: true,
@@ -41,6 +53,7 @@ module.exports = {
     },
     web: {
       favicon: "./assets/favicon.png",
+      bundler: "metro",
     },
   },
 };
