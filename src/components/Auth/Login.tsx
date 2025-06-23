@@ -42,7 +42,7 @@ export default function LoginScreen() {
       if (response.user) {
         // 이미 가입된 경우
         await login({ token: response.token, user: response.user });
-        router.replace("/(tabs)");
+        router.replace("/home");
       } else {
         // 가입되지 않은 경우
         router.push({

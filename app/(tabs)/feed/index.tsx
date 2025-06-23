@@ -19,9 +19,16 @@ import ImageView from "react-native-image-viewing";
 import { Ionicons } from "@expo/vector-icons";
 import Hyperlink from "react-native-hyperlink";
 import FABPlus from "../../../src/components/Button/FABPlus";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { useUser } from "../../../context/UserContext";
 import { useRouter } from "expo-router";
+import CollapsibleHeader, {
+  useCollapsibleHeader,
+  DEFAULT_HEADER_HEIGHT,
+} from "../../../src/components/Header/CollapsibleHeader";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -48,35 +55,15 @@ interface User {
   type: "undergraduate" | "teacher" | string;
 }
 
-// Simple Header Component for Feed
-function FeedHeaderComponent() {
-  const { colors } = useTheme();
-
-  return (
-    <View style={feedHeaderStyles.header}>
-      <Text style={[feedHeaderStyles.title, { color: colors.text }]}>피드</Text>
-    </View>
-  );
-}
-
-const feedHeaderStyles = StyleSheet.create({
-  header: {
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row",
-  },
-  title: {
-    fontWeight: "700",
-    fontSize: 24,
-    marginTop: 14,
-    marginLeft: 16,
-  },
-});
-
 export default function FeedScreen() {
   const { user } = useUser() as { user: User | null };
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
+  const insets = useSafeAreaInsets();
+
+  const { scrollProps, headerTranslateY } = useCollapsibleHeader({
+    headerHeight: DEFAULT_HEADER_HEIGHT,
+  });
 
   const {
     data,
@@ -110,8 +97,14 @@ export default function FeedScreen() {
     user?.type === "undergraduate" || user?.type === "teacher";
 
   return (
-    <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       {isLoading && <FullScreenLoader />}
+
+      <CollapsibleHeader
+        title="피드"
+        headerTranslateY={headerTranslateY}
+        headerHeight={DEFAULT_HEADER_HEIGHT}
+      />
 
       {isSuccess && canCreateFeed && (
         <FABPlus onPress={() => router.push("/feed/post")} />
@@ -119,9 +112,12 @@ export default function FeedScreen() {
 
       {data && (
         <FlatList
+          {...scrollProps}
           onEndReachedThreshold={0.8}
           onEndReached={handleEndReached}
-          ListHeaderComponent={<FeedHeaderComponent />}
+          ListHeaderComponent={() => (
+            <View style={{ height: DEFAULT_HEADER_HEIGHT }} />
+          )}
           ListFooterComponent={() => {
             if (isFetchingNextPage) return <FullScreenLoader />;
             return null;
@@ -137,7 +133,13 @@ export default function FeedScreen() {
   );
 }
 
-function FeedItemComponent({ item }: { item: FeedItem }) {
+function FeedItemComponent({
+  item,
+  isFirst = false,
+}: {
+  item: FeedItem;
+  isFirst?: boolean;
+}) {
   const { user } = useUser() as { user: User | null };
   const [activeSnapIndex, setActiveSnapIndex] = useState(0);
   const [imageOpen, setImageOpen] = useState(false);
@@ -320,7 +322,6 @@ function FeedDeleteButton({ onPress }: { onPress: () => void }) {
 const styles = StyleSheet.create({
   // Container styles
   container: {
-    marginTop: 14,
     paddingBottom: 16,
   },
 

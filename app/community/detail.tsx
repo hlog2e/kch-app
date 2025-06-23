@@ -24,13 +24,17 @@ import HorizontalScrollImageView from "../../src/components/Image/HorizontalScro
 import Comment from "../../src/components/community/Detail/Comment";
 import InteractionButtons from "../../src/components/community/Detail/InteractionButtons";
 import CommentInput from "../../src/components/community/Detail/CommentInput";
+import CommunityBadge from "../../src/components/community/CommunityBadge";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 export default function CommunityDetailScreen() {
   const { colors } = useTheme();
+
   const { id: communityId } = useLocalSearchParams<{ id: string }>();
+
   const { user } = useUser();
   const router = useRouter();
+
   const { data, isLoading }: { data: any; isLoading: boolean } = useQuery(
     "CommunityDetail",
     () => {
@@ -67,6 +71,9 @@ export default function CommunityDetailScreen() {
       paddingHorizontal: 16,
       backgroundColor: colors.background,
     },
+    headerSection: {
+      marginBottom: 4,
+    },
     title: {
       fontSize: 24,
       fontWeight: "600",
@@ -97,11 +104,19 @@ export default function CommunityDetailScreen() {
             <View style={styles.scroll_view_wrap}>
               <ScrollView style={styles.scroll_view}>
                 <View style={styles.wrap}>
-                  <Text style={styles.title}>{data.title}</Text>
+                  <View style={styles.headerSection}>
+                    <CommunityBadge categoryId={data.category} size="large" />
+                    <Text style={styles.title}>{data.title}</Text>
+                  </View>
                   <Text style={styles.nameAndDate}>
                     {data.isAnonymous
                       ? "익명"
-                      : data.publisherName + ` (${data.publisherDesc})`}{" "}
+                      : !data?.publisher || !data?.publisher?.name
+                      ? "탈퇴한 사용자"
+                      : data?.publisher?.name +
+                        (data?.publisher?.desc
+                          ? ` (${data?.publisher?.desc})`
+                          : "")}{" "}
                     | {moment(data.createdAt).fromNow()}
                   </Text>
 

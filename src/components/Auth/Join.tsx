@@ -63,7 +63,7 @@ export default function JoinScreen() {
     try {
       const response = await postJoin({ ...data });
       await login({ token: response.token, user: response.user });
-      router.replace("/(tabs)");
+      router.replace("/home");
       const pushToken = await registerForPushNotificationsAsync();
       if (pushToken) {
         await registerPushTokenToDB(pushToken);

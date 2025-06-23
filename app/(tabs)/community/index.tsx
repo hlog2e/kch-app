@@ -1,113 +1,83 @@
-import React, { useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import FABPlus from "../../../src/components/Button/FABPlus";
-import Header from "../../../src/components/Header/Header";
-import { View, Text, Switch, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { useInfiniteQuery } from "react-query";
 import { useTheme } from "@react-navigation/native";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
-  getCurrentNotificaionSettings,
-  postUpdateNotificationSetting,
-} from "../../../apis/user/notification";
-import { useUser } from "../../../context/UserContext";
-import { useRouter, useLocalSearchParams } from "expo-router";
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
-// 임시 컴포넌트
-const CommunityList = ({ boardData }: { boardData: any }) => (
-  <View style={{ padding: 20 }}>
-    <Text>커뮤니티 리스트</Text>
-  </View>
-);
+import { getCommunities } from "../../../apis/community/index";
+import FullScreenLoader from "../../../src/components/Overlay/FullScreenLoader";
+import CommunityItem from "../../../src/components/community/List/Item";
+import CollapsibleHeader, {
+  useCollapsibleHeader,
+  DEFAULT_HEADER_HEIGHT,
+} from "../../../src/components/Header/CollapsibleHeader";
 
-export default function CommunityInnerListScreen() {
-  const router = useRouter();
-  const params = useLocalSearchParams();
-
-  // URL params에서 boardData 파싱 (실제 구현에서는 boardId만 전달하고 API로 데이터 가져오는 것이 좋음)
-  const boardData = params.boardData
-    ? JSON.parse(params.boardData as string)
-    : null;
-
-  const { user } = useUser();
-  const accessAllowed =
-    user && boardData ? boardData.role.includes(user.type) : false;
-
-  useEffect(() => {
-    if (boardData && !accessAllowed) {
-      router.replace(
-        `/access-denied?boardData=${encodeURIComponent(
-          JSON.stringify(boardData)
-        )}`
-      );
-    }
-  }, [router, accessAllowed, boardData]);
-
-  if (accessAllowed && boardData) {
-    return (
-      <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
-        <Header
-          title=""
-          backArrowText={boardData.name + " 게시판"}
-          rightComponent={<RightNotificationSwitch boardData={boardData} />}
-        />
-        <FABPlus
-          onPress={() => {
-            router.push(
-              `/community/post?boardData=${encodeURIComponent(
-                JSON.stringify(boardData)
-              )}`
-            );
-          }}
-        />
-        <CommunityList boardData={boardData} />
-      </SafeAreaView>
-    );
-  }
-  return null;
-}
-
-interface RightNotificationSwitchProps {
-  boardData: {
-    _id: string;
-  };
-}
-
-function RightNotificationSwitch({ boardData }: RightNotificationSwitchProps) {
+export default function CommunityScreen() {
+  const [refreshing, setRefreshing] = useState(false);
   const { colors } = useTheme();
-  const { data } = useQuery(
-    "NotificationSetting",
-    getCurrentNotificaionSettings
-  );
-  const { mutate } = useMutation(postUpdateNotificationSetting);
-  const queryClient = useQueryClient();
-  const isSubscribe = Array.isArray(data)
-    ? data.includes(boardData._id)
-    : false;
+  const insets = useSafeAreaInsets();
 
-  const styles = StyleSheet.create({
-    container: { flexDirection: "row", alignItems: "center", marginRight: 10 },
-    text: { fontSize: 12, color: (colors as any).subText },
-    switch: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
+  const { scrollProps, headerTranslateY } = useCollapsibleHeader({
+    headerHeight: DEFAULT_HEADER_HEIGHT,
   });
 
+  const { isLoading, data, refetch, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["community"],
+      queryFn: ({ pageParam = 0 }) => getCommunities({ offset: pageParam }),
+      getNextPageParam: (lastPage: any, allPages: any) => {
+        if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
+          return undefined;
+        }
+        return lastPage.nextCursor;
+      },
+    });
+
+  const handleEndReached = () => {
+    if (!isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>알림</Text>
-      <Switch
-        style={styles.switch}
-        value={isSubscribe}
-        onValueChange={(_value) => {
-          mutate(
-            { category: boardData._id, isRegister: _value },
-            {
-              onSuccess: () => {
-                queryClient.invalidateQueries("NotificationSetting");
-              },
-            }
-          );
-        }}
-        trackColor={{ true: (colors as any).blue, false: undefined }}
+    <SafeAreaView style={{ flex: 1 }}>
+      {isLoading && <FullScreenLoader />}
+
+      <CollapsibleHeader
+        title="커뮤니티"
+        headerTranslateY={headerTranslateY}
+        headerHeight={DEFAULT_HEADER_HEIGHT}
       />
-    </View>
+
+      {data && (
+        <FlatList
+          {...scrollProps}
+          onEndReachedThreshold={0.8}
+          onEndReached={handleEndReached}
+          ListHeaderComponent={() => (
+            <View style={{ height: DEFAULT_HEADER_HEIGHT }} />
+          )}
+          ListFooterComponent={() => {
+            if (isFetchingNextPage) return <FullScreenLoader />;
+            return null;
+          }}
+          onRefresh={() => {
+            setRefreshing(true);
+            refetch().then(() => {
+              setRefreshing(false);
+            });
+          }}
+          refreshing={refreshing}
+          data={(data as any).pages.flatMap((page: any) => page.communities)}
+          renderItem={({ item }) => {
+            return <CommunityItem item={item} />;
+          }}
+          keyExtractor={(item: any) => item._id}
+        />
+      )}
+    </SafeAreaView>
   );
 }

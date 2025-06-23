@@ -36,8 +36,7 @@ export default function CommentInput({ communityId }: { communityId: string }) {
 
     checkbox_wrap: {
       flexDirection: "row",
-
-      justifyContent: "center",
+      flex: 1,
       alignItems: "center",
     },
     checkbox: { borderRadius: 5, color: colors.blue, width: 18, height: 18 },
@@ -52,6 +51,7 @@ export default function CommentInput({ communityId }: { communityId: string }) {
       color: colors.text,
       marginLeft: 8,
       paddingTop: 0,
+      flex: 1,
     },
     comment_send_button: {
       fontSize: 16,

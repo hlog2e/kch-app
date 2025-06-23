@@ -7,7 +7,7 @@ export interface BoardIdPayload {
 
 export interface PaginationParams {
   offset: number;
-  boardId: string;
+  category?: string;
 }
 
 export interface BlockUserPayload {
@@ -41,39 +41,54 @@ export interface CommunityDeletePayload {
   communityId: string;
 }
 
-// ------- API calls -------
-export const getCommunityBoards = async () => {
-  const { data } = await apiAuthInstance.get<unknown>("/community/board");
-  return data;
-};
+export interface CategoryItem {
+  id: string;
+  name: string;
+  color: string;
+}
 
-export const getCommunityBoardFixeds = async () => {
-  const { data } = await apiAuthInstance.get<unknown>("/community/board/fixed");
-  return data;
-};
+export interface CategoriesResponse {
+  status: number;
+  message: string;
+  categories: CategoryItem[];
+}
 
-export const postCommunityBoardFix = async ({ boardId }: BoardIdPayload) => {
-  const { data } = await apiAuthInstance.post<unknown>("/community/board/fix", {
-    boardId,
-  });
-  return data;
-};
+// // ------- API calls -------
+// export const getCommunityBoards = async () => {
+//   const { data } = await apiAuthInstance.get<unknown>("/community/board");
+//   return data;
+// };
 
-export const postCommunityBoardUnFix = async ({ boardId }: BoardIdPayload) => {
-  const { data } = await apiAuthInstance.post<unknown>(
-    "/community/board/unFix",
-    {
-      boardId,
-    }
-  );
-  return data;
-};
+// export const getCommunityBoardFixeds = async () => {
+//   const { data } = await apiAuthInstance.get<unknown>("/community/board/fixed");
+//   return data;
+// };
 
-export const getCommunities = async ({ offset, boardId }: PaginationParams) => {
+// export const postCommunityBoardFix = async ({ boardId }: BoardIdPayload) => {
+//   const { data } = await apiAuthInstance.post<unknown>("/community/board/fix", {
+//     boardId,
+//   });
+//   return data;
+// };
+
+// export const postCommunityBoardUnFix = async ({ boardId }: BoardIdPayload) => {
+//   const { data } = await apiAuthInstance.post<unknown>(
+//     "/community/board/unFix",
+//     {
+//       boardId,
+//     }
+//   );
+//   return data;
+// };
+
+export const getCommunities = async ({
+  offset,
+  category,
+}: PaginationParams) => {
   const limit = 5;
 
-  const { data } = await apiAuthInstance.get<unknown>("/community", {
-    params: { limit, offset, boardId },
+  const { data } = await apiAuthInstance.get<unknown>("/v2/community", {
+    params: { limit, offset, category },
   });
 
   return data;
@@ -81,14 +96,14 @@ export const getCommunities = async ({ offset, boardId }: PaginationParams) => {
 
 export const getBlockedUsers = async () => {
   const { data } = await apiAuthInstance.get<unknown>(
-    "/community/blockedUsers"
+    "/v2/community/blockedUsers"
   );
   return data;
 };
 
 export const postBlockUser = async ({ blockUserId }: BlockUserPayload) => {
   const { data } = await apiAuthInstance.post<unknown>(
-    "/community/block_user",
+    "/v2/community/block_user",
     {
       blockUserId,
     }
@@ -97,7 +112,7 @@ export const postBlockUser = async ({ blockUserId }: BlockUserPayload) => {
 };
 
 export const postReportCommunityItem = async ({ postId }: ReportPayload) => {
-  const { data } = await apiAuthInstance.post<unknown>("/community/report", {
+  const { data } = await apiAuthInstance.post<unknown>("/v2/community/report", {
     postId,
   });
   return data;
@@ -107,7 +122,7 @@ export const postReportComment = async ({
   commentId,
 }: ReportCommentPayload) => {
   const { data } = await apiAuthInstance.post<unknown>(
-    "/community/report/comment",
+    "/v2/community/report/comment",
     {
       commentId,
     }
@@ -116,14 +131,18 @@ export const postReportComment = async ({
 };
 
 export const postCommunity = async (formData: FormData) => {
-  const { data } = await apiAuthInstance.post<unknown>("/community", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await apiAuthInstance.post<unknown>(
+    "/v2/community",
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
   return data;
 };
 
 export const getCommunityDetail = async (_id: string) => {
-  const { data } = await apiAuthInstance.get<unknown>("/community/detail", {
+  const { data } = await apiAuthInstance.get<unknown>("/v2/community/detail", {
     params: { id: _id },
   });
   return data;
@@ -134,11 +153,14 @@ export const postComment = async ({
   communityId,
   isAnonymous,
 }: PostCommentPayload) => {
-  const { data } = await apiAuthInstance.post<unknown>("/community/comment", {
-    comment,
-    communityId,
-    isAnonymous,
-  });
+  const { data } = await apiAuthInstance.post<unknown>(
+    "/v2/community/comment",
+    {
+      comment,
+      communityId,
+      isAnonymous,
+    }
+  );
   return data;
 };
 
@@ -146,21 +168,24 @@ export const deleteComment = async ({
   commentId,
   communityId,
 }: DeleteCommentPayload) => {
-  const { data } = await apiAuthInstance.delete<unknown>("/community/comment", {
-    data: { commentId, communityId },
-  });
+  const { data } = await apiAuthInstance.delete<unknown>(
+    "/v2/community/comment",
+    {
+      data: { commentId, communityId },
+    }
+  );
   return data;
 };
 
 export const addLike = async ({ communityId }: CommunityLikePayload) => {
-  const { data } = await apiAuthInstance.post<unknown>("/community/like", {
+  const { data } = await apiAuthInstance.post<unknown>("/v2/community/like", {
     communityId,
   });
   return data;
 };
 
 export const deleteLike = async ({ communityId }: CommunityLikePayload) => {
-  const { data } = await apiAuthInstance.delete<unknown>("/community/like", {
+  const { data } = await apiAuthInstance.delete<unknown>("/v2/community/like", {
     data: { communityId },
   });
   return data;
@@ -169,8 +194,15 @@ export const deleteLike = async ({ communityId }: CommunityLikePayload) => {
 export const communityDelete = async ({
   communityId,
 }: CommunityDeletePayload) => {
-  const { data } = await apiAuthInstance.delete<unknown>("/community", {
+  const { data } = await apiAuthInstance.delete<unknown>("/v2/community", {
     data: { communityId },
   });
+  return data;
+};
+
+export const getCommunityCategories = async (): Promise<CategoriesResponse> => {
+  const { data } = await apiAuthInstance.get<CategoriesResponse>(
+    "/v2/community/categories"
+  );
   return data;
 };

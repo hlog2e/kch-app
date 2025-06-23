@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
+  FlatList,
   Dimensions,
 } from "react-native";
 import Animated, {
@@ -18,55 +18,28 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import moment from "moment";
-
-// 목 데이터 (실제 구현시에는 API로 교체)
-const mockCommunityPosts = [
-  {
-    id: "1",
-    title: "중간고사 준비하는 꿀팁 공유해요!",
-    content:
-      "안녕하세요! 이번에 중간고사를 잘 본 학생입니다. 제가 사용한 공부법을 공유해볼게요...",
-    author: "김*현",
-    authorGrade: "2학년",
-    likeCount: 47,
-    commentCount: 23,
-    createdAt: "2024-06-18T10:30:00Z",
-    category: "학습",
-    images: ["https://picsum.photos/200/150?random=1"],
-  },
-  {
-    id: "2",
-    title: "학교 급식 맛집 메뉴 추천!",
-    content:
-      "오늘 급식이 진짜 맛있었는데 여러분도 드셔보세요. 특히 치킨마요덮밥이...",
-    author: "박*민",
-    authorGrade: "3학년",
-    likeCount: 32,
-    commentCount: 18,
-    createdAt: "2024-06-18T14:15:00Z",
-    category: "생활",
-  },
-  {
-    id: "3",
-    title: "동아리 페스티벌 후기 + 사진",
-    content: "어제 동아리 페스티벌 너무 재미있었어요! 사진 몇 장 공유합니다.",
-    author: "이*수",
-    authorGrade: "1학년",
-    likeCount: 89,
-    commentCount: 41,
-    createdAt: "2024-06-17T16:45:00Z",
-    category: "행사",
-    images: [
-      "https://picsum.photos/200/150?random=2",
-      "https://picsum.photos/200/150?random=3",
-      "https://picsum.photos/200/150?random=4",
-    ],
-  },
-];
+import { useInfiniteQuery } from "react-query";
+import { getCommunities } from "../../../apis/community/index";
+import CommunityBadge from "../community/CommunityBadge";
 
 export default function CommunitySection() {
   const { colors } = useTheme();
   const router = useRouter();
+
+  // 무한스크롤을 위한 useInfiniteQuery 사용
+  const { data, isLoading, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["homeCommunityPosts"],
+      queryFn: ({ pageParam = 0 }) =>
+        getCommunities({ offset: pageParam, category: undefined }),
+      getNextPageParam: (lastPage: any, allPages: any) => {
+        if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
+          return undefined;
+        }
+        return lastPage.nextCursor;
+      },
+      staleTime: 3 * 60 * 1000, // 3분간 캐시 유지
+    });
 
   // 애니메이션 설정
   const translateY = useSharedValue(40);
@@ -88,6 +61,13 @@ export default function CommunitySection() {
     transform: [{ translateY: translateY.value }],
     opacity: opacity.value,
   }));
+
+  // 다음 페이지 로드 핸들러
+  const handleEndReached = () => {
+    if (!isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -125,11 +105,17 @@ export default function CommunitySection() {
       color: colors.subText,
       marginRight: 4,
     },
-    scrollView: {
+    flatListContainer: {
       paddingLeft: 14,
       paddingVertical: 17,
     },
   });
+
+  // 로딩 중이거나 데이터가 없으면 빈 컨테이너 반환
+  const posts = data?.pages?.flatMap((page: any) => page.communities) || [];
+  if (isLoading || !data || posts.length === 0) {
+    return <View style={styles.container} />;
+  }
 
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
@@ -146,16 +132,24 @@ export default function CommunitySection() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView
+      <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={styles.scrollView}
-        contentContainerStyle={{ paddingRight: 14 }}
-      >
-        {mockCommunityPosts.map((post, index) => (
-          <CommunityPostCard key={post.id} post={post} index={index} />
-        ))}
-      </ScrollView>
+        data={posts}
+        renderItem={({ item, index }) => (
+          <CommunityPostCard key={item._id} post={item} index={index} />
+        )}
+        keyExtractor={(item: any) => item._id}
+        contentContainerStyle={styles.flatListContainer}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={() => {
+          if (isFetchingNextPage) {
+            return <View style={{ width: 50 }} />; // 로딩 인디케이터 자리
+          }
+          return null;
+        }}
+      />
     </Animated.View>
   );
 }
@@ -170,19 +164,14 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
   const router = useRouter();
   const screenWidth = Dimensions.get("window").width;
 
-  const getCategoryColor = (category: string) => {
-    // 모든 카테고리를 통일된 파란색으로
-    return "#4A90E2";
-  };
-
   const styles = StyleSheet.create({
     card: {
       width: screenWidth - 80,
-      minHeight: 140,
+      height: 160,
+      marginRight: 12,
       backgroundColor: index % 2 === 0 ? "#F2F9FF" : colors.cardBg,
       borderRadius: 20,
-      marginRight: 12,
-      padding: 16,
+      padding: 14,
       borderWidth: 1,
       borderColor: index % 2 === 0 ? "#E0F0FF" : colors.border,
       shadowColor: "#000",
@@ -204,30 +193,15 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
       flexDirection: "row",
       alignItems: "center",
     },
-    categoryBadge: {
-      paddingHorizontal: 8,
-      paddingVertical: 3,
-      borderRadius: 10,
-      backgroundColor: "rgba(74, 144, 226, 0.1)",
-      borderWidth: 1,
-      borderColor: "#4A90E2",
-    },
-    categoryText: {
-      fontSize: 10,
-      fontWeight: "600",
-      color: "#4A90E2",
-    },
     postTitle: {
       fontSize: 15,
       fontWeight: "700",
       color: colors.text,
       marginBottom: 6,
-      lineHeight: 20,
     },
     postContent: {
       fontSize: 13,
       color: colors.subText,
-      lineHeight: 18,
       marginBottom: 12,
     },
     contentWithImage: {
@@ -304,23 +278,30 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => router.push(`/community/post/${post.id}`)}
+      onPress={() =>
+        router.push({
+          pathname: "/community/detail",
+          params: { id: post._id },
+        })
+      }
       activeOpacity={0.8}
     >
       <View style={styles.cardHeader}>
         <View style={styles.categoryContainer}>
-          <View style={styles.categoryBadge}>
-            <Text style={styles.categoryText}>{post.category}</Text>
-          </View>
+          <CommunityBadge categoryId={post.category} />
         </View>
       </View>
 
       <View style={styles.contentWithImage}>
         <View style={styles.textContent}>
-          <Text style={styles.postTitle} numberOfLines={2}>
+          <Text style={styles.postTitle} numberOfLines={1} ellipsizeMode="tail">
             {post.title}
           </Text>
-          <Text style={styles.postContent} numberOfLines={2}>
+          <Text
+            style={styles.postContent}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >
             {post.content}
           </Text>
         </View>
@@ -350,7 +331,11 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
             color={colors.subText}
           />
           <Text style={styles.authorText}>
-            {post.author} • {post.authorGrade}
+            {post.isAnonymous
+              ? "익명"
+              : !post?.publisher || !post?.publisher?.name
+              ? "탈퇴한 사용자"
+              : `${post.publisher.name} • ${post.publisher.desc || ""}`}
           </Text>
           <Text style={styles.timeText}>
             {moment(post.createdAt).fromNow()}
@@ -360,7 +345,7 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
             <Ionicons name="heart-outline" size={14} color="#ff6b6b" />
-            <Text style={styles.statText}>{post.likeCount}</Text>
+            <Text style={styles.statText}>{post.likeCount || 0}</Text>
           </View>
           <View style={styles.statItem}>
             <Ionicons
@@ -368,7 +353,7 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
               size={14}
               color={colors.subText}
             />
-            <Text style={styles.statText}>{post.commentCount}</Text>
+            <Text style={styles.statText}>{post.commentCount || 0}</Text>
           </View>
         </View>
       </View>
