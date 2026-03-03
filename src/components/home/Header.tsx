@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -20,56 +19,14 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-// 목 데이터
-const mockTimetable = [
-  {
-    period: 1,
-    subject: "국어",
-    room: "1-1",
-    time: "09:00~09:50",
-  },
-  {
-    period: 2,
-    subject: "수학",
-    room: "1-1",
-    time: "10:00~10:50",
-  },
-  {
-    period: 3,
-    subject: "영어",
-    room: "영어실",
-    time: "11:00~11:50",
-  },
-  {
-    period: 4,
-    subject: "과학",
-    room: "과학실",
-    time: "12:00~12:50",
-  },
-  {
-    period: 5,
-    subject: "점심시간",
-    room: "",
-    time: "12:50~13:50",
-  },
-  {
-    period: 6,
-    subject: "체육",
-    room: "체육관",
-    time: "13:50~14:40",
-  },
-];
-
 export default function Header() {
   const nowTime = parseInt(moment().format("H"));
   const { user } = useUser();
   const { colors } = useTheme();
   const router = useRouter();
-  const screenWidth = Dimensions.get("window").width;
 
   const [grade, setGrade] = useState<string | null>(null);
   const [alias, setAlias] = useState<string | null>(null);
-  const [nextPeriod, setNextPeriod] = useState<any>(null);
 
   const [greetText, setGreetText] = useState<string>("");
 
@@ -78,7 +35,8 @@ export default function Header() {
   const nameRotateX = useSharedValue(90);
   const greetOpacity = useSharedValue(0);
   const greetRotateX = useSharedValue(90);
-  const timetableTranslateX = useSharedValue(screenWidth);
+  const rightOpacity = useSharedValue(0);
+
   const grettings = [
     "별이 빛나는 밤입니다:)",
     "안 주무시나요?:)",
@@ -119,21 +77,6 @@ export default function Header() {
     return parseInt(today) - _birthYear + 1;
   };
 
-  const getCurrentPeriod = () => {
-    const now = moment();
-    const currentTime = now.format("HH:mm");
-
-    for (let i = 0; i < mockTimetable.length; i++) {
-      const period = mockTimetable[i];
-      const startTime = period.time.split("~")[0];
-
-      if (currentTime < startTime) {
-        return period;
-      }
-    }
-    return null;
-  };
-
   useEffect(() => {
     if (user?.type === "undergraduate") {
       const age = getAge(user.birthYear);
@@ -145,9 +88,6 @@ export default function Header() {
     if (user?.type === "teacher") {
       setAlias("선생");
     }
-
-    // 목업 데이터로 강제 설정 (항상 1교시 국어를 다음 수업으로 표시)
-    setNextPeriod(mockTimetable[0]);
 
     // 애니메이션 시작
     // 이름 텍스트 플립
@@ -164,11 +104,8 @@ export default function Header() {
       withSpring(0, { damping: 20, stiffness: 100 })
     );
 
-    // 시간표 슬라이드인
-    timetableTranslateX.value = withDelay(
-      900,
-      withSpring(0, { damping: 25, stiffness: 90 })
-    );
+    // 우측 섹션 페이드인
+    rightOpacity.value = withDelay(900, withTiming(1, { duration: 400 }));
   }, [user]);
 
   // 애니메이션 스타일들
@@ -194,13 +131,9 @@ export default function Header() {
     };
   });
 
-  const timetableAnimatedStyle = useAnimatedStyle(() => {
+  const rightAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        {
-          translateX: timetableTranslateX.value,
-        },
-      ],
+      opacity: rightOpacity.value,
     };
   });
 
@@ -239,54 +172,6 @@ export default function Header() {
     rightSection: {
       alignItems: "flex-end",
     },
-    nextClassContainer: {
-      backgroundColor: "#F2F9FF",
-      borderRadius: 12,
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      marginBottom: 8,
-      borderWidth: 1,
-      borderColor: "#E0F0FF",
-    },
-    nextClassTop: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 6,
-    },
-    nextClassBadge: {
-      backgroundColor: "#4A90E2",
-      paddingHorizontal: 8,
-      paddingVertical: 3,
-      borderRadius: 8,
-      marginRight: 8,
-    },
-    nextClassBadgeText: {
-      fontSize: 10,
-      color: "white",
-      fontWeight: "700",
-    },
-    nextSubjectRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    nextSubjectText: {
-      fontSize: 14,
-      color: colors.text,
-      fontWeight: "700",
-      marginRight: 6,
-    },
-    nextRoomText: {
-      fontSize: 11,
-      color: colors.subText,
-      fontWeight: "600",
-    },
-    nextClassTime: {
-      fontSize: 10,
-      color: "#4A90E2",
-      fontWeight: "600",
-    },
   });
 
   return (
@@ -301,25 +186,7 @@ export default function Header() {
           {greetText}
         </Animated.Text>
       </View>
-      <Animated.View style={[styles.rightSection, timetableAnimatedStyle]}>
-        {/* 다음 수업 정보 */}
-        <TouchableOpacity
-          style={styles.nextClassContainer}
-          onPress={() => router.push("/home/timetable")}
-          activeOpacity={0.7}
-        >
-          <View style={styles.nextClassTop}>
-            <View style={styles.nextClassBadge}>
-              <Text style={styles.nextClassBadgeText}>1교시</Text>
-            </View>
-            <Text style={styles.nextClassTime}>09:00</Text>
-          </View>
-          <View style={styles.nextSubjectRow}>
-            <Text style={styles.nextSubjectText}>국어</Text>
-            <Text style={styles.nextRoomText}>📍 1-1</Text>
-          </View>
-        </TouchableOpacity>
-
+      <Animated.View style={[styles.rightSection, rightAnimatedStyle]}>
         {user?.type === "undergraduate" && (
           <TouchableOpacity
             onPress={() => {
