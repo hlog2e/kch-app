@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import Animated, {
   useSharedValue,
@@ -146,7 +145,35 @@ export default function UpcomingEventsSection() {
   };
 
   const styles = StyleSheet.create({
-    container: {},
+    container: {
+      marginTop: 20,
+    },
+    headerRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 14,
+      marginBottom: 4,
+    },
+    title: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    viewAllButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 12,
+      backgroundColor: colors.cardBg2,
+    },
+    viewAllText: {
+      fontSize: 11,
+      fontWeight: "600",
+      color: colors.subText,
+      marginRight: 3,
+    },
     scrollView: {
       paddingLeft: 14,
       paddingVertical: 12,
@@ -166,6 +193,18 @@ export default function UpcomingEventsSection() {
   if (upcomingEvents.length === 0) {
     return (
       <Animated.View style={[styles.container, animatedStyle]}>
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>다가오는 학사일정</Text>
+          <TouchableOpacity
+            style={styles.viewAllButton}
+            onPress={() => {
+              router.push("/home/calendar");
+            }}
+          >
+            <Text style={styles.viewAllText}>더보기</Text>
+            <Ionicons name="chevron-forward" size={14} color={colors.subText} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.noEventsContainer}>
           <Ionicons name="calendar-outline" size={32} color={colors.subText} />
           <Text style={styles.noEventsText}>예정된 학사일정이 없습니다</Text>
@@ -176,17 +215,28 @@ export default function UpcomingEventsSection() {
 
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
+      <View style={styles.headerRow}>
+        <Text style={styles.title}>다가오는 학사일정</Text>
+        <TouchableOpacity
+          style={styles.viewAllButton}
+          onPress={() => {
+            router.push("/home/calendar");
+          }}
+        >
+          <Text style={styles.viewAllText}>더보기</Text>
+          <Ionicons name="chevron-forward" size={14} color={colors.subText} />
+        </TouchableOpacity>
+      </View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}
         contentContainerStyle={{ paddingRight: 14 }}
       >
-        {upcomingEvents.map((event: any, index: number) => (
+        {upcomingEvents.map((event: any) => (
           <EventCard
             key={`${event.startDate}-${event.EVENT_NM}`}
             event={event}
-            index={index}
             getDDay={getDDay}
             getDateDisplay={getDateDisplay}
             getEventIcon={getEventIcon}
@@ -205,7 +255,6 @@ export default function UpcomingEventsSection() {
 
 interface EventCardProps {
   event: any;
-  index: number;
   getDDay: (startDate: string) => string;
   getDateDisplay: (
     startDate: string,
@@ -217,34 +266,32 @@ interface EventCardProps {
 
 function EventCard({
   event,
-  index,
   getDDay,
   getDateDisplay,
   getEventIcon,
   onPress,
 }: EventCardProps) {
   const { colors } = useTheme();
-  const screenWidth = Dimensions.get("window").width;
   const dateDisplay = getDateDisplay(event.startDate, event.endDate);
+
+  const diff = moment(event.startDate, "YYYYMMDD").diff(moment(), "days");
+  const isHighlight = diff <= 1;
 
   const styles = StyleSheet.create({
     card: {
       width: 170,
       height: 80,
-      backgroundColor: index % 2 === 0 ? "#F2F9FF" : colors.cardBg,
+      backgroundColor: isHighlight ? "#F2F9FF" : colors.cardBg,
       borderRadius: 16,
       marginRight: 12,
       padding: 12,
       borderWidth: 1,
-      borderColor: index % 2 === 0 ? "#E0F0FF" : colors.border,
+      borderColor: isHighlight ? "#E0F0FF" : colors.border,
       shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 4,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 6,
+      elevation: 3,
       flexDirection: "column",
       justifyContent: "space-between",
     },

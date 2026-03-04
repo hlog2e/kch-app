@@ -28,11 +28,11 @@ export default function MealSection() {
     // 600ms 지연 후 왼쪽에서 슬라이드인
     translateX.value = withDelay(
       600,
-      withSpring(0, { damping: 15, stiffness: 120 })
+      withSpring(0, { damping: 15, stiffness: 120 }),
     );
     opacity.value = withDelay(
       600,
-      withSpring(1, { damping: 15, stiffness: 120 })
+      withSpring(1, { damping: 15, stiffness: 120 }),
     );
   }, []);
 
@@ -85,11 +85,12 @@ export default function MealSection() {
 
             if (e.nativeEvent.contentOffset.x > 0) {
               setFocus(
-                Math.round(e.nativeEvent.contentOffset.x / average - 0.25)
+                Math.round(e.nativeEvent.contentOffset.x / average - 0.25),
               );
             }
           }}
           style={styles.scrollView}
+          contentContainerStyle={{ paddingRight: 14 }}
           horizontal
           showsHorizontalScrollIndicator={false}
         >
@@ -113,32 +114,33 @@ export default function MealSection() {
 
 function MealItem({ title, kcal, menu }: { title: any; kcal: any; menu: any }) {
   const { colors } = useTheme();
+  const isLunch = title === "중식";
   const styles = StyleSheet.create({
     container: {
-      borderWidth: title === "석식" ? 0 : 0.5,
-      borderColor: colors.border,
+      borderWidth: 1,
+      borderColor: isLunch ? "#E0F0FF" : colors.border,
       borderRadius: 30,
       minHeight: 160,
       width: 160,
       padding: 14,
       marginRight: 12,
-      backgroundColor: title === "석식" ? "#F2F9FF" : "white",
+      backgroundColor: isLunch ? "#F2F9FF" : colors.cardBg,
     },
     header: {
       alignItems: "flex-end",
       justifyContent: "center",
       flexDirection: "row",
     },
-    headerTitle: { fontSize: 16, fontWeight: "700", color: colors.text },
+    headerTitle: { fontSize: 14, fontWeight: "700", color: colors.text },
     kcal: {
-      fontWeight: "200",
+      fontWeight: "500",
       fontSize: 10,
       marginLeft: 4,
       color: colors.subText,
     },
 
-    menuWrap: { marginTop: 12 },
-    menuText: { color: colors.subText, fontSize: 13, lineHeight: 16 },
+    menuWrap: { marginTop: 6 },
+    menuText: { color: colors.subText, fontSize: 12, lineHeight: 16 },
   });
   return (
     <View style={styles.container}>

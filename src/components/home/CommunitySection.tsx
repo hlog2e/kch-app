@@ -29,9 +29,9 @@ export default function CommunitySection() {
   // 무한스크롤을 위한 useInfiniteQuery 사용
   const { data, isLoading, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["homeCommunityPosts"],
+      queryKey: ["homeCommunityPosts", "top"],
       queryFn: ({ pageParam = 0 }) =>
-        getCommunities({ offset: pageParam, category: undefined }),
+        getCommunities({ offset: pageParam, category: "top" }),
       getNextPageParam: (lastPage: any, allPages: any) => {
         if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
           return undefined;
@@ -84,7 +84,7 @@ export default function CommunitySection() {
       alignItems: "center",
     },
     title: {
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: "600",
       color: colors.text,
     },
@@ -94,13 +94,13 @@ export default function CommunitySection() {
     moreButton: {
       flexDirection: "row",
       alignItems: "center",
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      borderRadius: 15,
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 12,
       backgroundColor: colors.cardBg2,
     },
     moreButtonText: {
-      fontSize: 12,
+      fontSize: 11,
       fontWeight: "600",
       color: colors.subText,
       marginRight: 4,
@@ -136,8 +136,8 @@ export default function CommunitySection() {
         horizontal
         showsHorizontalScrollIndicator={false}
         data={posts}
-        renderItem={({ item, index }) => (
-          <CommunityPostCard key={item._id} post={item} index={index} />
+        renderItem={({ item }) => (
+          <CommunityPostCard key={item._id} post={item} />
         )}
         keyExtractor={(item: any) => item._id}
         contentContainerStyle={styles.flatListContainer}
@@ -156,66 +156,58 @@ export default function CommunitySection() {
 
 interface CommunityPostCardProps {
   post: any;
-  index: number;
 }
 
-function CommunityPostCard({ post, index }: CommunityPostCardProps) {
+function CommunityPostCard({ post }: CommunityPostCardProps) {
   const { colors } = useTheme();
   const router = useRouter();
   const screenWidth = Dimensions.get("window").width;
 
   const styles = StyleSheet.create({
     card: {
-      width: screenWidth - 80,
-      height: 160,
-      marginRight: 12,
-      backgroundColor: index % 2 === 0 ? "#F2F9FF" : colors.cardBg,
-      borderRadius: 20,
-      padding: 14,
+      width: screenWidth * 0.72,
+      height: 140,
+      marginRight: 10,
+      backgroundColor: colors.cardBg,
+      borderRadius: 18,
+      padding: 12,
       borderWidth: 1,
-      borderColor: index % 2 === 0 ? "#E0F0FF" : colors.border,
+      borderColor: colors.border,
       shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 4,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 6,
+      elevation: 3,
     },
     cardHeader: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between",
-      marginBottom: 8,
-    },
-    categoryContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    postTitle: {
-      fontSize: 15,
-      fontWeight: "700",
-      color: colors.text,
       marginBottom: 6,
     },
+    postTitle: {
+      fontSize: 14,
+      fontWeight: "700",
+      color: colors.text,
+      marginBottom: 4,
+    },
     postContent: {
-      fontSize: 13,
+      fontSize: 12,
       color: colors.subText,
-      marginBottom: 12,
+      marginBottom: 10,
+      lineHeight: 17,
     },
     contentWithImage: {
       flexDirection: "row",
       alignItems: "flex-start",
-      marginBottom: 12,
+      marginBottom: 10,
     },
     textContent: {
       flex: 1,
-      marginRight: 12,
+      marginRight: 10,
     },
     imagePreview: {
-      width: 50,
-      height: 50,
+      width: 44,
+      height: 44,
       borderRadius: 8,
     },
     multiImageContainer: {
@@ -251,7 +243,6 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
       fontSize: 12,
       color: colors.subText,
       fontWeight: "500",
-      marginLeft: 4,
     },
     statsContainer: {
       flexDirection: "row",
@@ -287,9 +278,7 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
       activeOpacity={0.8}
     >
       <View style={styles.cardHeader}>
-        <View style={styles.categoryContainer}>
-          <CommunityBadge categoryId={post.category} />
-        </View>
+        <CommunityBadge categoryId={post.category} size="small" />
       </View>
 
       <View style={styles.contentWithImage}>
@@ -325,11 +314,6 @@ function CommunityPostCard({ post, index }: CommunityPostCardProps) {
 
       <View style={styles.cardFooter}>
         <View style={styles.authorInfo}>
-          <Ionicons
-            name="person-circle-outline"
-            size={16}
-            color={colors.subText}
-          />
           <Text style={styles.authorText}>
             {post.isAnonymous
               ? "익명"

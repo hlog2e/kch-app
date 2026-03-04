@@ -47,11 +47,11 @@ export default function Banner({
     // 400ms 지연 후 스케일과 페이드인
     scale.value = withDelay(
       400,
-      withSpring(1, { damping: 15, stiffness: 120 })
+      withSpring(1, { damping: 15, stiffness: 120 }),
     );
     opacity.value = withDelay(
       400,
-      withSpring(1, { damping: 15, stiffness: 120 })
+      withSpring(1, { damping: 15, stiffness: 120 }),
     );
   }, []);
 
@@ -67,7 +67,7 @@ export default function Banner({
       onSuccess: (_data) => {
         setDataLength(_data.length);
       },
-    }
+    },
   );
 
   const [dataLength, setDataLength] = useState<number>(0);
@@ -77,7 +77,6 @@ export default function Banner({
     <Animated.View
       style={[
         {
-          marginTop: 4,
           paddingVertical: 14,
           paddingHorizontal: padding ?? 0,
         },

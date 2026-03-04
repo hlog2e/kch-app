@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -28,8 +29,15 @@ export default function TimetableTimeline() {
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
 
-  const { slots, isLoading, isError, isToday, targetDate, currentIndex, hasGradeClass } =
-    useTodayTimetable();
+  const {
+    slots,
+    isLoading,
+    isError,
+    isToday,
+    targetDate,
+    currentIndex,
+    hasGradeClass,
+  } = useTodayTimetable();
 
   // 애니메이션
   const translateY = useSharedValue(40);
@@ -38,11 +46,11 @@ export default function TimetableTimeline() {
   useEffect(() => {
     translateY.value = withDelay(
       400,
-      withSpring(0, { damping: 15, stiffness: 120 })
+      withSpring(0, { damping: 15, stiffness: 120 }),
     );
     opacity.value = withDelay(
       400,
-      withSpring(1, { damping: 15, stiffness: 120 })
+      withSpring(1, { damping: 15, stiffness: 120 }),
     );
   }, []);
 
@@ -77,21 +85,31 @@ export default function TimetableTimeline() {
       justifyContent: "space-between",
       alignItems: "center",
       paddingHorizontal: 14,
-      marginBottom: 12,
+      marginBottom: 6,
     },
     title: {
       fontSize: 16,
       fontWeight: "600",
       color: colors.text,
     },
-    viewAll: {
-      fontSize: 13,
+    viewAllButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 12,
+      backgroundColor: colors.cardBg2,
+    },
+    viewAllText: {
+      fontSize: 11,
+      fontWeight: "600",
       color: colors.subText,
-      fontWeight: "500",
+      marginRight: 3,
     },
     scrollContent: {
       paddingLeft: 14,
       paddingRight: 4,
+      paddingVertical: 8,
     },
     emptyContainer: {
       marginHorizontal: 14,
@@ -135,8 +153,12 @@ export default function TimetableTimeline() {
       <Animated.View style={[styles.container, animatedStyle]}>
         <View style={styles.headerRow}>
           <Text style={styles.title}>{headerTitle}</Text>
-          <TouchableOpacity onPress={() => router.push("/home/timetable")}>
-            <Text style={styles.viewAll}>전체보기</Text>
+          <TouchableOpacity
+            style={styles.viewAllButton}
+            onPress={() => router.push("/home/timetable")}
+          >
+            <Text style={styles.viewAllText}>더보기</Text>
+            <Ionicons name="chevron-forward" size={14} color={colors.subText} />
           </TouchableOpacity>
         </View>
         <View style={styles.emptyContainer}>
@@ -150,8 +172,9 @@ export default function TimetableTimeline() {
     <Animated.View style={[styles.container, animatedStyle]}>
       <View style={styles.headerRow}>
         <Text style={styles.title}>{headerTitle}</Text>
-        <TouchableOpacity onPress={() => router.push("/home/timetable")}>
-          <Text style={styles.viewAll}>전체보기</Text>
+        <TouchableOpacity style={styles.viewAllButton} onPress={() => router.push("/home/timetable")}>
+          <Text style={styles.viewAllText}>더보기</Text>
+          <Ionicons name="chevron-forward" size={14} color={colors.subText} />
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -175,22 +198,13 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
   const isNext = slot.status === "next";
   const isPassed = slot.status === "passed";
 
-  const cardBg = isCurrent
-    ? "#4A90E2"
-    : isNext
-      ? "#F2F9FF"
-      : colors.cardBg;
-
-  const cardBorder = isCurrent
-    ? "#4A90E2"
-    : isNext
-      ? "#E0F0FF"
-      : colors.border;
+  const cardBg = isCurrent ? "#F2F9FF" : colors.cardBg;
+  const cardBorder = isCurrent ? "#E0F0FF" : colors.border;
 
   const styles = StyleSheet.create({
     card: {
       width: CARD_WIDTH,
-      height: 100,
+      height: 80,
       borderRadius: 16,
       padding: 12,
       marginRight: CARD_MARGIN,
@@ -199,6 +213,11 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
       borderColor: cardBorder,
       opacity: isPassed ? 0.45 : 1,
       justifyContent: "space-between",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 6,
+      elevation: 3,
     },
     topRow: {
       flexDirection: "row",
@@ -208,18 +227,18 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
     label: {
       fontSize: 11,
       fontWeight: "600",
-      color: isCurrent ? "rgba(255,255,255,0.8)" : colors.subText,
+      color: colors.subText,
     },
     indicator: {
       width: 8,
       height: 8,
       borderRadius: 4,
-      backgroundColor: "#fff",
+      backgroundColor: "#4A90E2",
     },
     subject: {
       fontSize: 16,
       fontWeight: "700",
-      color: isCurrent ? "#fff" : colors.text,
+      color: colors.text,
       marginTop: 4,
     },
     bottomRow: {
@@ -230,19 +249,18 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
     time: {
       fontSize: 10,
       fontWeight: "500",
-      color: isCurrent ? "rgba(255,255,255,0.7)" : colors.subText,
+      color: colors.subText,
     },
     badge: {
       fontSize: 10,
       fontWeight: "700",
-      color: isCurrent ? "#fff" : "#4A90E2",
+      color: "#4A90E2",
     },
   });
 
-  const badgeText = isCurrent
-    ? `${slot.remainingMinutes}분 남음`
-    : isNext && slot.remainingMinutes !== undefined
-      ? `${slot.remainingMinutes}분 후`
+  const badgeText =
+    isCurrent && slot.remainingMinutes !== undefined
+      ? `${slot.remainingMinutes}분 남음`
       : "";
 
   return (

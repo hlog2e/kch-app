@@ -17,12 +17,9 @@ export default function Home() {
       <ScrollView>
         <Header />
         <TimetableTimeline />
-        <UpcomingEventsSection />
-
-        <Banner location={"home"} height={90} padding={14} />
-
+        <Banner location={"home"} height={90} padding={12} />
         <MealSection />
-
+        <UpcomingEventsSection />
         <CommunitySection />
       </ScrollView>
     </SafeAreaView>
