@@ -10,6 +10,7 @@ import {
 import { getCommunities } from "../../../apis/community/index";
 import FullScreenLoader from "../../../src/components/Overlay/FullScreenLoader";
 import CommunityItem from "../../../src/components/community/List/Item";
+import CategoryFilter from "../../../src/components/community/CategoryFilter";
 import CollapsibleHeader, {
   useCollapsibleHeader,
   DEFAULT_HEADER_HEIGHT,
@@ -17,6 +18,7 @@ import CollapsibleHeader, {
 
 export default function CommunityScreen() {
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -26,14 +28,16 @@ export default function CommunityScreen() {
 
   const { isLoading, data, refetch, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["community"],
-      queryFn: ({ pageParam = 0 }) => getCommunities({ offset: pageParam }),
+      queryKey: ["community", selectedCategory],
+      queryFn: ({ pageParam = 0 }) =>
+        getCommunities({ offset: pageParam, category: selectedCategory ?? undefined }),
       getNextPageParam: (lastPage: any, allPages: any) => {
         if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
           return undefined;
         }
         return lastPage.nextCursor;
       },
+      keepPreviousData: true,
     });
 
   const handleEndReached = () => {
@@ -52,14 +56,19 @@ export default function CommunityScreen() {
         headerHeight={DEFAULT_HEADER_HEIGHT}
       />
 
-      {data && (
-        <FlatList
+      <FlatList
           {...scrollProps}
           onEndReachedThreshold={0.8}
           onEndReached={handleEndReached}
-          ListHeaderComponent={() => (
-            <View style={{ height: DEFAULT_HEADER_HEIGHT }} />
-          )}
+          ListHeaderComponent={
+            <View>
+              <View style={{ height: DEFAULT_HEADER_HEIGHT }} />
+              <CategoryFilter
+                selectedCategory={selectedCategory}
+                onSelect={setSelectedCategory}
+              />
+            </View>
+          }
           ListFooterComponent={() => {
             if (isFetchingNextPage) return <FullScreenLoader />;
             return null;
@@ -71,13 +80,12 @@ export default function CommunityScreen() {
             });
           }}
           refreshing={refreshing}
-          data={(data as any).pages.flatMap((page: any) => page.communities)}
+          data={data ? (data as any).pages.flatMap((page: any) => page.communities) : []}
           renderItem={({ item }) => {
             return <CommunityItem item={item} />;
           }}
           keyExtractor={(item: any) => item._id}
         />
-      )}
     </SafeAreaView>
   );
 }

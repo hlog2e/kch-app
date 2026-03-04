@@ -72,7 +72,9 @@ export default function CommunityDetailScreen() {
       backgroundColor: colors.background,
     },
     headerSection: {
+      marginTop: 12,
       marginBottom: 4,
+      gap: 6,
     },
     title: {
       fontSize: 24,
@@ -105,7 +107,7 @@ export default function CommunityDetailScreen() {
               <ScrollView style={styles.scroll_view}>
                 <View style={styles.wrap}>
                   <View style={styles.headerSection}>
-                    <CommunityBadge categoryId={data.category} size="large" />
+                    <CommunityBadge categoryId={data.category} />
                     <Text style={styles.title}>{data.title}</Text>
                   </View>
                   <Text style={styles.nameAndDate}>

@@ -41,7 +41,8 @@ export default function CommunityItem({ item }: CommunityItemProps) {
       paddingVertical: 14,
     },
     headerSection: {
-      marginBottom: 4,
+      marginBottom: 6,
+      gap: 6,
     },
     title: {
       fontSize: 20,
@@ -74,7 +75,7 @@ export default function CommunityItem({ item }: CommunityItemProps) {
     <TouchableOpacity onPress={handlePress} style={styles.container}>
       <View>
         <View style={styles.headerSection}>
-          <CommunityBadge categoryId={item.category} size="small" />
+          <CommunityBadge categoryId={item.category} />
           <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
             {item.title}
           </Text>

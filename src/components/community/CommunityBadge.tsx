@@ -4,9 +4,10 @@ import { getCommunityCategories } from "../../../apis/community/index";
 
 interface CommunityBadgeProps {
   categoryId?: string;
+  size?: "small" | "default";
 }
 
-export default function CommunityBadge({ categoryId }: CommunityBadgeProps) {
+export default function CommunityBadge({ categoryId, size = "default" }: CommunityBadgeProps) {
   // 카테고리 데이터 가져오기
   const { data: categoriesData } = useQuery(
     "communityCategories",
@@ -95,17 +96,18 @@ export default function CommunityBadge({ categoryId }: CommunityBadgeProps) {
 
   const colors = getCategoryColor(categoryId);
 
+  const isSmall = size === "small";
+
   const styles = StyleSheet.create({
     badge: {
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-      borderRadius: 16,
+      paddingHorizontal: isSmall ? 8 : 9,
+      paddingVertical: isSmall ? 3 : 4,
+      borderRadius: isSmall ? 10 : 11,
       alignSelf: "flex-start",
-      marginBottom: 4,
       backgroundColor: colors.bg,
     },
     text: {
-      fontSize: 12,
+      fontSize: isSmall ? 11 : 12,
       fontWeight: "600",
       color: colors.text,
     },
