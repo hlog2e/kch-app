@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,10 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
+import { useQueryClient } from "react-query";
 import { Ionicons } from "@expo/vector-icons";
+import { GalleryHorizontal } from "lucide-react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -18,8 +21,10 @@ import Animated, {
 import {
   useTodayTimetable,
   TimetableSlot,
-  SlotStatus,
 } from "../../hooks/useTodayTimetable";
+import { useTimetableMode } from "../../hooks/useTimetableMode";
+import { useCustomTodayTimetable } from "../../hooks/useCustomTodayTimetable";
+import { CUSTOM_TIMETABLE_QUERY_KEY } from "../../hooks/useCustomTimetable";
 
 const CARD_WIDTH = 110;
 const CARD_MARGIN = 10;
@@ -29,15 +34,30 @@ export default function TimetableTimeline() {
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
 
-  const {
-    slots,
-    isLoading,
-    isError,
-    isToday,
-    targetDate,
-    currentIndex,
-    hasGradeClass,
-  } = useTodayTimetable();
+  const queryClient = useQueryClient();
+  const { mode, refresh: refreshMode } = useTimetableMode();
+
+  const neis = useTodayTimetable();
+  const custom = useCustomTodayTimetable();
+
+  // 화면 복귀 시 모드 새로고침 + 커스텀 시간표 refetch
+  useFocusEffect(
+    useCallback(() => {
+      console.log("[TimetableTimeline] useFocusEffect - refreshMode + invalidateQueries");
+      refreshMode();
+      queryClient.invalidateQueries(CUSTOM_TIMETABLE_QUERY_KEY);
+    }, [refreshMode, queryClient])
+  );
+
+  // 모드에 따라 데이터 선택
+  const isCustomMode = mode === "custom";
+  const slots = isCustomMode ? custom.slots : neis.slots;
+  const isLoading = isCustomMode ? custom.isLoading : neis.isLoading;
+  const isError = isCustomMode ? false : neis.isError;
+  const isToday = isCustomMode ? custom.isToday : neis.isToday;
+  const targetDate = isCustomMode ? custom.targetDate : neis.targetDate;
+  const currentIndex = isCustomMode ? custom.currentIndex : neis.currentIndex;
+  const hasGradeClass = neis.hasGradeClass;
 
   // 애니메이션
   const translateY = useSharedValue(40);
@@ -74,7 +94,7 @@ export default function TimetableTimeline() {
 
   const headerTitle = isToday
     ? "오늘의 시간표"
-    : `${targetDate.format("M월 D일")} (${["일", "월", "화", "수", "목", "금", "토"][targetDate.day()]}) 시간표`;
+    : `${targetDate.format("M월 D일")} ${["일", "월", "화", "수", "목", "금", "토"][targetDate.day()]} 시간표`;
 
   const styles = StyleSheet.create({
     container: {
@@ -87,10 +107,28 @@ export default function TimetableTimeline() {
       paddingHorizontal: 14,
       marginBottom: 6,
     },
+    titleRow: {
+      flexDirection: "row" as const,
+      alignItems: "center" as const,
+      gap: 6,
+    },
     title: {
       fontSize: 16,
       fontWeight: "600",
       color: colors.text,
+    },
+    modeBadge: {
+      paddingHorizontal: 8,
+      paddingVertical: 3,
+      borderRadius: 999,
+      backgroundColor: "rgba(74, 144, 226, 0.10)",
+      justifyContent: "center" as const,
+      alignItems: "center" as const,
+    },
+    modeBadgeText: {
+      fontSize: 10,
+      fontWeight: "600",
+      color: "#4A90E2",
     },
     viewAllButton: {
       flexDirection: "row",
@@ -122,15 +160,21 @@ export default function TimetableTimeline() {
       fontSize: 13,
       color: colors.subText,
       fontWeight: "500",
+      marginTop: 8,
     },
   });
 
-  // 학년/반 미설정
-  if (!hasGradeClass) {
+  // 학년/반 미설정 (커스텀 모드면 바이패스)
+  if (!isCustomMode && !hasGradeClass) {
     return (
       <Animated.View style={[styles.container, animatedStyle]}>
         <View style={styles.headerRow}>
-          <Text style={styles.title}>오늘의 시간표</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>오늘의 시간표</Text>
+            <View style={styles.modeBadge}>
+              <Text style={styles.modeBadgeText}>{isCustomMode ? "커스텀" : "NEIS"}</Text>
+            </View>
+          </View>
         </View>
         <TouchableOpacity
           style={styles.emptyContainer}
@@ -145,14 +189,19 @@ export default function TimetableTimeline() {
     );
   }
 
-  // 로딩 / 에러 / 데이터 없음
+  // 로딩
   if (isLoading) return null;
 
   if (isError || slots.length === 0) {
     return (
       <Animated.View style={[styles.container, animatedStyle]}>
         <View style={styles.headerRow}>
-          <Text style={styles.title}>{headerTitle}</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>{headerTitle}</Text>
+            <View style={styles.modeBadge}>
+              <Text style={styles.modeBadgeText}>{isCustomMode ? "커스텀" : "NEIS"}</Text>
+            </View>
+          </View>
           <TouchableOpacity
             style={styles.viewAllButton}
             onPress={() => router.push("/home/timetable")}
@@ -162,7 +211,12 @@ export default function TimetableTimeline() {
           </TouchableOpacity>
         </View>
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>시간표 정보가 없습니다</Text>
+          <GalleryHorizontal size={28} color={colors.subText} strokeWidth={1.5} />
+          <Text style={styles.emptyText}>
+            {isCustomMode
+              ? "나만의 시간표를 등록해보세요"
+              : "NEIS 시간표 정보가 없습니다"}
+          </Text>
         </View>
       </Animated.View>
     );
@@ -171,7 +225,12 @@ export default function TimetableTimeline() {
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
       <View style={styles.headerRow}>
-        <Text style={styles.title}>{headerTitle}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>{headerTitle}</Text>
+          <View style={styles.modeBadge}>
+            <Text style={styles.modeBadgeText}>{isCustomMode ? "커스텀" : "NEIS"}</Text>
+          </View>
+        </View>
         <TouchableOpacity style={styles.viewAllButton} onPress={() => router.push("/home/timetable")}>
           <Text style={styles.viewAllText}>더보기</Text>
           <Ionicons name="chevron-forward" size={14} color={colors.subText} />
@@ -195,7 +254,6 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
   const { colors } = useTheme();
 
   const isCurrent = slot.status === "current";
-  const isNext = slot.status === "next";
   const isPassed = slot.status === "passed";
 
   const cardBg = isCurrent ? "#F2F9FF" : colors.cardBg;

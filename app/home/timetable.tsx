@@ -1,11 +1,12 @@
-import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NeisTimetable from "../../src/components/home/Timetable/NeisTimetable";
-import { useState } from "react";
 import { useTheme } from "@react-navigation/native";
 import CustomTimetable from "../../src/components/home/Timetable/CustomTimetable";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import AnimatedToggle from "../../src/components/common/AnimatedToggle";
+import { useTimetableMode } from "../../src/hooks/useTimetableMode";
 
 // Simple Header Component for Timetable
 function TimetableHeader() {
@@ -43,93 +44,38 @@ function TimetableHeader() {
 }
 
 export default function TimetableScreen() {
-  const { colors } = useTheme();
   const styles = StyleSheet.create({
-    header: {
+    toggleWrap: {
       marginTop: 10,
-
-      flexDirection: "row",
-      justifyContent: "space-between",
-      paddingHorizontal: 10,
+      paddingHorizontal: 16,
     },
-    headerButton: {
-      flex: 1,
-      alignItems: "center",
-      padding: 15,
-      borderBottomWidth: 2,
-      borderColor: colors.border,
-      marginHorizontal: 5,
-    },
-    headerButtonSelected: {
-      flex: 1,
-      alignItems: "center",
-      padding: 15,
-      borderBottomWidth: 2.5,
-      borderColor: colors.blue,
-      marginHorizontal: 5,
-    },
-    headerButtonText: {
-      fontWeight: "700",
-      fontSize: 16,
-      color: colors.subText,
-    },
-    headerButtonTextSelected: {
-      fontWeight: "700",
-      fontSize: 16,
-      color: colors.blue,
-    },
-
     tableWrap: { flex: 1, paddingHorizontal: 10 },
   });
 
-  const [viewMode, setViewMode] = useState("neis");
+  const { mode, setMode, isLoading } = useTimetableMode();
+
+  const selectedIndex = mode === "neis" ? 0 : 1;
+  const handleToggle = (index: 0 | 1) => {
+    setMode(index === 0 ? "neis" : "custom");
+  };
+
+  if (isLoading) return null;
 
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
       <TimetableHeader />
 
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={
-            viewMode === "neis"
-              ? styles.headerButtonSelected
-              : styles.headerButton
-          }
-          onPress={() => setViewMode("neis")}
-        >
-          <Text
-            style={
-              viewMode === "neis"
-                ? styles.headerButtonTextSelected
-                : styles.headerButtonText
-            }
-          >
-            NEIS 시간표
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={
-            viewMode === "my"
-              ? styles.headerButtonSelected
-              : styles.headerButton
-          }
-          onPress={() => setViewMode("my")}
-        >
-          <Text
-            style={
-              viewMode === "my"
-                ? styles.headerButtonTextSelected
-                : styles.headerButtonText
-            }
-          >
-            나만의 시간표
-          </Text>
-        </TouchableOpacity>
+      <View style={styles.toggleWrap}>
+        <AnimatedToggle
+          options={["NEIS 시간표", "나만의 시간표"]}
+          selectedIndex={selectedIndex as 0 | 1}
+          onToggle={handleToggle}
+        />
       </View>
 
       <View style={styles.tableWrap}>
-        {viewMode === "neis" && <NeisTimetable />}
-        {viewMode === "my" && <CustomTimetable />}
+        {mode === "neis" && <NeisTimetable />}
+        {mode === "custom" && <CustomTimetable />}
       </View>
     </SafeAreaView>
   );

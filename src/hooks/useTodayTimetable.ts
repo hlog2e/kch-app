@@ -32,7 +32,7 @@ interface GradeClass {
   class: number;
 }
 
-function getTargetSchoolDate(): { date: moment.Moment; isToday: boolean } {
+export function getTargetSchoolDate(): { date: moment.Moment; isToday: boolean } {
   const now = moment();
   const day = now.day(); // 0=일, 1=월, ..., 6=토
   const currentTime = now.format("HH:mm");
@@ -113,7 +113,7 @@ function processNeisResponse(
   return slots;
 }
 
-function calculateStatuses(
+export function calculateStatuses(
   slots: TimetableSlot[],
   isToday: boolean,
   currentTime: string

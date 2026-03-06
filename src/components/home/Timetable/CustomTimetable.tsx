@@ -3,21 +3,15 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   ScrollView,
-  Alert,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-
-// 타입 정의
-interface TimetableData {
-  [dayIndex: string]: {
-    [timeIndex: string]: string;
-  };
-}
+import { useEffect, useState, useRef, useCallback } from "react";
+import { CustomTimetableData } from "../../../types/timetable";
+import {
+  useCustomTimetableQuery,
+  useCustomTimetableMutation,
+} from "../../../hooks/useCustomTimetable";
 
 interface TimetableCellProps {
   value: string;
@@ -26,32 +20,11 @@ interface TimetableCellProps {
 }
 
 interface DayColumnProps {
-  dayData: { [timeIndex: string]: string };
+  dayData: (string | null)[];
   dayIndex: number;
   times: string[];
   onUpdateCell: (dayIndex: number, timeIndex: number, value: string) => void;
 }
-
-// Mock API functions (실제 API 연결 시 교체)
-const getCustomTimetable = async (): Promise<TimetableData | null> => {
-  try {
-    const data = await AsyncStorage.getItem("customTimetable");
-    return data ? JSON.parse(data) : null;
-  } catch (error) {
-    console.error("Custom timetable fetch error:", error);
-    return null;
-  }
-};
-
-const postCustomTimetable = async (data: TimetableData): Promise<boolean> => {
-  try {
-    await AsyncStorage.setItem("customTimetable", JSON.stringify(data));
-    return true;
-  } catch (error) {
-    console.error("Custom timetable save error:", error);
-    return false;
-  }
-};
 
 // 시간표 셀 컴포넌트
 function TimetableCell({
@@ -65,7 +38,6 @@ function TimetableCell({
     dataItem: {
       height: 50,
       width: "100%",
-      paddingHorizontal: 4,
       alignItems: "center",
       justifyContent: "center",
       borderBottomWidth: 1,
@@ -73,11 +45,15 @@ function TimetableCell({
     },
     textInput: {
       textAlign: "center",
+      textAlignVertical: "center",
       fontSize: 12,
       color: colors.text,
       fontWeight: "300",
       width: "100%",
-      height: "100%",
+      height: 50,
+      lineHeight: 18,
+      paddingVertical: 16,
+      paddingHorizontal: 2,
     },
   });
 
@@ -90,7 +66,6 @@ function TimetableCell({
         placeholder={placeholder}
         placeholderTextColor={colors.subText}
         multiline
-        textAlignVertical="center"
       />
     </View>
   );
@@ -114,54 +89,11 @@ function DayColumn({ dayData, dayIndex, times, onUpdateCell }: DayColumnProps) {
       {times.map((_, timeIndex) => (
         <TimetableCell
           key={`${dayIndex}-${timeIndex}`}
-          value={dayData[timeIndex.toString()] || ""}
+          value={dayData[timeIndex] ?? ""}
           onChangeText={(text) => onUpdateCell(dayIndex, timeIndex, text)}
           placeholder="과목명"
         />
       ))}
-    </View>
-  );
-}
-
-// 시간표 헤더 컴포넌트
-function TimetableHeader({ onSave }: { onSave: () => void }) {
-  const { colors } = useTheme();
-
-  const styles = StyleSheet.create({
-    header: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      marginBottom: 16,
-    },
-    headerTitle: {
-      fontSize: 20,
-      fontWeight: "700",
-      paddingVertical: 8,
-      color: colors.text,
-    },
-    saveButton: {
-      flexDirection: "row",
-      alignItems: "center",
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      backgroundColor: colors.primary,
-      borderRadius: 8,
-    },
-    saveButtonText: {
-      color: "#ffffff",
-      fontWeight: "600",
-      marginLeft: 4,
-    },
-  });
-
-  return (
-    <View style={styles.header}>
-      <Text style={styles.headerTitle}>내 시간표</Text>
-      <TouchableOpacity style={styles.saveButton} onPress={onSave}>
-        <Ionicons name="save-outline" size={16} color="#ffffff" />
-        <Text style={styles.saveButtonText}>저장</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -247,73 +179,91 @@ function TimeColumn({ times }: { times: string[] }) {
   );
 }
 
+const initializeTimetableData = (): CustomTimetableData =>
+  Array.from({ length: 5 }, () => Array(8).fill(""));
+
 export default function CustomTimetable() {
   const { colors } = useTheme();
-  const [timetableData, setTimetableData] = useState<TimetableData>({});
+  const [timetableData, setTimetableData] = useState<CustomTimetableData>(
+    initializeTimetableData()
+  );
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestDataRef = useRef<CustomTimetableData | null>(null);
+  const isInitialized = useRef(false);
+
+  const { data: serverData } = useCustomTimetableQuery();
+  const { mutate } = useCustomTimetableMutation();
 
   const times = ["1", "2", "3", "4", "5", "6", "7", "8"];
   const dayNames = ["월", "화", "수", "목", "금"];
 
-  // 시간표 데이터 초기화
-  const initializeTimetableData = () => {
-    const initialData: TimetableData = {};
-    for (let dayIndex = 0; dayIndex < 5; dayIndex++) {
-      initialData[dayIndex.toString()] = {};
-      for (let timeIndex = 0; timeIndex < 8; timeIndex++) {
-        initialData[dayIndex.toString()][timeIndex.toString()] = "";
-      }
-    }
-    return initialData;
-  };
+  // 서버 데이터 최초 1회만 로컬 state에 복사
+  useEffect(() => {
+    if (isInitialized.current) return;
+    if (serverData === undefined) return; // 아직 로딩 중
 
-  // 시간표 데이터 로드
-  const loadTimetableData = async () => {
-    try {
-      const data = await getCustomTimetable();
-      if (data) {
-        setTimetableData(data);
-      } else {
-        setTimetableData(initializeTimetableData());
+    if (serverData && serverData.length > 0) {
+      const padded = serverData.map((day) => {
+        const arr = day || [];
+        // 8교시까지 패딩, null → "" 변환
+        return Array.from({ length: 8 }, (_, i) => arr[i] ?? "");
+      });
+      // 5요일 미만이면 빈 요일 추가
+      while (padded.length < 5) {
+        padded.push(Array(8).fill(""));
       }
-    } catch (error) {
-      console.error("시간표 로드 오류:", error);
+      setTimetableData(padded);
+    } else {
       setTimetableData(initializeTimetableData());
     }
-  };
+    isInitialized.current = true;
+  }, [serverData]);
 
-  // 셀 업데이트 함수
+  // 디바운스 자동저장 (서버 POST)
+  const autoSave = useCallback(
+    (data: CustomTimetableData) => {
+      latestDataRef.current = data;
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = setTimeout(() => {
+        mutate(data);
+        latestDataRef.current = null;
+      }, 500);
+    },
+    [mutate]
+  );
+
   const updateCell = (dayIndex: number, timeIndex: number, value: string) => {
-    setTimetableData((prev) => ({
-      ...prev,
-      [dayIndex.toString()]: {
-        ...prev[dayIndex.toString()],
-        [timeIndex.toString()]: value,
-      },
-    }));
+    setTimetableData((prev) => {
+      const next = prev.map((day, di) =>
+        di === dayIndex
+          ? day.map((cell, ti) => (ti === timeIndex ? value : cell))
+          : day
+      );
+      autoSave(next);
+      return next;
+    });
   };
 
-  // 시간표 저장
-  const saveTimetable = async () => {
-    try {
-      const success = await postCustomTimetable(timetableData);
-      if (success) {
-        Alert.alert("저장 완료", "시간표가 성공적으로 저장되었습니다.");
-      } else {
-        Alert.alert("저장 실패", "시간표 저장 중 오류가 발생했습니다.");
-      }
-    } catch (error) {
-      console.error("시간표 저장 오류:", error);
-      Alert.alert("저장 실패", "시간표 저장 중 오류가 발생했습니다.");
-    }
-  };
-
+  // 화면 이탈 시 미저장 데이터 flush
   useEffect(() => {
-    loadTimetableData();
-  }, []);
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      if (latestDataRef.current) {
+        mutate(latestDataRef.current);
+      }
+    };
+  }, [mutate]);
 
   const styles = StyleSheet.create({
     container: {
+      flex: 1,
       paddingVertical: 10,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "700",
+      color: colors.text,
+      paddingVertical: 8,
     },
     tableWrap: {
       flexDirection: "row",
@@ -325,8 +275,8 @@ export default function CustomTimetable() {
   });
 
   return (
-    <ScrollView style={styles.container}>
-      <TimetableHeader onSave={saveTimetable} />
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>내 시간표</Text>
       <DayHeader dayNames={dayNames} />
 
       <View style={styles.tableWrap}>
@@ -335,7 +285,7 @@ export default function CustomTimetable() {
           {dayNames.map((_, dayIndex) => (
             <DayColumn
               key={dayIndex}
-              dayData={timetableData[dayIndex.toString()] || {}}
+              dayData={timetableData[dayIndex] || []}
               dayIndex={dayIndex}
               times={times}
               onUpdateCell={updateCell}
