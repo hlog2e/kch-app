@@ -12,17 +12,11 @@ module.exports = {
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
-    splash: {
-      image: "./assets/splash.png",
-      resizeMode: "contain",
-      backgroundColor: "#ffffff",
-    },
     updates: {
       url: "https://u.expo.dev/5b77743f-dfb8-4df6-942e-446f6e72ed63",
       fallbackToCacheTimeout: 0,
     },
-    runtimeVersion: { policy: "sdkVersion" },
-    assetBundlePatterns: ["**/*"],
+    runtimeVersion: { policy: "fingerprint" },
     plugins: [
       "expo-router",
       [
