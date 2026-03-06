@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getCustomTimetable,
   postCustomTimetable,
@@ -8,18 +8,19 @@ import { CustomTimetableData } from "../types/timetable";
 export const CUSTOM_TIMETABLE_QUERY_KEY = "CustomTimetable";
 
 export function useCustomTimetableQuery() {
-  return useQuery<CustomTimetableData | null>(
-    CUSTOM_TIMETABLE_QUERY_KEY,
-    getCustomTimetable,
-    { staleTime: 5 * 60 * 1000 }
-  );
+  return useQuery<CustomTimetableData | null>({
+    queryKey: [CUSTOM_TIMETABLE_QUERY_KEY],
+    queryFn: getCustomTimetable,
+    staleTime: 5 * 60 * 1000,
+  });
 }
 
 export function useCustomTimetableMutation() {
   const queryClient = useQueryClient();
-  return useMutation(postCustomTimetable, {
+  return useMutation({
+    mutationFn: postCustomTimetable,
     onSuccess: () => {
-      queryClient.invalidateQueries(CUSTOM_TIMETABLE_QUERY_KEY);
+      queryClient.invalidateQueries({ queryKey: [CUSTOM_TIMETABLE_QUERY_KEY] });
     },
   });
 }

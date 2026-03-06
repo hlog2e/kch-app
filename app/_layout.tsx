@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { QueryClientProvider, QueryClient } from "react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { UserProvider } from "../context/UserContext";
 import { AlertProvider } from "../context/AlertContext";
 import * as Notifications from "expo-notifications";

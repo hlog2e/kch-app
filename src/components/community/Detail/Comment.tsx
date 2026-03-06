@@ -5,7 +5,7 @@ import {
   getBlockedUsers,
 } from "../../../../apis/community/index";
 import { useTheme } from "@react-navigation/native";
-import { useMutation, useQueryClient, useQuery } from "react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Text, StyleSheet, View, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,15 +24,15 @@ export default function Comment({
   const { colors } = useTheme();
   //react-query
   const queryClient = useQueryClient();
-  const { mutate: deleteCommentMutate } = useMutation(deleteComment);
-  const { mutate: blockUserMutate } = useMutation(postBlockUser);
-  const { mutate: reportComment } = useMutation(postReportComment);
+  const { mutate: deleteCommentMutate } = useMutation({ mutationFn: deleteComment });
+  const { mutate: blockUserMutate } = useMutation({ mutationFn: postBlockUser });
+  const { mutate: reportComment } = useMutation({ mutationFn: postReportComment });
 
-  const { data: blockedUsers = [] } = useQuery<string[]>(
-    "BlockedUsers",
-    () => getBlockedUsers() as Promise<string[]>,
-    { initialData: [] }
-  );
+  const { data: blockedUsers = [] } = useQuery<string[]>({
+    queryKey: ["BlockedUsers"],
+    queryFn: () => getBlockedUsers() as Promise<string[]>,
+    initialData: [],
+  });
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -88,7 +88,7 @@ export default function Comment({
             { communityId: communityId, commentId: commentData._id },
             {
               onSuccess: () => {
-                queryClient.invalidateQueries("CommunityDetail");
+                queryClient.invalidateQueries({ queryKey: ["CommunityDetail"] });
               },
             }
           );
@@ -115,8 +115,8 @@ export default function Comment({
               { blockUserId: issuerId },
               {
                 onSuccess: () => {
-                  queryClient.invalidateQueries("CommunityDetail");
-                  queryClient.invalidateQueries("BlockedUsers");
+                  queryClient.invalidateQueries({ queryKey: ["CommunityDetail"] });
+                  queryClient.invalidateQueries({ queryKey: ["BlockedUsers"] });
                 },
               }
             );

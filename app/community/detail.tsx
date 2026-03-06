@@ -11,8 +11,9 @@ import { useTheme } from "@react-navigation/native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
+import { useEffect } from "react";
 
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getCommunityDetail } from "../../apis/community/index";
 import FullScreenLoader from "../../src/components/Overlay/FullScreenLoader";
 import { useUser } from "../../context/UserContext";
@@ -35,26 +36,27 @@ export default function CommunityDetailScreen() {
   const { user } = useUser();
   const router = useRouter();
 
-  const { data, isLoading }: { data: any; isLoading: boolean } = useQuery(
-    "CommunityDetail",
-    () => {
+  const { data, isLoading, isError, error }: { data: any; isLoading: boolean; isError: boolean; error: any } = useQuery({
+    queryKey: ["CommunityDetail", communityId],
+    queryFn: () => {
       return getCommunityDetail(communityId as string);
     },
-    {
-      retry: false,
-      onError: (_err) => {
-        console.log(_err);
-        Alert.alert("오류", "존재하지 않거나, 삭제된 게시글 입니다.", [
-          {
-            text: "확인",
-            onPress: () => {
-              router.back();
-            },
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (isError) {
+      console.log(error);
+      Alert.alert("오류", "존재하지 않거나, 삭제된 게시글 입니다.", [
+        {
+          text: "확인",
+          onPress: () => {
+            router.back();
           },
-        ]);
-      },
+        },
+      ]);
     }
-  );
+  }, [isError]);
 
   const styles = StyleSheet.create({
     container: {

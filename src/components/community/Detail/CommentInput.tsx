@@ -6,7 +6,7 @@ import {
   TextInput,
 } from "react-native";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postComment } from "../../../../apis/community/index";
 import { useTheme } from "@react-navigation/native";
 import FullScreenLoader from "../../Overlay/FullScreenLoader";
@@ -18,7 +18,7 @@ export default function CommentInput({ communityId }: { communityId: string }) {
   const [isAnonymous, setIsAnonymous] = useState(true);
 
   const queryClient = useQueryClient();
-  const { mutate: commentMutate, isLoading } = useMutation(postComment);
+  const { mutate: commentMutate, isPending: isLoading } = useMutation({ mutationFn: postComment });
 
   const styles = StyleSheet.create({
     input_container: {
@@ -66,7 +66,7 @@ export default function CommentInput({ communityId }: { communityId: string }) {
 
   const handlePostComment = async () => {
     if (comment !== "") {
-      await commentMutate(
+      commentMutate(
         {
           comment: comment,
           communityId: communityId,
@@ -74,7 +74,7 @@ export default function CommentInput({ communityId }: { communityId: string }) {
         },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries("CommunityDetail");
+            queryClient.invalidateQueries({ queryKey: ["CommunityDetail"] });
           },
         }
       );

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { getNeisTimetable } from "../../apis/neis/timetable";
@@ -200,20 +200,18 @@ export function useTodayTimetable() {
     data: rawData,
     isLoading,
     isError,
-  } = useQuery(
-    ["todayTimetable", gradeClass?.grade, gradeClass?.class, targetDateStr],
-    () =>
+  } = useQuery({
+    queryKey: ["todayTimetable", gradeClass?.grade, gradeClass?.class, targetDateStr],
+    queryFn: () =>
       getNeisTimetable(
         gradeClass!.grade,
         gradeClass!.class,
         targetDateStr,
         targetDateStr
       ),
-    {
-      enabled: !!gradeClass,
-      staleTime: 1000 * 60 * 30, // 30분 캐시
-    }
-  );
+    enabled: !!gradeClass,
+    staleTime: 1000 * 60 * 30, // 30분 캐시
+  });
 
   // 데이터 변환
   const rawSlots = useMemo(() => {

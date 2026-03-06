@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, StyleSheet, Switch } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getCurrentNotificaionSettings,
   postUpdateNotificationSetting,
@@ -52,10 +52,10 @@ export default function NotificationSettingScreen() {
     data: currentSettings,
     isSuccess,
     isLoading,
-  } = useQuery("NotificationSetting", getCurrentNotificaionSettings);
-  const { mutate: updateSettingMutate } = useMutation(
-    postUpdateNotificationSetting
-  );
+  } = useQuery({ queryKey: ["NotificationSetting"], queryFn: getCurrentNotificaionSettings });
+  const { mutate: updateSettingMutate } = useMutation({
+    mutationFn: postUpdateNotificationSetting,
+  });
 
   // currentSettings를 안전하게 타입 캐스팅
   const safeCurrentSettings = currentSettings as string[] | undefined;
@@ -74,7 +74,7 @@ export default function NotificationSettingScreen() {
           },
           {
             onSuccess: () => {
-              queryClient.invalidateQueries("NotificationSetting");
+              queryClient.invalidateQueries({ queryKey: ["NotificationSetting"] });
             },
           }
         );
@@ -95,7 +95,7 @@ export default function NotificationSettingScreen() {
           },
           {
             onSuccess: () => {
-              queryClient.invalidateQueries("NotificationSetting");
+              queryClient.invalidateQueries({ queryKey: ["NotificationSetting"] });
             },
           }
         );
@@ -114,7 +114,7 @@ export default function NotificationSettingScreen() {
           },
           {
             onSuccess: () => {
-              queryClient.invalidateQueries("NotificationSetting");
+              queryClient.invalidateQueries({ queryKey: ["NotificationSetting"] });
             },
           }
         );

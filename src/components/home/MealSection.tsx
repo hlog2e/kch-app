@@ -6,7 +6,7 @@ import Animated, {
   withDelay,
   withSpring,
 } from "react-native-reanimated";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getMeals } from "../../../apis/school_data/meal";
 import { useState } from "react";
 import moment from "moment";
@@ -18,7 +18,7 @@ const riceImage = require("../../../assets/svgs/rice.png");
 
 export default function MealSection() {
   const { colors } = useTheme();
-  const { data } = useQuery("meals", getMeals);
+  const { data } = useQuery({ queryKey: ["meals"], queryFn: getMeals });
 
   // 애니메이션 설정
   const translateX = useSharedValue(-50);

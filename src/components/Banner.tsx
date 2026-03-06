@@ -13,9 +13,9 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { Image } from "expo-image";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getBanners } from "../../apis/banner/index";
-import Carousel from "react-native-snap-carousel";
+import ReanimatedCarousel from "react-native-reanimated-carousel";
 import * as Linking from "expo-linking";
 import { useState } from "react";
 
@@ -60,18 +60,13 @@ export default function Banner({
     opacity: opacity.value,
   }));
 
-  const { data = [] } = useQuery<BannerItem[]>(
-    ["banner", location],
-    () => getBanners({ location }),
-    {
-      onSuccess: (_data) => {
-        setDataLength(_data.length);
-      },
-    },
-  );
-
-  const [dataLength, setDataLength] = useState<number>(0);
+  const { data = [] } = useQuery<BannerItem[]>({
+    queryKey: ["banner", location],
+    queryFn: () => getBanners({ location }),
+  });
   const [nowIndex, setNowIndex] = useState<number>(0);
+
+  const carouselWidth = SCREEN_WIDTH - (parentPadding ?? padding * 2);
 
   return (
     <Animated.View
@@ -83,24 +78,25 @@ export default function Banner({
         animatedStyle,
       ]}
     >
-      <Carousel<BannerItem>
-        data={data}
-        renderItem={({ item }) => (
-          <Item
-            item={item}
-            height={height}
-            dataLength={dataLength}
-            nowIndex={nowIndex}
-          />
-        )}
-        itemWidth={SCREEN_WIDTH - (parentPadding ?? padding * 2)}
-        sliderWidth={SCREEN_WIDTH - (parentPadding ?? padding * 2)}
-        autoplay
-        autoplayDelay={0}
-        autoplayInterval={6000}
-        onSnapToItem={setNowIndex}
-        vertical={false}
-      />
+      {data.length > 0 && (
+        <ReanimatedCarousel
+          data={data}
+          width={carouselWidth}
+          height={height}
+          autoPlay
+          autoPlayInterval={6000}
+          loop
+          onSnapToItem={setNowIndex}
+          renderItem={({ item }: { item: BannerItem }) => (
+            <Item
+              item={item}
+              height={height}
+              dataLength={data.length}
+              nowIndex={nowIndex}
+            />
+          )}
+        />
+      )}
     </Animated.View>
   );
 }

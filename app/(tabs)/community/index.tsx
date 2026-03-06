@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import { useState } from "react";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTheme } from "@react-navigation/native";
 import {
   SafeAreaView,
@@ -29,15 +29,16 @@ export default function CommunityScreen() {
   const { isLoading, data, refetch, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["community", selectedCategory],
-      queryFn: ({ pageParam = 0 }) =>
+      queryFn: ({ pageParam }) =>
         getCommunities({ offset: pageParam, category: selectedCategory ?? undefined }),
+      initialPageParam: 0,
       getNextPageParam: (lastPage: any, allPages: any) => {
         if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
           return undefined;
         }
         return lastPage.nextCursor;
       },
-      keepPreviousData: true,
+      placeholderData: (prev) => prev,
     });
 
   const handleEndReached = () => {

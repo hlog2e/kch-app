@@ -9,7 +9,7 @@ import {
 import { useTheme } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Ionicons } from "@expo/vector-icons";
 import { GalleryHorizontal } from "lucide-react-native";
 import Animated, {
@@ -45,7 +45,7 @@ export default function TimetableTimeline() {
     useCallback(() => {
       console.log("[TimetableTimeline] useFocusEffect - refreshMode + invalidateQueries");
       refreshMode();
-      queryClient.invalidateQueries(CUSTOM_TIMETABLE_QUERY_KEY);
+      queryClient.invalidateQueries({ queryKey: [CUSTOM_TIMETABLE_QUERY_KEY] });
     }, [refreshMode, queryClient])
   );
 

@@ -12,7 +12,7 @@ import { Image } from "expo-image";
 import { useEffect, useState } from "react";
 import { useUser } from "../../context/UserContext";
 import { useTheme } from "@react-navigation/native";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 import {
@@ -74,17 +74,17 @@ export default function EditUserProfileScreen() {
     name: null,
     desc: null,
   });
-  const { mutate: photoMutate } = useMutation<unknown, unknown, FormData>(
-    postRegisterProfilePhoto
-  );
-  const { mutate: deletePhotoMutate } = useMutation<unknown, unknown, void>(
-    deleteProfilePhoto
-  );
+  const { mutate: photoMutate } = useMutation<unknown, unknown, FormData>({
+    mutationFn: postRegisterProfilePhoto,
+  });
+  const { mutate: deletePhotoMutate } = useMutation<unknown, unknown, void>({
+    mutationFn: deleteProfilePhoto,
+  });
   const { mutate: profileMutate } = useMutation<
     unknown,
     unknown,
     { name: string; desc: string }
-  >(postEditUserProfile);
+  >({ mutationFn: postEditUserProfile });
 
   const formData = new FormData();
   const queryClient = useQueryClient();
@@ -123,7 +123,7 @@ export default function EditUserProfileScreen() {
 
     photoMutate(formData, {
       onSuccess: () => {
-        queryClient.invalidateQueries("UserData");
+        queryClient.invalidateQueries({ queryKey: ["UserData"] });
         alert.success(
           "이미지를 성공적으로 업로드 하였습니다.\n화면 상에서 변경되기까지 약 30초 정도 걸려요:)"
         );
@@ -140,7 +140,7 @@ export default function EditUserProfileScreen() {
     alert.loading("");
     deletePhotoMutate(undefined, {
       onSuccess: () => {
-        queryClient.invalidateQueries("UserData");
+        queryClient.invalidateQueries({ queryKey: ["UserData"] });
         alert.success(
           "기본 프로필 이미지로 변경하였습니다.\n화면 상에서 변경되기까지는 약 30초 정도 걸려요:)"
         );
@@ -163,7 +163,7 @@ export default function EditUserProfileScreen() {
     alert.loading("");
     profileMutate(dataToSubmit, {
       onSuccess: () => {
-        queryClient.invalidateQueries("UserData");
+        queryClient.invalidateQueries({ queryKey: ["UserData"] });
         router.back();
         alert.close();
       },

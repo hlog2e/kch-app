@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 import * as Linking from "expo-linking";
 import { useTheme } from "@react-navigation/native";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getNoticeDetail } from "../../apis/school_data/notice";
 import moment from "moment";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -48,9 +48,10 @@ export default function NoticeDetailScreen() {
   const { id: noticeId } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
 
-  const { data }: { data: any } = useQuery("NoticeDetail", () =>
-    getNoticeDetail({ noticeId: noticeId as string })
-  );
+  const { data }: { data: any } = useQuery({
+    queryKey: ["NoticeDetail", noticeId],
+    queryFn: () => getNoticeDetail({ noticeId: noticeId as string }),
+  });
 
   const styles = StyleSheet.create({
     container: { flex: 1 },

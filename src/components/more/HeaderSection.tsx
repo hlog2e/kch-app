@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "../../../apis/user/index";
 import { useEffect } from "react";
 import { useUser } from "../../../context/UserContext";
@@ -9,7 +9,7 @@ import { useTheme } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 
 export default function HeaderSection() {
-  const { data } = useQuery("UserData", getUserInfo);
+  const { data } = useQuery({ queryKey: ["UserData"], queryFn: getUserInfo });
   const { user, update } = useUser();
   const router = useRouter();
 

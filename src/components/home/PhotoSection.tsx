@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getPhotos } from "../../../apis/school_data/photo";
 import { useTheme } from "@react-navigation/native";
 import { useRouter } from "expo-router";
@@ -16,8 +16,9 @@ export default function PhotoSection() {
   const router = useRouter();
 
   const { data, fetchNextPage } = useInfiniteQuery({
-    queryKey: "SchoolPhoto",
-    queryFn: ({ pageParam = 0 }) => getPhotos({ skip: pageParam }),
+    queryKey: ["SchoolPhoto"],
+    queryFn: ({ pageParam }) => getPhotos({ skip: pageParam }),
+    initialPageParam: 0,
     getNextPageParam: (lastPage: any, allPages: any) => {
       if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
         return false;

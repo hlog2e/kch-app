@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getCommunityCategories } from "../../../apis/community/index";
 
 interface CommunityBadgeProps {
@@ -9,13 +9,11 @@ interface CommunityBadgeProps {
 
 export default function CommunityBadge({ categoryId, size = "default" }: CommunityBadgeProps) {
   // 카테고리 데이터 가져오기
-  const { data: categoriesData } = useQuery(
-    "communityCategories",
-    getCommunityCategories,
-    {
-      staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
-    }
-  );
+  const { data: categoriesData } = useQuery({
+    queryKey: ["communityCategories"],
+    queryFn: getCommunityCategories,
+    staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
+  });
 
   // 색상을 RGB로 변환하는 함수
   const hexToRgb = (hex: string) => {

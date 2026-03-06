@@ -12,7 +12,7 @@ import {
 import Checkbox from "expo-checkbox";
 import { useTheme } from "@react-navigation/native";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postCommunity } from "../../apis/community/index";
 import mime from "mime";
 import Header from "../../src/components/Header/Header";
@@ -37,7 +37,7 @@ export default function CommunityPOSTScreen() {
   const formData = new FormData();
 
   const queryClient = useQueryClient();
-  const { mutateAsync } = useMutation(postCommunity);
+  const { mutateAsync } = useMutation({ mutationFn: postCommunity });
 
   const handlePOST = async () => {
     if (title === "" || content === "") {
@@ -65,7 +65,7 @@ export default function CommunityPOSTScreen() {
       setImages([]);
 
       alert.close();
-      queryClient.invalidateQueries("community");
+      queryClient.invalidateQueries({ queryKey: ["community"] });
       router.back();
     } catch (error: any) {
       error.response

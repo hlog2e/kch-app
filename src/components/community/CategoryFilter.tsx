@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import { getCommunityCategories } from "../../../apis/community/index";
@@ -59,11 +59,11 @@ export default function CategoryFilter({
 }: CategoryFilterProps) {
   const { dark } = useTheme();
 
-  const { data: categoriesData } = useQuery(
-    "communityCategories",
-    getCommunityCategories,
-    { staleTime: 5 * 60 * 1000 },
-  );
+  const { data: categoriesData } = useQuery({
+    queryKey: ["communityCategories"],
+    queryFn: getCommunityCategories,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const handleSelect = (categoryId: string | null) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

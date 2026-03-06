@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getNotices } from "../../../apis/school_data/notice";
 import moment from "moment";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -18,8 +18,9 @@ export default function NoticeSection() {
   const router = useRouter();
 
   const { data, fetchNextPage } = useInfiniteQuery({
-    queryKey: "Notice",
-    queryFn: ({ pageParam = 0 }) => getNotices({ skip: pageParam }),
+    queryKey: ["Notice"],
+    queryFn: ({ pageParam }) => getNotices({ skip: pageParam }),
+    initialPageParam: 0,
     getNextPageParam: (lastPage: any, allPages: any) => {
       if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
         return false;

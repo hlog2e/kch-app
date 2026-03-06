@@ -1,7 +1,7 @@
 import { useTheme } from "@react-navigation/native";
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { postResetBlockedUsers } from "../../../apis/user/index";
 import { useRouter } from "expo-router";
 
@@ -9,9 +9,9 @@ export default function CommunitySection() {
   const { colors } = useTheme();
   const router = useRouter();
 
-  const { mutate: resetBlockedUsersMutate } = useMutation(
-    postResetBlockedUsers
-  );
+  const { mutate: resetBlockedUsersMutate } = useMutation({
+    mutationFn: postResetBlockedUsers,
+  });
 
   const handleResetBlockedUsers = async () => {
     const resetBlockedUser = async () => {

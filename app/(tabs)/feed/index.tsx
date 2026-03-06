@@ -10,9 +10,9 @@ import {
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { useState } from "react";
-import Carousel, { Pagination } from "react-native-snap-carousel";
+import ReanimatedCarousel from "react-native-reanimated-carousel";
 import moment from "moment";
-import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteFeed, getFeeds } from "../../../apis/feed/index";
 import FullScreenLoader from "../../../src/components/Overlay/FullScreenLoader";
 import ImageView from "react-native-image-viewing";
@@ -73,8 +73,9 @@ export default function FeedScreen() {
     refetch,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: "Feed",
-    queryFn: ({ pageParam = 0 }) => getFeeds(pageParam as number),
+    queryKey: ["Feed"],
+    queryFn: ({ pageParam }) => getFeeds(pageParam as number),
+    initialPageParam: 0,
     getNextPageParam: (lastPage: any) => {
       if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
         return undefined;
@@ -145,7 +146,7 @@ function FeedItemComponent({
   const [imageOpen, setImageOpen] = useState(false);
   const [imageUris, setImageUris] = useState<{ uri: string }[]>([]);
 
-  const { mutate: deleteFeedMutate } = useMutation(deleteFeed);
+  const { mutate: deleteFeedMutate } = useMutation({ mutationFn: deleteFeed });
   const queryClient = useQueryClient();
 
   const handleImageOpen = () => {
@@ -162,12 +163,12 @@ function FeedItemComponent({
       {
         text: "예",
         style: "destructive",
-        onPress: async () => {
-          await deleteFeedMutate(
+        onPress: () => {
+          deleteFeedMutate(
             { feedId: item._id },
             {
               onSuccess: () => {
-                queryClient.invalidateQueries("Feed");
+                queryClient.invalidateQueries({ queryKey: ["Feed"] });
               },
             }
           );
@@ -249,9 +250,11 @@ function FeedImageCarousel({
 
   return (
     <View style={styles.carouselWrap}>
-      <Carousel
-        vertical={false}
+      <ReanimatedCarousel
         data={images}
+        width={SCREEN_WIDTH}
+        height={SCREEN_WIDTH}
+        loop={false}
         onSnapToItem={onSnapToItem}
         renderItem={({ item: image }: { item: string }) => (
           <TouchableOpacity onPress={onImagePress}>
@@ -264,18 +267,24 @@ function FeedImageCarousel({
             />
           </TouchableOpacity>
         )}
-        itemWidth={SCREEN_WIDTH}
-        sliderWidth={SCREEN_WIDTH}
       />
 
-      <Pagination
-        inactiveDotScale={1}
-        inactiveDotColor={colors.subText}
-        containerStyle={styles.paginationContainer}
-        dotColor={colors.text}
-        activeDotIndex={activeIndex}
-        dotsLength={images.length}
-      />
+      <View style={styles.paginationContainer}>
+        <View style={{ flexDirection: "row", justifyContent: "center", gap: 6 }}>
+          {images.map((_, i) => (
+            <View
+              key={i}
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: 4,
+                backgroundColor: i === activeIndex ? colors.text : colors.subText,
+                opacity: i === activeIndex ? 1 : 0.4,
+              }}
+            />
+          ))}
+        </View>
+      </View>
     </View>
   );
 }

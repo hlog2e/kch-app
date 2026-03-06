@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getSchedule } from "../../apis/neis/schedule";
 import FullScreenLoader from "../../src/components/Overlay/FullScreenLoader";
 import uuid from "react-native-uuid";

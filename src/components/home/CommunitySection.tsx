@@ -18,7 +18,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import moment from "moment";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getCommunities } from "../../../apis/community/index";
 import CommunityBadge from "../community/CommunityBadge";
 
@@ -30,8 +30,9 @@ export default function CommunitySection() {
   const { data, isLoading, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["homeCommunityPosts", "top"],
-      queryFn: ({ pageParam = 0 }) =>
+      queryFn: ({ pageParam }) =>
         getCommunities({ offset: pageParam, category: "top" }),
+      initialPageParam: 0,
       getNextPageParam: (lastPage: any, allPages: any) => {
         if (Number(lastPage.nextCursor) > Number(lastPage.totalCount)) {
           return undefined;

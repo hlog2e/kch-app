@@ -8,7 +8,7 @@ import {
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
 import { Text, StyleSheet, View, TouchableOpacity, Alert } from "react-native";
@@ -27,11 +27,11 @@ export default function InteractionButtons({
   const { colors } = useTheme();
 
   const queryClient = useQueryClient();
-  const { mutate: likeAddMutate } = useMutation(addLike);
-  const { mutate: likeDeleteMutate } = useMutation(deleteLike);
-  const { mutate: communityDeleteMutate } = useMutation(communityDelete);
-  const { mutate: blockUserMutate } = useMutation(postBlockUser);
-  const { mutate: reportCommunityItem } = useMutation(postReportCommunityItem);
+  const { mutate: likeAddMutate } = useMutation({ mutationFn: addLike });
+  const { mutate: likeDeleteMutate } = useMutation({ mutationFn: deleteLike });
+  const { mutate: communityDeleteMutate } = useMutation({ mutationFn: communityDelete });
+  const { mutate: blockUserMutate } = useMutation({ mutationFn: postBlockUser });
+  const { mutate: reportCommunityItem } = useMutation({ mutationFn: postReportCommunityItem });
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -42,7 +42,7 @@ export default function InteractionButtons({
         { communityId: communityId },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries("CommunityDetail");
+            queryClient.invalidateQueries({ queryKey: ["CommunityDetail"] });
           },
         }
       );
@@ -53,7 +53,7 @@ export default function InteractionButtons({
         { communityId: communityId },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries("CommunityDetail");
+            queryClient.invalidateQueries({ queryKey: ["CommunityDetail"] });
           },
         }
       );
@@ -70,7 +70,7 @@ export default function InteractionButtons({
             { communityId: communityId },
             {
               onSuccess: () => {
-                queryClient.invalidateQueries("community");
+                queryClient.invalidateQueries({ queryKey: ["community"] });
                 router.back();
               },
             }
@@ -94,7 +94,7 @@ export default function InteractionButtons({
               { blockUserId: data.publisher },
               {
                 onSuccess: () => {
-                  queryClient.invalidateQueries("community");
+                  queryClient.invalidateQueries({ queryKey: ["community"] });
                   router.back();
                 },
               }

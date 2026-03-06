@@ -8,7 +8,7 @@ import {
 
 import { useTheme } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getCommunitiesWrittenByMe } from "../../apis/user/index";
 import FullScreenLoader from "../../src/components/Overlay/FullScreenLoader";
 import moment from "moment";
@@ -56,10 +56,10 @@ function MyCommunitiesHeader() {
 export default function CommunitiesWrittenByMeScreen() {
   const { colors } = useTheme();
 
-  const { data, isLoading, isSuccess, refetch } = useQuery<any[], Error>(
-    "CommunitiesWrittenByMe",
-    getCommunitiesWrittenByMe
-  );
+  const { data, isLoading, isSuccess, refetch } = useQuery<any[], Error>({
+    queryKey: ["CommunitiesWrittenByMe"],
+    queryFn: getCommunitiesWrittenByMe,
+  });
   const [onRefreshing, setOnRefreshing] = useState(false);
 
   const styles = StyleSheet.create({
