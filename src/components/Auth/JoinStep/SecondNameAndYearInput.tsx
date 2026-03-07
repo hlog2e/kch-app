@@ -13,12 +13,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-import RNPickerSelect from "react-native-picker-select";
-
-interface PickerItem {
-  label: string;
-  value: string;
-}
+import Dropdown, { DropdownItem } from "../../common/Dropdown";
 
 interface SecondNameAndYearInputProps {
   type: "undergraduate" | "graduate" | "teacher" | "parents/outsider";
@@ -38,11 +33,11 @@ export default function SecondNameAndYearInput({
   const [name, setName] = useState<string>("");
   const [birthYear, setBirthYear] = useState<string>();
   const thisYear = moment().format("YYYY");
-  const [yearArray, setYearArray] = useState<PickerItem[]>([]);
+  const [yearArray, setYearArray] = useState<DropdownItem<string>[]>([]);
   const [pickerOpen, setPickerOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const tempYearArray: PickerItem[] = [];
+    const tempYearArray: DropdownItem<string>[] = [];
     for (let i = parseInt(thisYear); i >= 1900; i--) {
       tempYearArray.push({ label: String(i), value: String(i) });
     }
@@ -72,9 +67,6 @@ export default function SecondNameAndYearInput({
 
     pickerWrap: {
       width: "100%",
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: colors.border,
       marginTop: 24,
     },
 
@@ -143,11 +135,14 @@ export default function SecondNameAndYearInput({
             delay={700}
             style={styles.pickerWrap}
           >
-            <RNPickerSelect
+            <Dropdown
+              items={yearArray}
+              value={birthYear ?? null}
               onValueChange={(value) => setBirthYear(value)}
               onOpen={() => setPickerOpen(true)}
               onClose={() => setPickerOpen(false)}
-              items={yearArray}
+              placeholder="출생연도를 선택해주세요"
+              modalTitle="출생연도 선택"
             />
           </Animatable.View>
         )}

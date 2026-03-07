@@ -2,16 +2,14 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import * as Animatable from "react-native-animatable";
-import RNPickerSelect from "react-native-picker-select";
 import { useTheme } from "@react-navigation/native";
+import Dropdown from "../../common/Dropdown";
 
 type UserType = "undergraduate" | "teacher" | "graduate" | "parents/outsider";
 
 interface FirstTypeProps {
   onNext: (type: UserType) => void;
 }
-
-const PickerSelect: any = RNPickerSelect;
 
 export default function FirstType({ onNext }: FirstTypeProps) {
   const { colors } = useTheme();
@@ -28,21 +26,7 @@ export default function FirstType({ onNext }: FirstTypeProps) {
 
     pickerWrap: {
       marginTop: 24,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: colors.border,
       width: "100%",
-    },
-    picker: {
-      inputAndroid: {
-        fontWeight: "600",
-        color: colors.text,
-      },
-      inputIOS: {
-        fontWeight: "600",
-        color: colors.text,
-        padding: 15,
-      },
     },
 
     goButton: {
@@ -65,15 +49,15 @@ export default function FirstType({ onNext }: FirstTypeProps) {
           <Text style={styles.title}>아래에서 유형을 선택해주세요!</Text>
         </Animatable.View>
         <Animatable.View style={styles.pickerWrap}>
-          <PickerSelect
-            style={styles.picker}
-            placeholder={{ label: "유형을 선택해주세요!", value: null }}
+          <Dropdown
+            placeholder="유형을 선택해주세요!"
             items={[
               { label: "재학생", value: "undergraduate" },
               { label: "졸업생", value: "graduate" },
               { label: "선생님", value: "teacher" },
               { label: "학부모/외부인", value: "parents/outsider" },
             ]}
+            value={type}
             onValueChange={(value) => setType(value as UserType)}
             onOpen={() => setPickerOpen(true)}
             onClose={() => setPickerOpen(false)}

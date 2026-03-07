@@ -11,7 +11,7 @@ import { useTheme } from "@react-navigation/native";
 import { getNeisTimetable } from "../../../../apis/neis/timetable";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import RNPickerSelect from "react-native-picker-select";
+import Dropdown from "../../common/Dropdown";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // 타입 정의
@@ -67,8 +67,7 @@ function GradeSelector({ value, onValueChange }: SelectorProps) {
   });
 
   return (
-    <RNPickerSelect
-      fixAndroidTouchableBug
+    <Dropdown
       items={[
         { label: "1학년", value: 1 },
         { label: "2학년", value: 2 },
@@ -76,12 +75,17 @@ function GradeSelector({ value, onValueChange }: SelectorProps) {
       ]}
       value={value}
       onValueChange={onValueChange}
-    >
-      <TouchableOpacity style={styles.headerButton}>
-        <Text style={styles.headerButtonText}>{value}학년</Text>
-        <Ionicons name="caret-down-outline" size={12} color={colors.subText} />
-      </TouchableOpacity>
-    </RNPickerSelect>
+      renderTrigger={({ onPress }) => (
+        <TouchableOpacity style={styles.headerButton} onPress={onPress}>
+          <Text style={styles.headerButtonText}>{value}학년</Text>
+          <Ionicons
+            name="caret-down-outline"
+            size={12}
+            color={colors.subText}
+          />
+        </TouchableOpacity>
+      )}
+    />
   );
 }
 
@@ -102,8 +106,7 @@ function ClassSelector({ value, onValueChange }: SelectorProps) {
   });
 
   return (
-    <RNPickerSelect
-      fixAndroidTouchableBug
+    <Dropdown
       items={[
         { label: "1반", value: 1 },
         { label: "2반", value: 2 },
@@ -117,12 +120,17 @@ function ClassSelector({ value, onValueChange }: SelectorProps) {
       ]}
       value={value}
       onValueChange={onValueChange}
-    >
-      <TouchableOpacity style={styles.headerButton}>
-        <Text style={styles.headerButtonText}>{value}반</Text>
-        <Ionicons name="caret-down-outline" size={12} color={colors.subText} />
-      </TouchableOpacity>
-    </RNPickerSelect>
+      renderTrigger={({ onPress }) => (
+        <TouchableOpacity style={styles.headerButton} onPress={onPress}>
+          <Text style={styles.headerButtonText}>{value}반</Text>
+          <Ionicons
+            name="caret-down-outline"
+            size={12}
+            color={colors.subText}
+          />
+        </TouchableOpacity>
+      )}
+    />
   );
 }
 
