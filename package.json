@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.0.1",
+    "@kichiyaki/react-native-barcode-generator": "^0.6.7",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-picker/picker": "2.11.4",
     "@react-navigation/bottom-tabs": "^7.2.0",

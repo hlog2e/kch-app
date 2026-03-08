@@ -8,7 +8,7 @@ export default function SettingSection() {
   const router = useRouter();
 
   const styles = StyleSheet.create({
-    wrap: { marginTop: 40 },
+    wrap: { marginTop: 26 },
     sectionTitle: { fontSize: 12, color: colors.subText },
 
     buttonWrap: { marginTop: 12 },
