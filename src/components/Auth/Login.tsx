@@ -20,6 +20,9 @@ export default function LoginScreen() {
 
   const [step, setStep] = useState<"RequestCode" | "VerifyCode">("RequestCode");
   const [data, setData] = useState<LoginData>({ phoneNumber: "", code: "" });
+  const [verifyStatus, setVerifyStatus] = useState<
+    "idle" | "verifying" | "success" | "error"
+  >("idle");
 
   const handleRequestCode = async (phoneNumber: string): Promise<void> => {
     try {
@@ -36,8 +39,13 @@ export default function LoginScreen() {
     phoneNumber: string,
     code: string
   ): Promise<void> => {
+    setVerifyStatus("verifying");
     try {
       const response = await postVerifyCode(phoneNumber, code);
+      setVerifyStatus("success");
+
+      // success 애니메이션이 보이도록 딜레이
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
       if (response.user) {
         // 이미 가입된 경우
@@ -51,10 +59,12 @@ export default function LoginScreen() {
         });
       }
     } catch (error: any) {
+      setVerifyStatus("error");
       alert.error(
         error?.response?.data?.message ||
           "인증번호 검증중 오류가 발생하였습니다!"
       );
+      setTimeout(() => setVerifyStatus("idle"), 600);
     }
   };
 
@@ -72,6 +82,8 @@ export default function LoginScreen() {
 
       {step === "VerifyCode" && (
         <SecondVerifyCode
+          phoneNumber={data.phoneNumber}
+          verifyStatus={verifyStatus}
           back={() => setStep("RequestCode")}
           onNext={async (code: string) => {
             setData((prev) => ({ ...prev, code }));
