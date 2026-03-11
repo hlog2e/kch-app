@@ -32,7 +32,7 @@ export default function CommunityPOSTScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(true);
   const [images, setImages] = useState<any[]>([]);
 
   const { data: categoriesData } = useQuery({
@@ -54,6 +54,9 @@ export default function CommunityPOSTScreen() {
   };
 
   const handlePOST = async () => {
+    if (selectedCategory === null) {
+      return alert.info("카테고리를 선택해 주세요!");
+    }
     if (title === "" || content === "") {
       return alert.info("제목이랑 내용 모두 작성해 주세요!");
     }
@@ -63,7 +66,7 @@ export default function CommunityPOSTScreen() {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("content", content);
-      formData.append("category", selectedCategory ?? "general");
+      formData.append("category", selectedCategory);
       formData.append("isAnonymous", String(isAnonymous));
 
       images.forEach(({ uri }) => {

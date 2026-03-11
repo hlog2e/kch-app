@@ -91,7 +91,7 @@ export default function InteractionButtons({
           style: "destructive",
           onPress: () => {
             blockUserMutate(
-              { blockUserId: data.publisher },
+              { blockUserId: data.publisher?._id },
               {
                 onSuccess: () => {
                   queryClient.invalidateQueries({ queryKey: ["community"] });
@@ -194,7 +194,7 @@ export default function InteractionButtons({
         <Ionicons name={"chatbubble-outline"} size={20} color={colors.text} />
         <Text style={styles.button_text}>{data.commentCount}</Text>
       </TouchableOpacity>
-      {data.publisher === user._id ? (
+      {data.publisher?._id === user._id ? (
         <TouchableOpacity style={styles.button} onPress={handleDeleteCommunity}>
           <Ionicons color={colors.red} name={"close"} size={24} />
           <Text style={{ fontSize: 12, color: colors.red }}>삭제하기</Text>
