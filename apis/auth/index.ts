@@ -10,7 +10,7 @@ export interface JoinRequest {
   code: string;
   type: "student" | "teacher" | string;
   name: string;
-  birthYear: number;
+  birthYear?: number;
   barcode?: string;
   teacherCode?: string;
   hiddenCode?: string;

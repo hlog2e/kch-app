@@ -19,7 +19,7 @@ interface SecondNameAndYearInputProps {
   type: "undergraduate" | "graduate" | "teacher" | "parents/outsider";
   isNeedYear: boolean;
   onNext: (data: { name: string; birthYear?: string }) => void;
-  back: () => void;
+  back?: () => void;
 }
 
 export default function SecondNameAndYearInput({
@@ -122,9 +122,7 @@ export default function SecondNameAndYearInput({
             value={name}
             onChangeText={(text) => setName(text)}
             style={styles.input}
-            placeholder={
-              type === "parents/outsider" ? "이름 (ex. OOO 학부모)" : "이름"
-            }
+            placeholder={"이름"}
             maxLength={10}
           />
         </Animatable.View>
@@ -149,9 +147,11 @@ export default function SecondNameAndYearInput({
       </View>
 
       <View>
-        <TouchableOpacity onPress={back} style={styles.backButton}>
-          <Text style={styles.backButtonText}>이전 단계</Text>
-        </TouchableOpacity>
+        {back && (
+          <TouchableOpacity onPress={back} style={styles.backButton}>
+            <Text style={styles.backButtonText}>이전 단계</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={() => {
             if (type !== "undergraduate" && name) {
@@ -163,11 +163,7 @@ export default function SecondNameAndYearInput({
           }}
           style={styles.nextButton}
         >
-          <Text style={styles.nextButtonText}>
-            {type === "graduate" || type === "parents/outsider"
-              ? "가입하기"
-              : "다음"}
-          </Text>
+          <Text style={styles.nextButtonText}>가입하기</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

@@ -98,7 +98,7 @@ export default function FeedScreen() {
     user?.type === "undergraduate" || user?.type === "teacher";
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
       {isLoading && <FullScreenLoader />}
 
       <CollapsibleHeader
@@ -181,7 +181,10 @@ function FeedItemComponent({
 
   return (
     <View style={styles.container}>
-      <FeedItemHeader item={item} />
+      <FeedItemHeader
+        item={item}
+        onDelete={isMyFeed ? handleDeleteFeed : undefined}
+      />
 
       {item.images && (
         <FeedImageCarousel
@@ -194,8 +197,6 @@ function FeedItemComponent({
 
       <FeedContent content={item.content} createdAt={item.createdAt} />
 
-      {isMyFeed && <FeedDeleteButton onPress={handleDeleteFeed} />}
-
       <ImageView
         visible={imageOpen}
         images={imageUris}
@@ -206,7 +207,13 @@ function FeedItemComponent({
   );
 }
 
-function FeedItemHeader({ item }: { item: FeedItem }) {
+function FeedItemHeader({
+  item,
+  onDelete,
+}: {
+  item: FeedItem;
+  onDelete?: () => void;
+}) {
   const { colors } = useTheme();
 
   return (
@@ -231,6 +238,16 @@ function FeedItemHeader({ item }: { item: FeedItem }) {
           {item.publisherDesc}
         </Text>
       </View>
+
+      {onDelete && (
+        <TouchableOpacity
+          onPress={onDelete}
+          hitSlop={8}
+          style={styles.headerDeleteButton}
+        >
+          <Ionicons name="trash-outline" size={22} color="#f87171" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -313,19 +330,6 @@ function FeedContent({
   );
 }
 
-function FeedDeleteButton({ onPress }: { onPress: () => void }) {
-  const { colors } = useTheme();
-
-  return (
-    <View style={styles.deleteButtonWrap}>
-      <TouchableOpacity onPress={onPress} style={styles.deleteButton}>
-        <Text style={[styles.deleteButtonText, { color: colors.red }]}>
-          삭제하기
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
 
 // Styles moved to the bottom and organized
 const styles = StyleSheet.create({
@@ -339,6 +343,10 @@ const styles = StyleSheet.create({
     padding: 12,
     flexDirection: "row",
     alignItems: "center",
+  },
+  headerDeleteButton: {
+    marginLeft: "auto",
+    padding: 4,
   },
   publisherPhoto: {
     width: 45,
@@ -383,14 +391,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  // Delete button styles
-  deleteButtonWrap: {
-    flexDirection: "row",
-    padding: 12,
-  },
-  deleteButton: {},
-  deleteButtonText: {
-    fontSize: 12,
-    fontWeight: "300",
-  },
 });
