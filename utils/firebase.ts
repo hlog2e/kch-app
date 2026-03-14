@@ -7,15 +7,19 @@ import {
 } from "@react-native-firebase/crashlytics";
 import {
   getAnalytics,
+  setAnalyticsCollectionEnabled,
   setUserId as analyticsSetUserId,
   setUserProperty,
   logEvent as analyticsLogEvent,
   logLogin as analyticsLogLogin,
   logSignUp as analyticsLogSignUp,
 } from "@react-native-firebase/analytics";
-
 const crash = getCrashlytics();
 const anal = getAnalytics();
+
+if (!__DEV__) {
+  setAnalyticsCollectionEnabled(anal, true);
+}
 
 // ─── Crashlytics ───
 export function setCrashlyticsUser(userId: string): void {
