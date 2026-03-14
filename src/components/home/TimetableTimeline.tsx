@@ -175,6 +175,13 @@ export default function TimetableTimeline() {
               <Text style={styles.modeBadgeText}>{isCustomMode ? "커스텀" : "NEIS"}</Text>
             </View>
           </View>
+          <TouchableOpacity
+            style={styles.viewAllButton}
+            onPress={() => router.push("/home/timetable")}
+          >
+            <Text style={styles.viewAllText}>더보기</Text>
+            <Ionicons name="chevron-forward" size={14} color={colors.subText} />
+          </TouchableOpacity>
         </View>
         <TouchableOpacity
           style={styles.emptyContainer}

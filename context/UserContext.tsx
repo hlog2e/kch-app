@@ -14,6 +14,12 @@ import {
 import { getExpoPushTokenAsync } from "expo-notifications";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
+import {
+  setCrashlyticsUser,
+  setCrashlyticsAttribute,
+  setAnalyticsUser,
+  setAnalyticsUserProperty,
+} from "../utils/firebase";
 
 interface User {
   _id?: string;
@@ -68,6 +74,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
       }
       const parsedUserData: User = JSON.parse(_user);
       setUser(parsedUserData);
+      if (parsedUserData._id) {
+        setCrashlyticsUser(parsedUserData._id);
+        await setAnalyticsUser(parsedUserData._id);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -76,6 +86,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const login = async ({ token, user }: LoginPayload): Promise<void> => {
     await AsyncStorage.setItem("token", JSON.stringify(token));
     await AsyncStorage.setItem("user", JSON.stringify(user));
+
+    if (user._id) {
+      setCrashlyticsUser(user._id);
+      await setAnalyticsUser(user._id);
+    }
+    if (user.verified !== undefined) {
+      setCrashlyticsAttribute("verified", String(user.verified));
+      await setAnalyticsUserProperty("verified", String(user.verified));
+    }
 
     const pushToken = await registerForPushNotificationsAsync();
     if (pushToken) {
@@ -90,6 +109,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async (): Promise<void> => {
+    setCrashlyticsUser("");
+    await setAnalyticsUser(null);
+
     // 실제 디바이스 경우 푸시 토큰을 DB에서 지우는 로직
     if (Device.isDevice) {
       const { data: pushToken } = await getExpoPushTokenAsync({

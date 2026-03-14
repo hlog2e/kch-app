@@ -17,24 +17,33 @@ module.exports = {
       fallbackToCacheTimeout: 0,
     },
     runtimeVersion: { policy: "fingerprint" },
+    splash: {
+      image: "./assets/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff",
+    },
     plugins: [
       "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
       [
-        "expo-splash-screen",
+        "expo-build-properties",
         {
-          backgroundColor: "#ffffff",
-          image: "./assets/splash.png",
-          imageWidth: 200,
-          resizeMode: "contain",
+          ios: {
+            useFrameworks: "static",
+            forceStaticLinking: ["RNFBApp", "RNFBAnalytics", "RNFBCrashlytics"],
+          },
         },
       ],
     ],
     ios: {
       bundleIdentifier: "me.kch-app.kch",
       supportsTablet: true,
+      googleServicesFile: "./GoogleService-Info.plist",
       infoPlist: {
         NSCameraUsageDescription:
           "금천고등학교 앱은 학생증의 바코드를 스캔하기 위하여 카메라 권한이 필요합니다.",
+        ITSAppUsesNonExemptEncryption: false,
       },
     },
     android: {

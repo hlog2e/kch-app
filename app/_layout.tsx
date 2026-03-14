@@ -4,12 +4,17 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { UserProvider } from "../context/UserContext";
 import { AlertProvider } from "../context/AlertContext";
 import * as Notifications from "expo-notifications";
+import * as Updates from "expo-updates";
 import Toast, { BaseToast } from "react-native-toast-message";
 import * as Haptics from "expo-haptics";
 import * as Linking from "expo-linking";
 import { Notification, NotificationResponse } from "expo-notifications";
 import { Stack } from "expo-router";
 import React, { useEffect, useRef } from "react";
+import ErrorBoundary from "react-native-error-boundary";
+import ErrorFallback from "../src/components/ErrorBoundary/ErrorFallback";
+import NavigationTracker from "../src/components/NavigationTracker";
+import { recordError, setCrashlyticsAttribute } from "../utils/firebase";
 import {
   ThemeProvider,
   DefaultTheme,
@@ -17,7 +22,18 @@ import {
 } from "@react-navigation/native";
 import { useColorScheme } from "react-native";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    mutations: {
+      onError: (error) => {
+        recordError(
+          error instanceof Error ? error : new Error(String(error)),
+          "ReactQuery mutation error"
+        );
+      },
+    },
+  },
+});
 
 // Custom light theme based on original RootStack
 const lightTheme = {
@@ -95,6 +111,10 @@ export default function RootLayout() {
         }
       );
 
+    if (Updates.updateId) {
+      setCrashlyticsAttribute("ota_update_id", Updates.updateId);
+    }
+
     return () => {
       notificationListener.current?.remove();
       responseListener.current?.remove();
@@ -117,26 +137,41 @@ export default function RootLayout() {
   };
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? darkTheme : lightTheme}>
-      <QueryClientProvider client={queryClient}>
-        <SafeAreaProvider>
-          <AlertProvider>
-            <UserProvider>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              </Stack>
-            </UserProvider>
-          </AlertProvider>
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onError={(error, stack) => {
+        console.error("[ErrorBoundary]", error, stack);
+        recordError(error, `ErrorBoundary: ${stack}`);
+      }}
+    >
+      <ThemeProvider value={colorScheme === "dark" ? darkTheme : lightTheme}>
+        <QueryClientProvider client={queryClient}>
+          <SafeAreaProvider>
+            <AlertProvider>
+              <UserProvider>
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                >
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{ headerShown: false }}
+                  />
+                </Stack>
+                <NavigationTracker />
+              </UserProvider>
+            </AlertProvider>
 
-          <StatusBar />
-          <Toast config={toastConfig} />
-        </SafeAreaProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+            <StatusBar />
+            <Toast config={toastConfig} />
+          </SafeAreaProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }

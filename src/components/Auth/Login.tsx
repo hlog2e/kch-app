@@ -7,6 +7,7 @@ import { postRequestCode, postVerifyCode } from "../../../apis/auth/index";
 import { useAlert } from "../../../context/AlertContext";
 import { useUser } from "../../../context/UserContext";
 import { useRouter } from "expo-router";
+import { logLogin, logSignUp } from "../../../utils/firebase";
 
 interface LoginData {
   phoneNumber: string;
@@ -49,10 +50,12 @@ export default function LoginScreen() {
 
       if (response.user) {
         // 이미 가입된 경우
+        await logLogin("phone_otp");
         await login({ token: response.token, user: response.user });
         router.replace("/home");
       } else {
         // 가입되지 않은 경우
+        await logSignUp("phone_otp");
         router.push({
           pathname: "./join",
           params: { phoneNumber, code },

@@ -7,6 +7,7 @@ import { Alert } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { crashlyticsLog, recordError } from "../utils/firebase";
 
 const baseUrl = process.env.EXPO_PUBLIC_API_SERVER;
 
@@ -38,13 +39,14 @@ apiInstance.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (!error.response) {
-      // Alert.alert(
-      //   "오류",
-      //   "서버와의 연결이 불안정합니다. 나중에 다시 시도해 주세요. (503)",
-      //   [{ text: "확인" }]
-      // );
-    }
+    const url = error?.config?.url ?? "unknown";
+    const method = error?.config?.method ?? "unknown";
+    const status = error?.response?.status ?? "no_response";
+    crashlyticsLog(`API Error: ${method.toUpperCase()} ${url} -> ${status}`);
+    recordError(
+      error instanceof Error ? error : new Error(String(error)),
+      `Axios[apiInstance] ${method} ${url} status=${status}`
+    );
 
     return Promise.reject(error);
   }
@@ -56,6 +58,20 @@ apiAuthInstance.interceptors.response.use(
     return response;
   },
   async function (error) {
+    const url = error?.config?.url ?? "unknown";
+    const method = error?.config?.method ?? "unknown";
+    const status = error?.response?.status ?? "no_response";
+
+    if (status !== 401) {
+      crashlyticsLog(
+        `Auth API Error: ${method.toUpperCase()} ${url} -> ${status}`
+      );
+      recordError(
+        error instanceof Error ? error : new Error(String(error)),
+        `Axios[apiAuthInstance] ${method} ${url} status=${status}`
+      );
+    }
+
     if (error.response && error.response.data?.status === 401) {
       await AsyncStorage.removeItem("user");
       await AsyncStorage.removeItem("token");
@@ -65,13 +81,6 @@ apiAuthInstance.interceptors.response.use(
         [{ text: "확인" }]
       );
       router.replace("/login");
-    }
-    if (!error.response) {
-      // Alert.alert(
-      //   "오류",
-      //   "서버와의 연결이 불안정합니다. 나중에 다시 시도해 주세요. (503)",
-      //   [{ text: "확인" }]
-      // );
     }
 
     return Promise.reject(error);
