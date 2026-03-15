@@ -4,6 +4,7 @@ module.exports = {
       eas: {
         projectId: "5b77743f-dfb8-4df6-942e-446f6e72ed63",
       },
+      forceUpdate: process.env.FORCE_UPDATE,
     },
     name: "금천고등학교",
     scheme: "kch",
@@ -16,7 +17,7 @@ module.exports = {
       url: "https://u.expo.dev/5b77743f-dfb8-4df6-942e-446f6e72ed63",
       fallbackToCacheTimeout: 0,
     },
-    runtimeVersion: { policy: "fingerprint" },
+    runtimeVersion: { policy: "appVersion" },
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",

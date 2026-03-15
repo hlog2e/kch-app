@@ -7,7 +7,17 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "update": "FORCE_UPDATE=false eas update --channel production",
+    "update:force": "FORCE_UPDATE=true eas update --channel production",
+    "update:preview": "FORCE_UPDATE=false eas update --channel preview",
+    "update:preview:force": "FORCE_UPDATE=true eas update --channel preview",
+    "build:ios": "eas env:pull --environment production && eas build --platform ios --local",
+    "build:android": "eas env:pull --environment production && eas build --platform android --local",
+    "build:ios:dev": "eas env:pull --environment development && eas build --profile development --platform ios --local",
+    "build:android:dev": "eas env:pull --environment development && eas build --profile development --platform android --local",
+    "build:ios:preview": "eas env:pull --environment preview && eas build --profile preview --platform ios --local",
+    "build:android:preview": "eas env:pull --environment preview && eas build --profile preview --platform android --local"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.0.1",
