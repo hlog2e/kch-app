@@ -14,7 +14,12 @@ import React, { useEffect, useRef } from "react";
 import ErrorBoundary from "react-native-error-boundary";
 import ErrorFallback from "../src/components/ErrorBoundary/ErrorFallback";
 import NavigationTracker from "../src/components/NavigationTracker";
+import ForceUpdateChecker from "../src/components/ForceUpdateChecker";
 import { recordError, setCrashlyticsAttribute } from "../utils/firebase";
+import moment from "moment";
+import "moment/locale/ko";
+
+moment.locale("ko");
 import {
   ThemeProvider,
   DefaultTheme,
@@ -164,6 +169,7 @@ export default function RootLayout() {
                   />
                 </Stack>
                 <NavigationTracker />
+                <ForceUpdateChecker />
               </UserProvider>
             </AlertProvider>
 

@@ -9,10 +9,18 @@ import {
 import moment from "moment";
 import { useTheme } from "@react-navigation/native";
 import { getNeisTimetable } from "../../../../apis/neis/timetable";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Dropdown from "../../common/Dropdown";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  withSequence,
+  Easing,
+} from "react-native-reanimated";
 
 // 타입 정의
 interface TimetableItem {
@@ -222,12 +230,17 @@ function DayHeader({
       borderRightWidth: 1,
       borderTopWidth: 1,
       borderColor: colors.border,
-      backgroundColor: colors.cardBg2,
+      backgroundColor: "rgba(59, 130, 246, 0.08)",
     },
     dayHeaderItemText: {
       fontWeight: "700",
       fontSize: 16,
       color: colors.text,
+    },
+    dayHeaderItemTextToday: {
+      fontWeight: "700",
+      fontSize: 16,
+      color: "#60a5fa",
     },
     dayHeaderDummy: {
       width: 40,
@@ -241,18 +254,19 @@ function DayHeader({
   return (
     <View style={styles.dayHeader}>
       <View style={styles.dayHeaderDummy} />
-      {dayNames.map((dayName, index) => (
-        <View
-          key={dayName}
-          style={
-            index + 1 === todayDay
-              ? styles.dayHeaderItemToday
-              : styles.dayHeaderItem
-          }
-        >
-          <Text style={styles.dayHeaderItemText}>{dayName}</Text>
-        </View>
-      ))}
+      {dayNames.map((dayName, index) => {
+        const isToday = index + 1 === todayDay;
+        return (
+          <View
+            key={dayName}
+            style={isToday ? styles.dayHeaderItemToday : styles.dayHeaderItem}
+          >
+            <Text style={isToday ? styles.dayHeaderItemTextToday : styles.dayHeaderItemText}>
+              {dayName}
+            </Text>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -321,7 +335,7 @@ function TimetableDataColumns({
       alignItems: "center",
       borderRightWidth: 1,
       borderColor: colors.border,
-      backgroundColor: colors.cardBg2,
+      backgroundColor: "rgba(59, 130, 246, 0.08)",
     },
     dataItem: {
       height: 50,
@@ -338,6 +352,12 @@ function TimetableDataColumns({
       color: colors.text,
       fontWeight: "300",
     },
+    dataTextToday: {
+      textAlign: "center",
+      fontSize: 12,
+      color: "#60a5fa",
+      fontWeight: "500",
+    },
   });
 
   return (
@@ -353,12 +373,85 @@ function TimetableDataColumns({
           >
             {dayData.map((item, itemIndex) => (
               <View key={`${dayIndex}-${itemIndex}`} style={styles.dataItem}>
-                <Text style={styles.dataText}>{item.ITRT_CNTNT}</Text>
+                <Text style={isToday ? styles.dataTextToday : styles.dataText}>
+                  {item.ITRT_CNTNT}
+                </Text>
               </View>
             ))}
           </View>
         );
       })}
+    </View>
+  );
+}
+
+// 스켈레톤 로딩 컴포넌트
+function SkeletonRow() {
+  const { colors } = useTheme();
+  const opacity = useSharedValue(0.3);
+
+  useEffect(() => {
+    opacity.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 800, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.3, { duration: 800, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
+  const styles = StyleSheet.create({
+    row: {
+      flexDirection: "row",
+      paddingHorizontal: 4,
+      marginBottom: 8,
+    },
+    timeCell: {
+      width: 40,
+      height: 44,
+      borderRadius: 8,
+      backgroundColor: colors.border,
+      marginRight: 8,
+    },
+    cells: {
+      flex: 1,
+      flexDirection: "row",
+      gap: 6,
+    },
+    cell: {
+      flex: 1,
+      height: 44,
+      borderRadius: 8,
+      backgroundColor: colors.border,
+    },
+  });
+
+  return (
+    <Animated.View style={[styles.row, animatedStyle]}>
+      <View style={styles.timeCell} />
+      <View style={styles.cells}>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <View key={i} style={styles.cell} />
+        ))}
+      </View>
+    </Animated.View>
+  );
+}
+
+function TimetableSkeleton() {
+  const styles = StyleSheet.create({
+    container: { marginTop: 12, gap: 0 },
+  });
+
+  return (
+    <View style={styles.container}>
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <SkeletonRow key={i} />
+      ))}
     </View>
   );
 }
@@ -391,26 +484,20 @@ function NoDataMessage() {
 }
 
 export default function NeisTimetable() {
-  const { colors } = useTheme();
   const [gradeClass, setGradeClass] = useState<GradeClass>({
     grade: 1,
     class: 1,
   });
   const [data, setData] = useState<TimetableData>([]);
   const [noData, setNoData] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const times = ["1", "2", "3", "4", "5", "6", "7", "8"];
   const dayNames = ["월", "화", "수", "목", "금"];
 
   const todayDay = moment().day();
-  const weekFirstDay = moment()
-    .startOf("weeks")
-    .add(1, "days")
-    .format("YYYYMMDD");
-  const weekLastDay = moment()
-    .endOf("week")
-    .subtract(1, "days")
-    .format("YYYYMMDD");
+  const weekFirstDay = moment().startOf("isoWeek").format("YYYYMMDD");
+  const weekLastDay = moment().endOf("isoWeek").subtract(2, "days").format("YYYYMMDD");
 
   // 그룹화 및 중복 제거 함수
   const processNeisData = (rowData: TimetableItem[]): TimetableData => {
@@ -433,6 +520,7 @@ export default function NeisTimetable() {
   };
 
   const getNeisData = async () => {
+    setIsLoading(true);
     try {
       const response: any = await getNeisTimetable(
         gradeClass.grade,
@@ -448,13 +536,18 @@ export default function NeisTimetable() {
       }
 
       setNoData(false);
-      const rowData = response.hisTimetable[0]?.row || [];
+      const rowData =
+        response.hisTimetable[1]?.row ||
+        response.hisTimetable[0]?.row ||
+        [];
       const processedData = processNeisData(rowData);
       setData(processedData);
     } catch (error) {
       console.error("NEIS 시간표 조회 오류:", error);
       setNoData(true);
       setData([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -497,7 +590,9 @@ export default function NeisTimetable() {
         onGradeClassChange={setGradeClass}
       />
 
-      {noData ? (
+      {isLoading ? (
+        <TimetableSkeleton />
+      ) : noData ? (
         <NoDataMessage />
       ) : (
         data.length > 0 && (

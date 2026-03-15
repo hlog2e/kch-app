@@ -43,10 +43,9 @@ export default function TimetableTimeline() {
   // 화면 복귀 시 모드 새로고침 + 커스텀 시간표 refetch
   useFocusEffect(
     useCallback(() => {
-      console.log("[TimetableTimeline] useFocusEffect - refreshMode + invalidateQueries");
       refreshMode();
       queryClient.invalidateQueries({ queryKey: [CUSTOM_TIMETABLE_QUERY_KEY] });
-    }, [refreshMode, queryClient])
+    }, [refreshMode, queryClient]),
   );
 
   // 모드에 따라 데이터 선택
@@ -172,7 +171,9 @@ export default function TimetableTimeline() {
           <View style={styles.titleRow}>
             <Text style={styles.title}>오늘의 시간표</Text>
             <View style={styles.modeBadge}>
-              <Text style={styles.modeBadgeText}>{isCustomMode ? "커스텀" : "NEIS"}</Text>
+              <Text style={styles.modeBadgeText}>
+                {isCustomMode ? "커스텀" : "NEIS"}
+              </Text>
             </View>
           </View>
           <TouchableOpacity
@@ -196,17 +197,20 @@ export default function TimetableTimeline() {
     );
   }
 
-  // 로딩
-  if (isLoading) return null;
+  if (isLoading || isError || slots.length === 0) {
+    const emptyMessage = isCustomMode
+      ? "나만의 시간표를 등록해보세요"
+      : "NEIS 시간표 정보가 없습니다";
 
-  if (isError || slots.length === 0) {
     return (
       <Animated.View style={[styles.container, animatedStyle]}>
         <View style={styles.headerRow}>
           <View style={styles.titleRow}>
             <Text style={styles.title}>{headerTitle}</Text>
             <View style={styles.modeBadge}>
-              <Text style={styles.modeBadgeText}>{isCustomMode ? "커스텀" : "NEIS"}</Text>
+              <Text style={styles.modeBadgeText}>
+                {isCustomMode ? "커스텀" : "NEIS"}
+              </Text>
             </View>
           </View>
           <TouchableOpacity
@@ -217,14 +221,18 @@ export default function TimetableTimeline() {
             <Ionicons name="chevron-forward" size={14} color={colors.subText} />
           </TouchableOpacity>
         </View>
-        <View style={styles.emptyContainer}>
-          <GalleryHorizontal size={28} color={colors.subText} strokeWidth={1.5} />
-          <Text style={styles.emptyText}>
-            {isCustomMode
-              ? "나만의 시간표를 등록해보세요"
-              : "NEIS 시간표 정보가 없습니다"}
-          </Text>
-        </View>
+        <TouchableOpacity
+          style={styles.emptyContainer}
+          onPress={() => router.push("/home/timetable")}
+          activeOpacity={0.7}
+        >
+          <GalleryHorizontal
+            size={28}
+            color={colors.subText}
+            strokeWidth={1.5}
+          />
+          <Text style={styles.emptyText}>{emptyMessage}</Text>
+        </TouchableOpacity>
       </Animated.View>
     );
   }
@@ -235,10 +243,15 @@ export default function TimetableTimeline() {
         <View style={styles.titleRow}>
           <Text style={styles.title}>{headerTitle}</Text>
           <View style={styles.modeBadge}>
-            <Text style={styles.modeBadgeText}>{isCustomMode ? "커스텀" : "NEIS"}</Text>
+            <Text style={styles.modeBadgeText}>
+              {isCustomMode ? "커스텀" : "NEIS"}
+            </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.viewAllButton} onPress={() => router.push("/home/timetable")}>
+        <TouchableOpacity
+          style={styles.viewAllButton}
+          onPress={() => router.push("/home/timetable")}
+        >
           <Text style={styles.viewAllText}>더보기</Text>
           <Ionicons name="chevron-forward" size={14} color={colors.subText} />
         </TouchableOpacity>

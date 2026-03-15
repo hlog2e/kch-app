@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { useEffect, useState, useRef, useCallback } from "react";
+import moment from "moment";
 import { CustomTimetableData } from "../../../types/timetable";
 import {
   useCustomTimetableQuery,
@@ -17,6 +18,7 @@ interface TimetableCellProps {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
+  isToday?: boolean;
 }
 
 interface DayColumnProps {
@@ -24,6 +26,7 @@ interface DayColumnProps {
   dayIndex: number;
   times: string[];
   onUpdateCell: (dayIndex: number, timeIndex: number, value: string) => void;
+  isToday?: boolean;
 }
 
 // 시간표 셀 컴포넌트
@@ -31,6 +34,7 @@ function TimetableCell({
   value,
   onChangeText,
   placeholder,
+  isToday,
 }: TimetableCellProps) {
   const { colors } = useTheme();
 
@@ -47,8 +51,8 @@ function TimetableCell({
       textAlign: "center",
       textAlignVertical: "center",
       fontSize: 12,
-      color: colors.text,
-      fontWeight: "300",
+      color: isToday ? "#60a5fa" : colors.text,
+      fontWeight: isToday ? "500" : "300",
       width: "100%",
       height: 50,
       lineHeight: 18,
@@ -72,7 +76,7 @@ function TimetableCell({
 }
 
 // 요일별 컬럼 컴포넌트
-function DayColumn({ dayData, dayIndex, times, onUpdateCell }: DayColumnProps) {
+function DayColumn({ dayData, dayIndex, times, onUpdateCell, isToday }: DayColumnProps) {
   const { colors } = useTheme();
 
   const styles = StyleSheet.create({
@@ -82,16 +86,24 @@ function DayColumn({ dayData, dayIndex, times, onUpdateCell }: DayColumnProps) {
       borderRightWidth: 1,
       borderColor: colors.border,
     },
+    dataColToday: {
+      flex: 1,
+      alignItems: "center",
+      borderRightWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: "rgba(59, 130, 246, 0.08)",
+    },
   });
 
   return (
-    <View style={styles.dataCol}>
+    <View style={isToday ? styles.dataColToday : styles.dataCol}>
       {times.map((_, timeIndex) => (
         <TimetableCell
           key={`${dayIndex}-${timeIndex}`}
           value={dayData[timeIndex] ?? ""}
           onChangeText={(text) => onUpdateCell(dayIndex, timeIndex, text)}
           placeholder="과목명"
+          isToday={isToday}
         />
       ))}
     </View>
@@ -99,7 +111,7 @@ function DayColumn({ dayData, dayIndex, times, onUpdateCell }: DayColumnProps) {
 }
 
 // 요일 헤더 컴포넌트
-function DayHeader({ dayNames }: { dayNames: string[] }) {
+function DayHeader({ dayNames, todayDay }: { dayNames: string[]; todayDay: number }) {
   const { colors } = useTheme();
 
   const styles = StyleSheet.create({
@@ -117,10 +129,24 @@ function DayHeader({ dayNames }: { dayNames: string[] }) {
       borderTopWidth: 1,
       borderColor: colors.border,
     },
+    dayHeaderItemToday: {
+      justifyContent: "center",
+      alignItems: "center",
+      flex: 1,
+      borderRightWidth: 1,
+      borderTopWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: "rgba(59, 130, 246, 0.08)",
+    },
     dayHeaderItemText: {
       fontWeight: "700",
       fontSize: 16,
       color: colors.text,
+    },
+    dayHeaderItemTextToday: {
+      fontWeight: "700",
+      fontSize: 16,
+      color: "#60a5fa",
     },
     dayHeaderDummy: {
       width: 40,
@@ -134,11 +160,19 @@ function DayHeader({ dayNames }: { dayNames: string[] }) {
   return (
     <View style={styles.dayHeader}>
       <View style={styles.dayHeaderDummy} />
-      {dayNames.map((dayName) => (
-        <View key={dayName} style={styles.dayHeaderItem}>
-          <Text style={styles.dayHeaderItemText}>{dayName}</Text>
-        </View>
-      ))}
+      {dayNames.map((dayName, index) => {
+        const isToday = index + 1 === todayDay;
+        return (
+          <View
+            key={dayName}
+            style={isToday ? styles.dayHeaderItemToday : styles.dayHeaderItem}
+          >
+            <Text style={isToday ? styles.dayHeaderItemTextToday : styles.dayHeaderItemText}>
+              {dayName}
+            </Text>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -196,6 +230,7 @@ export default function CustomTimetable() {
 
   const times = ["1", "2", "3", "4", "5", "6", "7", "8"];
   const dayNames = ["월", "화", "수", "목", "금"];
+  const todayDay = moment().day();
 
   // 서버 데이터 최초 1회만 로컬 state에 복사
   useEffect(() => {
@@ -277,7 +312,7 @@ export default function CustomTimetable() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>내 시간표</Text>
-      <DayHeader dayNames={dayNames} />
+      <DayHeader dayNames={dayNames} todayDay={todayDay} />
 
       <View style={styles.tableWrap}>
         <TimeColumn times={times} />
@@ -289,6 +324,7 @@ export default function CustomTimetable() {
               dayIndex={dayIndex}
               times={times}
               onUpdateCell={updateCell}
+              isToday={todayDay === dayIndex + 1}
             />
           ))}
         </View>
