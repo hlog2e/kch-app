@@ -294,13 +294,9 @@ function Photo({ userData }: PhotoProps) {
     );
   }
 
-  if (!userData) {
-    return null;
-  }
-
   return (
     <View style={styles.container}>
-      {userData.idPhoto ? (
+      {userData?.idPhoto ? (
         <TouchableOpacity onPress={handleImagePicking}>
           <Image
             style={styles.image}
@@ -346,11 +342,7 @@ function BarCodeSection({ userData, openBarCodeScanner }: BarCodeSectionProps) {
     dummy_text: { fontSize: 10, color: "gray" },
   });
 
-  if (!userData) {
-    return null;
-  }
-
-  if (userData.barcode) {
+  if (userData?.barcode) {
     return (
       <View style={styles.barcode}>
         <Barcode
