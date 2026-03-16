@@ -35,7 +35,7 @@ export default function FooterSection() {
   };
 
   const styles = StyleSheet.create({
-    wrap: { marginTop: 30 },
+    wrap: { marginTop: 18 },
 
     buttonWrap: { marginTop: 12 },
     button: {

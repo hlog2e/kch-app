@@ -37,7 +37,7 @@ iOS Model ID: ${Device.modelId}
   };
 
   const styles = StyleSheet.create({
-    wrap: { marginTop: 20 },
+    wrap: { marginTop: 14 },
     sectionTitle: { fontSize: 12, color: colors.subText },
 
     buttonWrap: { marginTop: 12 },
