@@ -78,7 +78,7 @@ export default function CalendarScreen() {
 
   const markedDatesWithSelDate = {
     ...markedDates,
-    [selDate]: { selected: true, selectedColor: "#60a5fa" },
+    [selDate]: { selected: true, selectedColor: colors.accentBlueSoft },
   };
 
   useEffect(() => {
@@ -248,9 +248,9 @@ function Item({ data }: { data: any }) {
       width: 50,
       height: 50,
       borderRadius: 18,
-      backgroundColor: "#F2F9FF",
+      backgroundColor: colors.accentBlueBg,
       borderWidth: 1,
-      borderColor: "#E0F0FF",
+      borderColor: colors.accentBlueBorder,
       alignItems: "center",
       justifyContent: "center",
       marginRight: 16,
@@ -277,16 +277,16 @@ function Item({ data }: { data: any }) {
       alignItems: "flex-end",
     },
     dateBadge: {
-      backgroundColor: "rgba(74, 144, 226, 0.1)",
+      backgroundColor: colors.accentBlueAlpha,
       paddingHorizontal: 10,
       paddingVertical: 6,
       borderRadius: 50,
       borderWidth: 1,
-      borderColor: "#4A90E2",
+      borderColor: colors.accentBlue,
     },
     eventDate: {
       fontSize: 11,
-      color: "#4A90E2",
+      color: colors.accentBlue,
       fontWeight: "600",
       textAlign: "center",
     },

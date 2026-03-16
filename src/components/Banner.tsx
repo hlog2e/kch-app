@@ -16,6 +16,7 @@ import { Image } from "expo-image";
 import { useQuery } from "@tanstack/react-query";
 import { getBanners } from "../../apis/banner/index";
 import ReanimatedCarousel from "react-native-reanimated-carousel";
+import { useTheme } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import { useState } from "react";
 
@@ -109,20 +110,21 @@ interface ItemProps {
 }
 
 const Item = ({ item, height, dataLength, nowIndex }: ItemProps) => {
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     image: { width: "100%", height: height, borderRadius: 15 },
     pagination: {
       position: "absolute",
       bottom: 8,
       right: 10,
-      backgroundColor: "white",
+      backgroundColor: colors.cardBg,
       paddingVertical: 1,
       paddingHorizontal: 5,
       borderRadius: 15,
     },
     pagination_text: {
       fontSize: 10,
-      color: "gray",
+      color: colors.subText,
     },
   });
 

@@ -49,7 +49,7 @@ export default function CommunityItem({ item }: CommunityItemProps) {
       fontWeight: "600",
       color: colors.text,
     },
-    nameAndTime: { fontSize: 11, color: "#b4b4b4", marginTop: 2 },
+    nameAndTime: { fontSize: 11, color: colors.subText, marginTop: 2 },
     content: {
       fontSize: 14,
       color: colors.subText,
@@ -61,7 +61,7 @@ export default function CommunityItem({ item }: CommunityItemProps) {
       marginTop: 8,
     },
     icon_wrap: { flexDirection: "row", alignItems: "center" },
-    icon_text: { fontSize: 12, marginLeft: 6, color: "#b4b4b4" },
+    icon_text: { fontSize: 12, marginLeft: 6, color: colors.subText },
   });
 
   const handlePress = () => {

@@ -81,7 +81,7 @@ export default function HorizontalImagePicker({
       marginLeft: 10,
     },
     image: { width: 100, height: 100, borderRadius: 10 },
-    image_skeleton_text: { color: "gray", fontWeight: "700", fontSize: 13 },
+    image_skeleton_text: { color: colors.subText, fontWeight: "700", fontSize: 13 },
   });
 
   return (
@@ -104,7 +104,7 @@ export default function HorizontalImagePicker({
         style={styles.image_skeleton}
         onPress={handleImagePicking}
       >
-        <Ionicons name="camera" size={30} color="gray" />
+        <Ionicons name="camera" size={30} color={colors.subText} />
         <Text style={styles.image_skeleton_text}>이미지 선택</Text>
       </TouchableOpacity>
     </ScrollView>

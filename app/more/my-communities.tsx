@@ -129,7 +129,7 @@ function TouchableCommunityItem({ item }: ItemProps) {
       marginTop: 14,
       color: colors.subText,
     },
-    datetime: { fontSize: 11, color: "gray", marginTop: 14 },
+    datetime: { fontSize: 11, color: colors.subText, marginTop: 14 },
   });
   return (
     <TouchableOpacity

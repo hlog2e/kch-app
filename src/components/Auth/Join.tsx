@@ -2,6 +2,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTheme } from "@react-navigation/native";
 import SecondNameAndYearInput from "./JoinStep/SecondNameAndYearInput";
 import { postJoin } from "../../../apis/auth/index";
 import { registerForPushNotificationsAsync } from "../../../utils/expo_notification";
@@ -18,6 +19,7 @@ export type UserType =
 
 export default function JoinScreen() {
   const { login } = useUser();
+  const { colors } = useTheme();
   const alert = useAlert();
   const router = useRouter();
   const params = useLocalSearchParams<{
@@ -49,7 +51,7 @@ export default function JoinScreen() {
   };
 
   return (
-    <SafeAreaView edges={["top"]} style={styles.container}>
+    <SafeAreaView edges={["top"]} style={[styles.container, { backgroundColor: colors.background }]}>
       <SecondNameAndYearInput
         type="parents/outsider"
         isNeedYear={false}

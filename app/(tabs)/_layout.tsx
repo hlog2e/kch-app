@@ -14,13 +14,13 @@ export default function TabLayout() {
       screenOptions={{
         tabBarStyle: {
           height: bottomInsets + 50,
-          backgroundColor: "white",
+          backgroundColor: colors.tabBarBg,
         },
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.text,
         tabBarInactiveTintColor: colors.text,
         headerShown: false,
-        sceneStyle: { backgroundColor: "white" },
+        sceneStyle: { backgroundColor: colors.background },
       }}
       screenListeners={{
         tabPress: () => {

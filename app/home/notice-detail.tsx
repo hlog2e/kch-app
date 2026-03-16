@@ -46,7 +46,7 @@ function NoticeDetailHeader() {
 
 export default function NoticeDetailScreen() {
   const { id: noticeId } = useLocalSearchParams<{ id: string }>();
-  const { colors } = useTheme();
+  const { colors, dark } = useTheme();
 
   const { data }: { data: any } = useQuery({
     queryKey: ["NoticeDetail", noticeId],
@@ -132,6 +132,11 @@ export default function NoticeDetailScreen() {
           return true;
         }}
         source={{ html: data?.html || "" }}
+        injectedJavaScript={
+          dark
+            ? `document.body.style.backgroundColor='${colors.background}';document.body.style.color='${colors.text}';true;`
+            : undefined
+        }
       />
     </SafeAreaView>
   );

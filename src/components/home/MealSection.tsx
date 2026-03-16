@@ -118,13 +118,13 @@ function MealItem({ title, kcal, menu }: { title: any; kcal: any; menu: any }) {
   const styles = StyleSheet.create({
     container: {
       borderWidth: 1,
-      borderColor: isLunch ? "#E0F0FF" : colors.border,
+      borderColor: isLunch ? colors.accentBlueBorder : colors.border,
       borderRadius: 30,
       minHeight: 160,
       width: 160,
       padding: 14,
       marginRight: 12,
-      backgroundColor: isLunch ? "#F2F9FF" : colors.cardBg,
+      backgroundColor: isLunch ? colors.accentBlueBg : colors.cardBg,
     },
     header: {
       alignItems: "flex-end",

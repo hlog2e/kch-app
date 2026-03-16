@@ -125,7 +125,7 @@ export default function HeaderSection() {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: dark ? "#2a2a2a" : "#f0f0f0",
+      backgroundColor: colors.buttonBg,
     },
     editProfileButtonText: {
       fontSize: 13,
@@ -139,12 +139,12 @@ export default function HeaderSection() {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      backgroundColor: "#000000",
+      backgroundColor: dark ? "#ffffff" : "#000000",
     },
     studentIdButtonText: {
       fontSize: 13,
       fontWeight: "700",
-      color: "#ffffff",
+      color: dark ? "#000000" : "#ffffff",
       marginLeft: 4,
     },
   });
@@ -159,7 +159,7 @@ export default function HeaderSection() {
           contentFit={"cover"}
         />
       ) : (
-        <Ionicons name="person-circle" size={80} color={"#d9d9d9"} />
+        <Ionicons name="person-circle" size={80} color={colors.subText} />
       )}
 
       <View style={styles.nameRow}>
@@ -189,7 +189,7 @@ export default function HeaderSection() {
             onPress={() => router.push("/home/student-id")}
             style={styles.studentIdButton}
           >
-            <Ionicons name="barcode-outline" size={16} color="#ffffff" />
+            <Ionicons name="barcode-outline" size={16} color={dark ? "#000000" : "#ffffff"} />
             <Text style={styles.studentIdButtonText}>모바일 학생증</Text>
           </TouchableOpacity>
         )}

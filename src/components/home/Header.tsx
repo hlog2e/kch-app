@@ -166,7 +166,7 @@ export default function Header() {
     studentIdButtonText: {
       fontSize: 10,
       marginLeft: 2,
-      color: "gray",
+      color: colors.subText,
       fontWeight: "600",
     },
     rightSection: {

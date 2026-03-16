@@ -128,7 +128,7 @@ export default function AnimatedToggle({
       top: TRACK_PADDING,
       left: 0,
       height: INDICATOR_HEIGHT,
-      backgroundColor: "#60A5FA",
+      backgroundColor: colors.accentBlueSoft,
       borderRadius: INDICATOR_HEIGHT / 2,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },

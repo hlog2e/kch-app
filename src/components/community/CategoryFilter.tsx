@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import { getCommunityCategories } from "../../../apis/community/index";
+import { getDarkChipBg, getDarkChipText } from "../../../utils/darkModeColor";
 
 interface CategoryFilterProps {
   selectedCategory: string | null;
@@ -87,8 +88,8 @@ export default function CategoryFilter({
           styles.chip,
           {
             backgroundColor: !hasSelection
-              ? dark ? "#e5e5e5" : "#2c2c2e"
-              : dark ? "#2a2a2c" : "#f0f0f0",
+              ? dark ? "#3a3a3c" : "#2c2c2e"
+              : dark ? "#1c1c1e" : "#f0f0f0",
           },
         ]}
       >
@@ -97,8 +98,8 @@ export default function CategoryFilter({
             styles.chipText,
             {
               color: !hasSelection
-                ? dark ? "#1a1a1a" : "#ffffff"
-                : dark ? "#999" : "#777",
+                ? dark ? "#ffffff" : "#ffffff"
+                : dark ? "#666" : "#777",
             },
           ]}
         >
@@ -117,13 +118,13 @@ export default function CategoryFilter({
             style={[
               styles.chip,
               {
-                backgroundColor: cat.color,
+                backgroundColor: dark ? getDarkChipBg(cat.color) : cat.color,
                 opacity: hasSelection && !isSelected ? 0.4 : 1,
               },
             ]}
           >
             <Text
-              style={[styles.chipText, { color: getTextColor(cat.color) }]}
+              style={[styles.chipText, { color: dark ? getDarkChipText(cat.color) : getTextColor(cat.color) }]}
             >
               {cat.name}
             </Text>

@@ -212,6 +212,7 @@ interface PhotoProps {
 }
 
 function Photo({ userData }: PhotoProps) {
+  const { colors } = useTheme();
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
@@ -264,7 +265,7 @@ function Photo({ userData }: PhotoProps) {
   const styles = StyleSheet.create({
     container: { paddingVertical: 15, alignItems: "center" },
     dummy_image: {
-      backgroundColor: "#e4e4e4",
+      backgroundColor: colors.placeholderBg,
       height: 125,
       width: 100,
       borderRadius: 5,
@@ -275,7 +276,7 @@ function Photo({ userData }: PhotoProps) {
     dummy_desc: {
       fontSize: 10,
       fontWeight: "700",
-      color: "gray",
+      color: colors.subText,
     },
     image: {
       height: 125,
@@ -309,7 +310,7 @@ function Photo({ userData }: PhotoProps) {
           style={styles.dummy_image}
           onPress={handleImagePicking}
         >
-          <Ionicons name="camera" size={30} color="gray" />
+          <Ionicons name="camera" size={30} color={colors.subText} />
           <Text style={styles.dummy_desc}>사진을 등록해주세요</Text>
         </TouchableOpacity>
       )}
@@ -339,7 +340,7 @@ function BarCodeSection({ userData, openBarCodeScanner }: BarCodeSectionProps) {
       alignItems: "center",
       paddingVertical: 6,
     },
-    dummy_text: { fontSize: 10, color: "gray" },
+    dummy_text: { fontSize: 10, color: colors.subText },
   });
 
   if (userData?.barcode) {
@@ -365,7 +366,7 @@ function BarCodeSection({ userData, openBarCodeScanner }: BarCodeSectionProps) {
           openBarCodeScanner();
         }}
       >
-        <Ionicons name="barcode" size={24} color="gray" />
+        <Ionicons name="barcode" size={24} color={colors.subText} />
         <Text style={styles.dummy_text}>바코드를 등록해주세요</Text>
       </TouchableOpacity>
     </View>

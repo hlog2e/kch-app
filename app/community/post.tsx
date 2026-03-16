@@ -21,6 +21,7 @@ import mime from "mime";
 import * as Haptics from "expo-haptics";
 import Header from "../../src/components/Header/Header";
 import HorizontalImagePicker from "../../src/components/Image/HorizontalImagePicker";
+import { getDarkChipBg, getDarkChipText } from "../../utils/darkModeColor";
 import { useAlert } from "../../context/AlertContext";
 import { useRouter } from "expo-router";
 
@@ -119,12 +120,13 @@ export default function CommunityPOSTScreen() {
                   style={[
                     styles.chip,
                     {
-                      backgroundColor: cat.color,
+                      backgroundColor: dark ? getDarkChipBg(cat.color) : cat.color,
+
                       opacity: selectedCategory !== null && !isSelected ? 0.4 : 1,
                     },
                   ]}
                 >
-                  <Text style={[styles.chipText, { color: getTextColor(cat.color) }]}>
+                  <Text style={[styles.chipText, { color: dark ? getDarkChipText(cat.color) : getTextColor(cat.color) }]}>
                     {cat.name}
                   </Text>
                 </TouchableOpacity>
@@ -136,7 +138,7 @@ export default function CommunityPOSTScreen() {
             <TextInput
               value={title}
               onChangeText={setTitle}
-              style={[styles.title_input, { color: colors.text, borderColor: "#d4d4d4" }]}
+              style={[styles.title_input, { color: colors.text, borderColor: colors.inputBorder }]}
               placeholder="제목을 입력해주세요."
               placeholderTextColor={colors.subText}
             />
@@ -177,7 +179,6 @@ export default function CommunityPOSTScreen() {
   );
 }
 
-// CategoryFilter.tsx에서 재사용하는 유틸 함수
 const hexToRgb = (hex: string) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result

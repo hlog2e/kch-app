@@ -117,7 +117,7 @@ function Item({ router, _id, title, teacher, createdAt }: ItemProps) {
       style={styles.item}
     >
       <View style={styles.itemTitleWrap}>
-        <Ionicons name="alert-circle-outline" size={26} color={"#cad5e2"} />
+        <Ionicons name="alert-circle-outline" size={26} color={colors.subText} />
 
         <View style={{ marginLeft: 8 }}>
           <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode="tail">

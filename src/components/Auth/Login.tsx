@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTheme } from "@react-navigation/native";
 import FirstRequestCode from "./LoginStep/FirstRequestCode";
 import SecondVerifyCode from "./LoginStep/SecondVerifyCode";
 import { postRequestCode, postVerifyCode } from "../../../apis/auth/index";
@@ -16,6 +17,7 @@ interface LoginData {
 
 export default function LoginScreen() {
   const { login } = useUser();
+  const { colors } = useTheme();
   const alert = useAlert();
   const router = useRouter();
 
@@ -72,7 +74,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView edges={["top"]} style={styles.container}>
+    <SafeAreaView edges={["top"]} style={[styles.container, { backgroundColor: colors.background }]}>
       {step === "RequestCode" && (
         <FirstRequestCode
           onNext={async (phoneNumber: string) => {

@@ -281,12 +281,12 @@ function EventCard({
     card: {
       width: 170,
       height: 80,
-      backgroundColor: isHighlight ? "#F2F9FF" : colors.cardBg,
+      backgroundColor: isHighlight ? colors.accentBlueBg : colors.cardBg,
       borderRadius: 16,
       marginRight: 12,
       padding: 12,
       borderWidth: 1,
-      borderColor: isHighlight ? "#E0F0FF" : colors.border,
+      borderColor: isHighlight ? colors.accentBlueBorder : colors.border,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.08,
@@ -304,7 +304,7 @@ function EventCard({
     dDayText: {
       fontSize: 15,
       fontWeight: "700",
-      color: "#4A90E2",
+      color: colors.accentBlue,
     },
     eventIcon: {
       fontSize: 18,

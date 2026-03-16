@@ -230,7 +230,7 @@ function DayHeader({
       borderRightWidth: 1,
       borderTopWidth: 1,
       borderColor: colors.border,
-      backgroundColor: "rgba(59, 130, 246, 0.08)",
+      backgroundColor: colors.accentBlueAlpha,
     },
     dayHeaderItemText: {
       fontWeight: "700",
@@ -240,7 +240,7 @@ function DayHeader({
     dayHeaderItemTextToday: {
       fontWeight: "700",
       fontSize: 16,
-      color: "#60a5fa",
+      color: colors.accentBlueSoft,
     },
     dayHeaderDummy: {
       width: 40,
@@ -335,7 +335,7 @@ function TimetableDataColumns({
       alignItems: "center",
       borderRightWidth: 1,
       borderColor: colors.border,
-      backgroundColor: "rgba(59, 130, 246, 0.08)",
+      backgroundColor: colors.accentBlueAlpha,
     },
     dataItem: {
       height: 50,
@@ -355,7 +355,7 @@ function TimetableDataColumns({
     dataTextToday: {
       textAlign: "center",
       fontSize: 12,
-      color: "#60a5fa",
+      color: colors.accentBlueSoft,
       fontWeight: "500",
     },
   });

@@ -179,9 +179,9 @@ function Item({ title, desc, value, onPress }: ItemProps) {
         <Text style={styles.desc}>{desc}</Text>
       </View>
       <Switch
-        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        trackColor={{ false: colors.switchTrackOff, true: colors.switchTrackOn }}
         thumbColor={value ? "#f5dd4b" : "#f4f3f4"}
-        ios_backgroundColor="#3e3e3e"
+        ios_backgroundColor={colors.switchTrackOff}
         onValueChange={onPress}
         value={value}
       />

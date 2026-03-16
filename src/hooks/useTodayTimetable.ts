@@ -33,22 +33,8 @@ interface GradeClass {
 }
 
 export function getTargetSchoolDate(): { date: moment.Moment; isToday: boolean } {
-  const now = moment();
-  const day = now.day(); // 0=일, 1=월, ..., 6=토
-  const currentTime = now.format("HH:mm");
-
-  // 평일이고 마지막 교시 종료 전이면 오늘
-  if (day >= 1 && day <= 5 && currentTime < "17:20") {
-    return { date: now, isToday: true };
-  }
-
-  // 그 외: 다음 평일
-  const daysUntilMonday =
-    day === 0 ? 1 : day === 6 ? 2 : day === 5 && currentTime >= "17:20" ? 3 : 1;
-  return {
-    date: moment().add(daysUntilMonday, "days"),
-    isToday: false,
-  };
+  // TODO: 스크린샷용 임시 코드 - 되돌려야 함
+  return { date: moment(), isToday: true };
 }
 
 function processNeisResponse(
@@ -173,7 +159,8 @@ export function calculateStatuses(
 
 export function useTodayTimetable() {
   const [gradeClass, setGradeClass] = useState<GradeClass | null>(null);
-  const [currentTime, setCurrentTime] = useState(moment().format("HH:mm"));
+  // TODO: 스크린샷용 임시 코드 - 되돌려야 함
+  const [currentTime, setCurrentTime] = useState("09:00");
 
   const { date: targetDate, isToday } = useMemo(getTargetSchoolDate, [currentTime]);
   const targetDateStr = targetDate.format("YYYYMMDD");

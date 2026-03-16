@@ -114,12 +114,12 @@ export default function TimetableSection() {
       marginHorizontal: 14,
     },
     card: {
-      backgroundColor: "#F2F9FF",
+      backgroundColor: colors.accentBlueBg,
       borderRadius: 16,
       paddingHorizontal: 16,
       paddingVertical: 12,
       borderWidth: 1,
-      borderColor: "#E0F0FF",
+      borderColor: colors.accentBlueBorder,
       shadowColor: "#000",
       shadowOffset: {
         width: 0,
@@ -153,7 +153,7 @@ export default function TimetableSection() {
       justifyContent: "center",
     },
     badge: {
-      backgroundColor: "#4A90E2",
+      backgroundColor: colors.accentBlue,
       paddingHorizontal: 10,
       paddingVertical: 5,
       borderRadius: 12,
@@ -185,11 +185,11 @@ export default function TimetableSection() {
     timeText: {
       fontSize: 13,
       fontWeight: "600",
-      color: "#4A90E2",
+      color: colors.accentBlue,
     },
 
     nextBadge: {
-      backgroundColor: "#E0F0FF",
+      backgroundColor: colors.accentBlueBorder,
       paddingHorizontal: 10,
       paddingVertical: 5,
       borderRadius: 12,
@@ -197,7 +197,7 @@ export default function TimetableSection() {
       alignSelf: "flex-end",
     },
     nextBadgeText: {
-      color: "#4A90E2",
+      color: colors.accentBlue,
       fontSize: 12,
       fontWeight: "700",
     },

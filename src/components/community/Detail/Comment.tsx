@@ -65,7 +65,7 @@ export default function Comment({
       fontSize: 11,
       marginLeft: 5,
     },
-    delete_text: { fontSize: 13, color: "gray" },
+    delete_text: { fontSize: 13, color: colors.subText },
     delete_admin_text: { fontSize: 13, color: colors.red, marginTop: 10 },
     comment_text: {
       marginTop: 8,
@@ -74,7 +74,7 @@ export default function Comment({
     comment_date: { fontSize: 12, color: colors.subText, marginTop: 8 },
 
     blocked_users_comment_text: {
-      color: "gray",
+      color: colors.subText,
     },
   });
 
@@ -215,7 +215,7 @@ export default function Comment({
                     <Ionicons
                       name="ellipsis-horizontal"
                       size={16}
-                      color="gray"
+                      color={colors.subText}
                     />
                   </TouchableOpacity>
                 )}

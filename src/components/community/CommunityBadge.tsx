@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
+import { useTheme } from "@react-navigation/native";
 import { getCommunityCategories } from "../../../apis/community/index";
+import { getDarkChipBg, getDarkChipText } from "../../../utils/darkModeColor";
 
 interface CommunityBadgeProps {
   categoryId?: string;
@@ -8,6 +10,8 @@ interface CommunityBadgeProps {
 }
 
 export default function CommunityBadge({ categoryId, size = "default" }: CommunityBadgeProps) {
+  const { dark } = useTheme();
+
   // 카테고리 데이터 가져오기
   const { data: categoriesData } = useQuery({
     queryKey: ["communityCategories"],
@@ -59,20 +63,30 @@ export default function CommunityBadge({ categoryId, size = "default" }: Communi
   // 카테고리별 색상을 반환하는 함수
   const getCategoryColor = (categoryId: string) => {
     if (!categoriesData?.categories) {
-      return { bg: "#6b7280", text: "#ffffff" }; // 기본 색상
+      return dark
+        ? { bg: "#2a2a2a", text: "#999999" }
+        : { bg: "#6b7280", text: "#ffffff" };
     }
 
     const category = categoriesData.categories.find(
       (cat) => cat.id === categoryId
     );
     if (category) {
+      if (dark) {
+        return {
+          bg: getDarkChipBg(category.color),
+          text: getDarkChipText(category.color),
+        };
+      }
       return {
         bg: category.color,
         text: getTextColorFromBackground(category.color),
       };
     }
 
-    return { bg: "#6b7280", text: "#ffffff" }; // 기본 색상
+    return dark
+      ? { bg: "#2a2a2a", text: "#999999" }
+      : { bg: "#6b7280", text: "#ffffff" };
   };
 
   // 카테고리 ID로 이름을 반환하는 함수

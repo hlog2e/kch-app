@@ -2,6 +2,7 @@ import React from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { useState } from "react";
+import { useTheme } from "@react-navigation/native";
 import ImageView from "react-native-image-viewing";
 
 interface HorizontalScrollImageViewProps {
@@ -13,6 +14,7 @@ export default function HorizontalScrollImageView({
   data,
   height,
 }: HorizontalScrollImageViewProps) {
+  const { colors } = useTheme();
   const [imageIndex, setImageIndex] = useState<number>(0);
   const [imageOpen, setImageOpen] = useState<boolean>(false);
   const [imageUris, setImageUris] = useState<{ uri: string }[]>([]);
@@ -34,7 +36,7 @@ export default function HorizontalScrollImageView({
       aspectRatio: 1,
       borderRadius: 18,
       marginRight: 8,
-      backgroundColor: "#f9f9f9",
+      backgroundColor: colors.placeholderBg,
     },
   });
 

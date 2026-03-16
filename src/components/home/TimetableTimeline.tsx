@@ -120,14 +120,14 @@ export default function TimetableTimeline() {
       paddingHorizontal: 8,
       paddingVertical: 3,
       borderRadius: 999,
-      backgroundColor: "rgba(74, 144, 226, 0.10)",
+      backgroundColor: colors.accentBlueAlpha,
       justifyContent: "center" as const,
       alignItems: "center" as const,
     },
     modeBadgeText: {
       fontSize: 10,
       fontWeight: "600",
-      color: "#4A90E2",
+      color: colors.accentBlue,
     },
     viewAllButton: {
       flexDirection: "row",
@@ -276,8 +276,8 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
   const isCurrent = slot.status === "current";
   const isPassed = slot.status === "passed";
 
-  const cardBg = isCurrent ? "#F2F9FF" : colors.cardBg;
-  const cardBorder = isCurrent ? "#E0F0FF" : colors.border;
+  const cardBg = isCurrent ? colors.accentBlueBg : colors.cardBg;
+  const cardBorder = isCurrent ? colors.accentBlueBorder : colors.border;
 
   const styles = StyleSheet.create({
     card: {
@@ -311,7 +311,7 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
       width: 8,
       height: 8,
       borderRadius: 4,
-      backgroundColor: "#4A90E2",
+      backgroundColor: colors.accentBlue,
     },
     subject: {
       fontSize: 16,
@@ -332,7 +332,7 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
     badge: {
       fontSize: 10,
       fontWeight: "700",
-      color: "#4A90E2",
+      color: colors.accentBlue,
     },
   });
 

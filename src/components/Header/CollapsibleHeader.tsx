@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: "#ffffff",
     zIndex: 1000,
   },
   headerContent: {
@@ -141,6 +140,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#000000",
   },
 });

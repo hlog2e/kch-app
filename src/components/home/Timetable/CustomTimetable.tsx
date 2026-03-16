@@ -51,7 +51,7 @@ function TimetableCell({
       textAlign: "center",
       textAlignVertical: "center",
       fontSize: 12,
-      color: isToday ? "#60a5fa" : colors.text,
+      color: isToday ? colors.accentBlueSoft : colors.text,
       fontWeight: isToday ? "500" : "300",
       width: "100%",
       height: 50,
@@ -91,7 +91,7 @@ function DayColumn({ dayData, dayIndex, times, onUpdateCell, isToday }: DayColum
       alignItems: "center",
       borderRightWidth: 1,
       borderColor: colors.border,
-      backgroundColor: "rgba(59, 130, 246, 0.08)",
+      backgroundColor: colors.accentBlueAlpha,
     },
   });
 
@@ -136,7 +136,7 @@ function DayHeader({ dayNames, todayDay }: { dayNames: string[]; todayDay: numbe
       borderRightWidth: 1,
       borderTopWidth: 1,
       borderColor: colors.border,
-      backgroundColor: "rgba(59, 130, 246, 0.08)",
+      backgroundColor: colors.accentBlueAlpha,
     },
     dayHeaderItemText: {
       fontWeight: "700",
@@ -146,7 +146,7 @@ function DayHeader({ dayNames, todayDay }: { dayNames: string[]; todayDay: numbe
     dayHeaderItemTextToday: {
       fontWeight: "700",
       fontSize: 16,
-      color: "#60a5fa",
+      color: colors.accentBlueSoft,
     },
     dayHeaderDummy: {
       width: 40,

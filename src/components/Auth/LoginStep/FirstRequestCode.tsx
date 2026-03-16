@@ -60,6 +60,7 @@ export default function FirstRequestCode({ onNext }: FirstRequestCodeProps) {
           onChangeText={(text) => setPhoneNumber(text)}
           style={styles.input}
           placeholder="전화번호"
+          placeholderTextColor={colors.subText}
           maxLength={11}
         />
       </Animatable.View>

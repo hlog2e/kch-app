@@ -9,6 +9,17 @@ declare module "@react-navigation/native" {
       icon: string;
       red: string;
       subText: string;
+      accentBlueBg: string;
+      accentBlueBorder: string;
+      accentBlue: string;
+      accentBlueSoft: string;
+      accentBlueAlpha: string;
+      tabBarBg: string;
+      inputBorder: string;
+      buttonBg: string;
+      placeholderBg: string;
+      switchTrackOn: string;
+      switchTrackOff: string;
     };
   };
 }

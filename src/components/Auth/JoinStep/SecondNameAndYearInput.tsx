@@ -123,6 +123,7 @@ export default function SecondNameAndYearInput({
             onChangeText={(text) => setName(text)}
             style={styles.input}
             placeholder={"이름"}
+            placeholderTextColor={(colors as any).subText}
             maxLength={10}
           />
         </Animatable.View>
