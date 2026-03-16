@@ -1,6 +1,6 @@
 import { useTheme } from "@react-navigation/native";
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as SMS from "expo-sms";
 import * as Device from "expo-device";
 import * as WebBrowser from "expo-web-browser";
@@ -15,20 +15,20 @@ export default function EtcSection() {
   const handleSendSMS = async () => {
     const smsIsAvailable = await SMS.isAvailableAsync();
 
-    const bugTemplate = `[Bug Report]
+    const template = `[문의하기]
 timestamp: ${moment().format("YYYY-MM-DD-HH-mm:ss.SSS")}
 User ID: ${user?._id}
 Device: ${Device.modelName}
 OS: ${Device.osName}
-OS Version: ${Device.osVersion} 
+OS Version: ${Device.osVersion}
 iOS Model ID: ${Device.modelId}
-  
-[버그내용]
-  
-(해당부분을 지우고 오류가 발생한 것을 자세히 설명해주세요... 버그가 발생한 부분의 스크린샷도 첨부해주시면 감사하겠습니다.)`;
+
+[문의 내용]
+
+`;
 
     if (smsIsAvailable) {
-      await SMS.sendSMSAsync(["01095645490"], bugTemplate, {});
+      await SMS.sendSMSAsync(["01095645490"], template, {});
     } else {
       Alert.alert("오류", "디바이스가 SMS를 전송할 수 없는 상태입니다.", [
         { text: "확인" },
@@ -62,8 +62,8 @@ iOS Model ID: ${Device.modelId}
       <View style={styles.buttonWrap}>
         <TouchableOpacity onPress={() => handleSendSMS()} style={styles.button}>
           <View style={styles.buttonLeftWrap}>
-            <Ionicons name="bug-outline" size={26} color={colors.subText} />
-            <Text style={styles.buttonText}>버그(오류) 신고</Text>
+            <MaterialIcons name="support-agent" size={26} color={colors.subText} />
+            <Text style={styles.buttonText}>문의하기</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.subText} />
         </TouchableOpacity>

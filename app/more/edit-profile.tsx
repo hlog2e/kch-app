@@ -34,27 +34,30 @@ function EditProfileHeader() {
       alignItems: "center",
       justifyContent: "space-between",
       flexDirection: "row",
-    },
-    backButton: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginLeft: 16,
+      paddingHorizontal: 16,
       marginBottom: 6,
     },
-    backButtonText: {
-      paddingHorizontal: 10,
-      fontSize: 16,
-      fontWeight: "600",
+    backButton: {
+      width: 40,
+      alignItems: "flex-start",
+    },
+    title: {
+      fontSize: 17,
+      fontWeight: "700",
       color: colors.text,
+    },
+    spacer: {
+      width: 40,
     },
   });
 
   return (
     <View style={styles.header}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={30} color={colors.text} />
-        <Text style={styles.backButtonText}>뒤로</Text>
+        <Ionicons name="chevron-back" size={28} color={colors.text} />
       </TouchableOpacity>
+      <Text style={styles.title}>프로필 수정</Text>
+      <View style={styles.spacer} />
     </View>
   );
 }
@@ -65,10 +68,15 @@ interface InputData {
 }
 
 export default function EditUserProfileScreen() {
-  const { user } = useUser();
+  const { user, update } = useUser();
   const alert = useAlert();
   const { colors } = useTheme();
   const router = useRouter();
+
+  const isVerified =
+    user?.type === "undergraduate" ||
+    user?.type === "graduate" ||
+    user?.type === "teacher";
 
   const [inputData, setInputData] = useState<InputData>({
     name: null,
@@ -139,8 +147,11 @@ export default function EditUserProfileScreen() {
   const handleDeleteProfilePhoto = async () => {
     alert.loading("");
     deletePhotoMutate(undefined, {
-      onSuccess: () => {
+      onSuccess: async () => {
         queryClient.invalidateQueries({ queryKey: ["UserData"] });
+        if (user) {
+          await update({ user: { ...user, profilePhoto: undefined } });
+        }
         alert.success(
           "기본 프로필 이미지로 변경하였습니다.\n화면 상에서 변경되기까지는 약 30초 정도 걸려요:)"
         );
@@ -162,8 +173,11 @@ export default function EditUserProfileScreen() {
 
     alert.loading("");
     profileMutate(dataToSubmit, {
-      onSuccess: () => {
+      onSuccess: async () => {
         queryClient.invalidateQueries({ queryKey: ["UserData"] });
+        if (user) {
+          await update({ user: { ...user, ...dataToSubmit } });
+        }
         router.back();
         alert.close();
       },
@@ -181,43 +195,81 @@ export default function EditUserProfileScreen() {
     flexWrap: {
       flex: 1,
       justifyContent: "space-between",
-      marginHorizontal: 20,
+      paddingHorizontal: 20,
     },
 
     photoWrap: { alignItems: "center", marginTop: 10 },
+    photoContainer: { position: "relative" as const },
     photo: { width: 100, height: 100, borderRadius: 50 },
+    photoPlaceholder: {
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+      backgroundColor: colors.cardBg2,
+      justifyContent: "center" as const,
+      alignItems: "center" as const,
+    },
+    removeButton: {
+      position: "absolute" as const,
+      top: 0,
+      right: 0,
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: "rgba(0,0,0,0.55)",
+      justifyContent: "center" as const,
+      alignItems: "center" as const,
+    },
     photoInfo: { fontSize: 12, marginTop: 6, color: colors.subText },
 
-    defaultButton: {
-      marginTop: 10,
-      padding: 5,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 10,
+    formSection: { marginTop: 30 },
+    inputWrap: { marginTop: 20 },
+    inputLabel: { fontSize: 14, fontWeight: "600", color: colors.subText },
+    disabledNotice: {
+      flexDirection: "row" as const,
+      alignItems: "center" as const,
+      justifyContent: "center" as const,
+      marginTop: 6,
+      gap: 4,
     },
-    defaultButtonText: {
+    disabledNoticeText: {
       fontSize: 12,
       color: colors.subText,
-      fontWeight: "200",
     },
-
-    inputWrap: { marginTop: 24 },
-    inputLeftText: { fontSize: 16, fontWeight: "600", color: colors.text },
     textInput: {
-      padding: 12,
-      marginTop: 10,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 10,
+      padding: 14,
+      marginTop: 8,
+      backgroundColor: colors.cardBg2,
+      borderRadius: 12,
+      fontSize: 15,
       color: colors.text,
+    },
+    textInputDisabled: {
+      padding: 14,
+      marginTop: 8,
+      backgroundColor: colors.cardBg2,
+      borderRadius: 12,
+      fontSize: 15,
+      color: colors.subText,
+      opacity: 0.6,
+    },
+    textInputMultiline: {
+      padding: 14,
+      marginTop: 8,
+      backgroundColor: colors.cardBg2,
+      borderRadius: 12,
+      fontSize: 15,
+      color: colors.text,
+      minHeight: 80,
+      textAlignVertical: "top" as const,
     },
 
     confirmButton: {
-      height: 50,
+      height: 52,
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: colors.blue,
-      borderRadius: 15,
+      borderRadius: 14,
       marginBottom: 20,
     },
     confirmButtonText: {
@@ -235,51 +287,72 @@ export default function EditUserProfileScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View>
-          <TouchableOpacity
-            onPress={handleImagePicking}
-            style={styles.photoWrap}
-          >
-            <Image
-              style={styles.photo}
-              source={{
-                uri: user?.profileImage
-                  ? user.profileImage
-                  : "https://cdn.discordapp.com/attachments/1101838265849245787/1102095939500302336/image.png",
-              }}
-            />
+          <View style={styles.photoWrap}>
+            <TouchableOpacity
+              onPress={handleImagePicking}
+              style={styles.photoContainer}
+            >
+              {user?.profilePhoto ? (
+                <Image
+                  style={styles.photo}
+                  source={user.profilePhoto}
+                />
+              ) : (
+                <View style={styles.photoPlaceholder}>
+                  <Ionicons name="person" size={44} color={colors.subText} />
+                </View>
+              )}
+              {user?.profilePhoto && (
+                <TouchableOpacity
+                  onPress={handleDeleteProfilePhoto}
+                  style={styles.removeButton}
+                >
+                  <Ionicons name="close" size={16} color="white" />
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
             <Text style={styles.photoInfo}>탭해서 프로필 이미지 변경</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleDeleteProfilePhoto}
-            style={styles.defaultButton}
-          >
-            <Text style={styles.defaultButtonText}>기본 이미지로 변경</Text>
-          </TouchableOpacity>
-
-          <View style={styles.inputWrap}>
-            <Text style={styles.inputLeftText}>닉네임</Text>
-            <TextInput
-              value={inputData.name || ""}
-              onChangeText={(value) =>
-                setInputData((prev) => ({ ...prev, name: value }))
-              }
-              style={styles.textInput}
-              placeholder="닉네임"
-              placeholderTextColor={colors.subText}
-            />
           </View>
-          <View style={styles.inputWrap}>
-            <Text style={styles.inputLeftText}>자기소개</Text>
-            <TextInput
-              value={inputData.desc || ""}
-              onChangeText={(value) =>
-                setInputData((prev) => ({ ...prev, desc: value }))
-              }
-              style={styles.textInput}
-              placeholder="자기소개"
-              placeholderTextColor={colors.subText}
-              multiline
-            />
+
+          <View style={styles.formSection}>
+            <View style={styles.inputWrap}>
+              <Text style={styles.inputLabel}>이름</Text>
+              <TextInput
+                value={inputData.name || ""}
+                onChangeText={(value) =>
+                  setInputData((prev) => ({ ...prev, name: value }))
+                }
+                style={isVerified ? styles.textInputDisabled : styles.textInput}
+                placeholder="이름"
+                placeholderTextColor={colors.subText}
+                editable={!isVerified}
+              />
+              {isVerified && (
+                <View style={styles.disabledNotice}>
+                  <Ionicons
+                    name="lock-closed"
+                    size={14}
+                    color={colors.subText}
+                  />
+                  <Text style={styles.disabledNoticeText}>
+                    인증된 회원의 이름은 문의하기를 통해 변경할 수 있어요
+                  </Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.inputWrap}>
+              <Text style={styles.inputLabel}>자기소개</Text>
+              <TextInput
+                value={inputData.desc || ""}
+                onChangeText={(value) =>
+                  setInputData((prev) => ({ ...prev, desc: value }))
+                }
+                style={styles.textInputMultiline}
+                placeholder="자기소개"
+                placeholderTextColor={colors.subText}
+                multiline
+              />
+            </View>
           </View>
         </View>
         <TouchableOpacity
