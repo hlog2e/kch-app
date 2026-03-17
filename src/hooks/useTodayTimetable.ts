@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
@@ -166,13 +166,17 @@ export function useTodayTimetable() {
   const targetDateStr = targetDate.format("YYYYMMDD");
 
   // AsyncStorage에서 gradeClass 로드
-  useEffect(() => {
+  const refreshGradeClass = useCallback(() => {
     AsyncStorage.getItem("gradeClass").then((stored) => {
       if (stored) {
         setGradeClass(JSON.parse(stored));
       }
     });
   }, []);
+
+  useEffect(() => {
+    refreshGradeClass();
+  }, [refreshGradeClass]);
 
   // 1분 간격 타이머
   useEffect(() => {
@@ -220,5 +224,6 @@ export function useTodayTimetable() {
     targetDate,
     currentIndex,
     hasGradeClass: !!gradeClass,
+    refreshGradeClass,
   };
 }

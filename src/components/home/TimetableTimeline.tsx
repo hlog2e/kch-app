@@ -38,14 +38,16 @@ export default function TimetableTimeline() {
   const { mode, refresh: refreshMode } = useTimetableMode();
 
   const neis = useTodayTimetable();
+  const { refreshGradeClass } = neis;
   const custom = useCustomTodayTimetable();
 
-  // 화면 복귀 시 모드 새로고침 + 커스텀 시간표 refetch
+  // 화면 복귀 시 모드 새로고침 + gradeClass 재로드 + 커스텀 시간표 refetch
   useFocusEffect(
     useCallback(() => {
       refreshMode();
+      refreshGradeClass();
       queryClient.invalidateQueries({ queryKey: [CUSTOM_TIMETABLE_QUERY_KEY] });
-    }, [refreshMode, queryClient]),
+    }, [refreshMode, refreshGradeClass, queryClient]),
   );
 
   // 모드에 따라 데이터 선택
