@@ -38,6 +38,7 @@ module.exports = {
       ],
     ],
     ios: {
+      icon: "./assets/ios-icon.icon",
       bundleIdentifier: "me.kch-app.kch",
       supportsTablet: true,
       googleServicesFile: "./GoogleService-Info.plist",
