@@ -11,8 +11,6 @@ import {
   setUserId as analyticsSetUserId,
   setUserProperty,
   logEvent as analyticsLogEvent,
-  logLogin as analyticsLogLogin,
-  logSignUp as analyticsLogSignUp,
 } from "@react-native-firebase/analytics";
 const crash = getCrashlytics();
 const anal = getAnalytics();
@@ -68,9 +66,9 @@ export async function logEvent(
 }
 
 export async function logLogin(method: string): Promise<void> {
-  await analyticsLogLogin(anal, { method });
+  await analyticsLogEvent(anal, "login", { method });
 }
 
 export async function logSignUp(method: string): Promise<void> {
-  await analyticsLogSignUp(anal, { method });
+  await analyticsLogEvent(anal, "sign_up", { method });
 }
