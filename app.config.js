@@ -55,6 +55,7 @@ module.exports = {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#FFFFFF",
       },
+      blockedPermissions: ["com.google.android.gms.permission.AD_ID"],
     },
     web: {
       favicon: "./assets/favicon.png",
