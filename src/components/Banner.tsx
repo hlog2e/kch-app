@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   View,
   Text,
 } from "react-native";
@@ -19,8 +18,7 @@ import ReanimatedCarousel from "react-native-reanimated-carousel";
 import { useTheme } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import { useState } from "react";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import { useResponsiveScale } from "../hooks/useResponsiveScale";
 
 export interface BannerItem {
   uri: string;
@@ -66,11 +64,13 @@ export default function Banner({
     queryFn: () => getBanners({ location }),
   });
   const [nowIndex, setNowIndex] = useState<number>(0);
+  const [layoutWidth, setLayoutWidth] = useState(0);
 
-  const carouselWidth = SCREEN_WIDTH - (parentPadding ?? padding * 2);
+  const carouselWidth = layoutWidth - (parentPadding ?? padding * 2);
 
   return (
     <Animated.View
+      onLayout={(e) => setLayoutWidth(e.nativeEvent.layout.width)}
       style={[
         {
           paddingVertical: 14,
@@ -79,7 +79,7 @@ export default function Banner({
         animatedStyle,
       ]}
     >
-      {data.length > 0 && (
+      {data.length > 0 && layoutWidth > 0 && (
         <ReanimatedCarousel
           data={data}
           width={carouselWidth}
@@ -111,8 +111,9 @@ interface ItemProps {
 
 const Item = ({ item, height, dataLength, nowIndex }: ItemProps) => {
   const { colors } = useTheme();
+  const { s } = useResponsiveScale();
   const styles = StyleSheet.create({
-    image: { width: "100%", height: height, borderRadius: 15 },
+    image: { width: "100%", height: height, borderRadius: s(15) },
     pagination: {
       position: "absolute",
       bottom: 8,
@@ -120,7 +121,7 @@ const Item = ({ item, height, dataLength, nowIndex }: ItemProps) => {
       backgroundColor: colors.cardBg,
       paddingVertical: 1,
       paddingHorizontal: 5,
-      borderRadius: 15,
+      borderRadius: s(15),
     },
     pagination_text: {
       fontSize: 10,

@@ -18,12 +18,14 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { useResponsiveScale } from "../../hooks/useResponsiveScale";
 
 export default function Header() {
   const nowTime = parseInt(moment().format("H"));
   const { user } = useUser();
   const { colors } = useTheme();
   const router = useRouter();
+  const { s } = useResponsiveScale();
 
   const [grade, setGrade] = useState<string | null>(null);
   const [alias, setAlias] = useState<string | null>(null);
@@ -139,26 +141,26 @@ export default function Header() {
 
   const styles = StyleSheet.create({
     header: {
-      marginHorizontal: 14,
-      marginTop: 14,
+      marginHorizontal: s(14),
+      marginTop: s(14),
       justifyContent: "space-between",
       alignItems: "center",
       flexDirection: "row",
     },
-    headerName: { fontSize: 18, fontWeight: "200", color: colors.subText },
+    headerName: { fontSize: s(18), fontWeight: "200", color: colors.subText },
     headerTitle: {
-      fontSize: 18,
+      fontSize: s(18),
       fontWeight: "700",
       marginTop: 2,
       color: colors.text,
     },
     studentIdButton: {
-      height: 40,
+      height: s(40),
       borderWidth: 1,
       borderColor: colors.border,
-      borderRadius: 15,
+      borderRadius: s(15),
       paddingVertical: 2,
-      paddingHorizontal: 10,
+      paddingHorizontal: s(10),
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",

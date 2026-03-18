@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Dimensions,
 } from "react-native";
 import Animated, {
   useSharedValue,
@@ -21,10 +20,12 @@ import moment from "moment";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getCommunities } from "../../../apis/community/index";
 import CommunityBadge from "../community/CommunityBadge";
+import { useResponsiveScale } from "../../hooks/useResponsiveScale";
 
 export default function CommunitySection() {
   const { colors } = useTheme();
   const router = useRouter();
+  const { s } = useResponsiveScale();
 
   // 무한스크롤을 위한 useInfiniteQuery 사용
   const { data, isLoading, fetchNextPage, isFetchingNextPage } =
@@ -78,14 +79,14 @@ export default function CommunitySection() {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      marginHorizontal: 14,
+      marginHorizontal: s(14),
     },
     titleContainer: {
       flexDirection: "row",
       alignItems: "center",
     },
     title: {
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: "600",
       color: colors.text,
     },
@@ -97,7 +98,7 @@ export default function CommunitySection() {
       alignItems: "center",
       paddingHorizontal: 10,
       paddingVertical: 4,
-      borderRadius: 12,
+      borderRadius: s(12),
       backgroundColor: colors.cardBg2,
     },
     moreButtonText: {
@@ -107,7 +108,7 @@ export default function CommunitySection() {
       marginRight: 4,
     },
     flatListContainer: {
-      paddingLeft: 14,
+      paddingLeft: s(14),
       paddingVertical: 17,
     },
   });
@@ -138,7 +139,7 @@ export default function CommunitySection() {
         showsHorizontalScrollIndicator={false}
         data={posts}
         renderItem={({ item }) => (
-          <CommunityPostCard key={item._id} post={item} />
+          <CommunityPostCard key={item._id} post={item} s={s} />
         )}
         keyExtractor={(item: any) => item._id}
         contentContainerStyle={styles.flatListContainer}
@@ -157,21 +158,21 @@ export default function CommunitySection() {
 
 interface CommunityPostCardProps {
   post: any;
+  s: (size: number) => number;
 }
 
-function CommunityPostCard({ post }: CommunityPostCardProps) {
+function CommunityPostCard({ post, s }: CommunityPostCardProps) {
   const { colors } = useTheme();
   const router = useRouter();
-  const screenWidth = Dimensions.get("window").width;
 
   const styles = StyleSheet.create({
     card: {
-      width: screenWidth * 0.72,
-      height: 140,
+      width: s(280),
+      height: s(140),
       marginRight: 10,
       backgroundColor: colors.cardBg,
-      borderRadius: 18,
-      padding: 12,
+      borderRadius: s(18),
+      padding: s(12),
       borderWidth: 1,
       borderColor: colors.border,
       shadowColor: "#000",
@@ -186,13 +187,13 @@ function CommunityPostCard({ post }: CommunityPostCardProps) {
       marginBottom: 6,
     },
     postTitle: {
-      fontSize: 14,
+      fontSize: s(14),
       fontWeight: "700",
       color: colors.text,
       marginBottom: 4,
     },
     postContent: {
-      fontSize: 12,
+      fontSize: s(12),
       color: colors.subText,
       marginBottom: 10,
       lineHeight: 17,
@@ -209,7 +210,7 @@ function CommunityPostCard({ post }: CommunityPostCardProps) {
     imagePreview: {
       width: 44,
       height: 44,
-      borderRadius: 8,
+      borderRadius: s(8),
     },
     multiImageContainer: {
       position: "relative",
@@ -221,7 +222,7 @@ function CommunityPostCard({ post }: CommunityPostCardProps) {
       right: 0,
       bottom: 0,
       backgroundColor: "rgba(0, 0, 0, 0.5)",
-      borderRadius: 8,
+      borderRadius: s(8),
       justifyContent: "center",
       alignItems: "center",
     },

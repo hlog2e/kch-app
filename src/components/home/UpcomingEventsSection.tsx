@@ -18,10 +18,12 @@ import { useRouter } from "expo-router";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import { getSchedule } from "../../../apis/neis/schedule";
+import { useResponsiveScale } from "../../hooks/useResponsiveScale";
 
 export default function UpcomingEventsSection() {
   const { colors } = useTheme();
   const router = useRouter();
+  const { s } = useResponsiveScale();
 
   // 애니메이션 설정
   const translateY = useSharedValue(30);
@@ -118,8 +120,8 @@ export default function UpcomingEventsSection() {
   };
 
   const getDDay = (startDate: string) => {
-    const eventDate = moment(startDate, "YYYYMMDD");
-    const today = moment();
+    const eventDate = moment(startDate, "YYYYMMDD").startOf("day");
+    const today = moment().startOf("day");
     const diff = eventDate.diff(today, "days");
 
     if (diff === 0) return "D-Day";
@@ -152,11 +154,11 @@ export default function UpcomingEventsSection() {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      paddingHorizontal: 14,
+      paddingHorizontal: s(14),
       marginBottom: 4,
     },
     title: {
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: "600",
       color: colors.text,
     },
@@ -165,7 +167,7 @@ export default function UpcomingEventsSection() {
       alignItems: "center",
       paddingHorizontal: 10,
       paddingVertical: 4,
-      borderRadius: 12,
+      borderRadius: s(12),
       backgroundColor: colors.cardBg2,
     },
     viewAllText: {
@@ -175,7 +177,7 @@ export default function UpcomingEventsSection() {
       marginRight: 3,
     },
     scrollView: {
-      paddingLeft: 14,
+      paddingLeft: s(14),
       paddingVertical: 12,
     },
     noEventsContainer: {
@@ -240,6 +242,7 @@ export default function UpcomingEventsSection() {
             getDDay={getDDay}
             getDateDisplay={getDateDisplay}
             getEventIcon={getEventIcon}
+            s={s}
             onPress={() => {
               const selectedDate = moment(event.startDate, "YYYYMMDD").format(
                 "YYYY-MM-DD"
@@ -261,6 +264,7 @@ interface EventCardProps {
     endDate: string
   ) => { shortDate: string; fullDate: string };
   getEventIcon: (eventName: string) => string;
+  s: (size: number) => number;
   onPress: () => void;
 }
 
@@ -269,6 +273,7 @@ function EventCard({
   getDDay,
   getDateDisplay,
   getEventIcon,
+  s,
   onPress,
 }: EventCardProps) {
   const { colors } = useTheme();
@@ -279,12 +284,12 @@ function EventCard({
 
   const styles = StyleSheet.create({
     card: {
-      width: 170,
-      height: 80,
+      width: s(170),
+      height: s(80),
       backgroundColor: isHighlight ? colors.accentBlueBg : colors.cardBg,
-      borderRadius: 16,
+      borderRadius: s(16),
       marginRight: 12,
-      padding: 12,
+      padding: s(12),
       borderWidth: 1,
       borderColor: isHighlight ? colors.accentBlueBorder : colors.border,
       shadowColor: "#000",
@@ -302,7 +307,7 @@ function EventCard({
       marginBottom: 4,
     },
     dDayText: {
-      fontSize: 15,
+      fontSize: s(15),
       fontWeight: "700",
       color: colors.accentBlue,
     },
@@ -318,10 +323,10 @@ function EventCard({
       marginBottom: 2,
     },
     eventName: {
-      fontSize: 13,
+      fontSize: s(13),
       fontWeight: "600",
       color: colors.text,
-      lineHeight: 16,
+      lineHeight: s(16),
     },
   });
 

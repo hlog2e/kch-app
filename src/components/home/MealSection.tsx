@@ -12,12 +12,14 @@ import { useState } from "react";
 import moment from "moment";
 import { Image } from "expo-image";
 import { useTheme } from "@react-navigation/native";
+import { useResponsiveScale } from "../../hooks/useResponsiveScale";
 
 // 이미지 import
 const riceImage = require("../../../assets/svgs/rice.png");
 
 export default function MealSection() {
   const { colors } = useTheme();
+  const { s } = useResponsiveScale();
   const { data } = useQuery({ queryKey: ["meals"], queryFn: getMeals });
 
   // 애니메이션 설정
@@ -58,13 +60,13 @@ export default function MealSection() {
       // marginTop: 4,
     },
     mealTitle: {
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: "600",
-      marginLeft: 14,
+      marginLeft: s(14),
       color: colors.text,
     },
     mealImage: { marginLeft: 6, width: 30, height: 30 },
-    scrollView: { marginTop: 16, paddingLeft: 14 },
+    scrollView: { marginTop: 16, paddingLeft: s(14) },
   });
   if (data && data.meals.length > 0) {
     return (
@@ -102,6 +104,7 @@ export default function MealSection() {
                   title={_meal.type}
                   kcal={_meal.kcal}
                   menu={_meal.menu}
+                  s={s}
                 />
               );
             });
@@ -112,17 +115,27 @@ export default function MealSection() {
   }
 }
 
-function MealItem({ title, kcal, menu }: { title: any; kcal: any; menu: any }) {
+function MealItem({
+  title,
+  kcal,
+  menu,
+  s,
+}: {
+  title: any;
+  kcal: any;
+  menu: any;
+  s: (size: number) => number;
+}) {
   const { colors } = useTheme();
   const isLunch = title === "중식";
   const styles = StyleSheet.create({
     container: {
       borderWidth: 1,
       borderColor: isLunch ? colors.accentBlueBorder : colors.border,
-      borderRadius: 30,
-      minHeight: 160,
-      width: 160,
-      padding: 14,
+      borderRadius: s(30),
+      minHeight: s(160),
+      width: s(160),
+      padding: s(14),
       marginRight: 12,
       backgroundColor: isLunch ? colors.accentBlueBg : colors.cardBg,
     },
@@ -131,7 +144,7 @@ function MealItem({ title, kcal, menu }: { title: any; kcal: any; menu: any }) {
       justifyContent: "center",
       flexDirection: "row",
     },
-    headerTitle: { fontSize: 14, fontWeight: "700", color: colors.text },
+    headerTitle: { fontSize: s(14), fontWeight: "700", color: colors.text },
     kcal: {
       fontWeight: "500",
       fontSize: 10,
@@ -140,7 +153,7 @@ function MealItem({ title, kcal, menu }: { title: any; kcal: any; menu: any }) {
     },
 
     menuWrap: { marginTop: 6 },
-    menuText: { color: colors.subText, fontSize: 12, lineHeight: 16 },
+    menuText: { color: colors.subText, fontSize: s(12), lineHeight: s(16) },
   });
   return (
     <View style={styles.container}>

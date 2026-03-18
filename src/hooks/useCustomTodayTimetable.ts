@@ -14,8 +14,7 @@ import { useCustomTimetableQuery } from "./useCustomTimetable";
 
 export function useCustomTodayTimetable() {
   const { data: customData, isLoading } = useCustomTimetableQuery();
-  // TODO: 스크린샷용 임시 코드 - 되돌려야 함
-  const [currentTime, setCurrentTime] = useState("09:00");
+  const [currentTime, setCurrentTime] = useState(moment().format("HH:mm"));
 
   const { date: targetDate, isToday } = useMemo(
     () => getTargetSchoolDate(),

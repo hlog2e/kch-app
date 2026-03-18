@@ -25,14 +25,16 @@ import {
 import { useTimetableMode } from "../../hooks/useTimetableMode";
 import { useCustomTodayTimetable } from "../../hooks/useCustomTodayTimetable";
 import { CUSTOM_TIMETABLE_QUERY_KEY } from "../../hooks/useCustomTimetable";
-
-const CARD_WIDTH = 110;
-const CARD_MARGIN = 10;
+import { useResponsiveScale } from "../../hooks/useResponsiveScale";
 
 export default function TimetableTimeline() {
   const { colors } = useTheme();
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
+  const { s } = useResponsiveScale();
+
+  const cardWidth = s(110);
+  const cardMargin = s(10);
 
   const queryClient = useQueryClient();
   const { mode, refresh: refreshMode } = useTimetableMode();
@@ -80,13 +82,13 @@ export default function TimetableTimeline() {
     if (slots.length > 0 && currentIndex > 0) {
       const timer = setTimeout(() => {
         scrollRef.current?.scrollTo({
-          x: currentIndex * (CARD_WIDTH + CARD_MARGIN) - 14,
+          x: currentIndex * (cardWidth + cardMargin) - s(14),
           animated: true,
         });
       }, 800);
       return () => clearTimeout(timer);
     }
-  }, [slots, currentIndex]);
+  }, [slots, currentIndex, cardWidth, cardMargin]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -105,7 +107,7 @@ export default function TimetableTimeline() {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      paddingHorizontal: 14,
+      paddingHorizontal: s(14),
       marginBottom: 6,
     },
     titleRow: {
@@ -114,14 +116,14 @@ export default function TimetableTimeline() {
       gap: 6,
     },
     title: {
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: "600",
       color: colors.text,
     },
     modeBadge: {
       paddingHorizontal: 8,
       paddingVertical: 3,
-      borderRadius: 999,
+      borderRadius: s(999),
       backgroundColor: colors.accentBlueAlpha,
       justifyContent: "center" as const,
       alignItems: "center" as const,
@@ -136,7 +138,7 @@ export default function TimetableTimeline() {
       alignItems: "center",
       paddingHorizontal: 10,
       paddingVertical: 4,
-      borderRadius: 12,
+      borderRadius: s(12),
       backgroundColor: colors.cardBg2,
     },
     viewAllText: {
@@ -146,16 +148,16 @@ export default function TimetableTimeline() {
       marginRight: 3,
     },
     scrollContent: {
-      paddingLeft: 14,
+      paddingLeft: s(14),
       paddingRight: 4,
       paddingVertical: 8,
     },
     emptyContainer: {
-      marginHorizontal: 14,
+      marginHorizontal: s(14),
       paddingVertical: 24,
       alignItems: "center",
       backgroundColor: colors.cardBg,
-      borderRadius: 16,
+      borderRadius: s(16),
     },
     emptyText: {
       fontSize: 13,
@@ -265,14 +267,30 @@ export default function TimetableTimeline() {
         contentContainerStyle={styles.scrollContent}
       >
         {slots.map((slot, index) => (
-          <SlotCard key={`${slot.period}-${index}`} slot={slot} />
+          <SlotCard
+            key={`${slot.period}-${index}`}
+            slot={slot}
+            cardWidth={cardWidth}
+            cardMargin={cardMargin}
+            s={s}
+          />
         ))}
       </ScrollView>
     </Animated.View>
   );
 }
 
-function SlotCard({ slot }: { slot: TimetableSlot }) {
+function SlotCard({
+  slot,
+  cardWidth,
+  cardMargin,
+  s,
+}: {
+  slot: TimetableSlot;
+  cardWidth: number;
+  cardMargin: number;
+  s: (size: number) => number;
+}) {
   const { colors } = useTheme();
 
   const isCurrent = slot.status === "current";
@@ -283,11 +301,11 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
 
   const styles = StyleSheet.create({
     card: {
-      width: CARD_WIDTH,
-      height: 80,
-      borderRadius: 16,
-      padding: 12,
-      marginRight: CARD_MARGIN,
+      width: cardWidth,
+      height: s(80),
+      borderRadius: s(16),
+      padding: s(12),
+      marginRight: cardMargin,
       backgroundColor: cardBg,
       borderWidth: 1,
       borderColor: cardBorder,
@@ -305,7 +323,7 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
       alignItems: "center",
     },
     label: {
-      fontSize: 11,
+      fontSize: s(11),
       fontWeight: "600",
       color: colors.subText,
     },
@@ -316,7 +334,7 @@ function SlotCard({ slot }: { slot: TimetableSlot }) {
       backgroundColor: colors.accentBlue,
     },
     subject: {
-      fontSize: 16,
+      fontSize: s(16),
       fontWeight: "700",
       color: colors.text,
       marginTop: 4,

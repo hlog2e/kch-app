@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@react-navigation/native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as ImagePicker from "expo-image-picker";
+import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import mime from "mime";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
@@ -144,6 +145,18 @@ export default function VerifyScreen() {
     },
   });
 
+  const convertToJpeg = async (
+    asset: ImagePicker.ImagePickerAsset,
+  ): Promise<ImagePicker.ImagePickerAsset> => {
+    const uri = asset.uri.toLowerCase();
+    if (uri.endsWith(".heic") || uri.endsWith(".heif")) {
+      const imageRef = await ImageManipulator.manipulate(asset.uri).renderAsync();
+      const result = await imageRef.saveAsync({ format: SaveFormat.JPEG, compress: 0.8 });
+      return { ...asset, uri: result.uri };
+    }
+    return asset;
+  };
+
   const handleImagePicking = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -153,7 +166,8 @@ export default function VerifyScreen() {
         quality: 0.5,
       });
       if (!result.canceled) {
-        setImage(result.assets[0]);
+        const converted = await convertToJpeg(result.assets[0]);
+        setImage(converted);
       }
     } catch (_err) {
       alert.error("이미지를 로드하는 중 오류가 발생하였습니다.");
@@ -389,7 +403,7 @@ export default function VerifyScreen() {
                   <Image
                     source={{ uri: image.uri }}
                     style={styles.previewImage}
-                    contentFit="cover"
+                    contentFit="contain"
                   />
                 ) : (
                   <>
