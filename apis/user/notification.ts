@@ -25,3 +25,27 @@ export const postUpdateNotificationSetting = async ({
   );
   return data;
 };
+
+interface UpdateCommunityNotificationPayload {
+  categoryId: string;
+  isRegister: boolean;
+}
+
+export const postUpdateCommunityNotificationSetting = async ({
+  categoryId,
+  isRegister,
+}: UpdateCommunityNotificationPayload) => {
+  const { data } = await apiAuthInstance.post("/user/notificationSetting", {
+    category: `community_${categoryId}`,
+    isRegister,
+  });
+  return data;
+};
+
+export const postToggleCommunityNotification = async (isRegister: boolean) => {
+  const { data } = await apiAuthInstance.post(
+    "/user/communityNotificationSetting/toggle",
+    { isRegister }
+  );
+  return data;
+};
