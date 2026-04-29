@@ -80,6 +80,23 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="chat"
+        options={{
+          tabBarIcon: ({
+            color,
+            focused,
+          }: {
+            color: string;
+            focused: boolean;
+          }) =>
+            focused ? (
+              <Ionicons name="chatbubbles" size={26} color={color} />
+            ) : (
+              <Ionicons name="chatbubbles-outline" size={26} color={color} />
+            ),
+        }}
+      />
+      <Tabs.Screen
         name="more/index"
         options={{
           tabBarIcon: ({
